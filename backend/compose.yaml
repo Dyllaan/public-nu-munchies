@@ -1,0 +1,10 @@
+services:
+  php:
+    build: .
+    container_name: php-service
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/app
+    tty: true
+

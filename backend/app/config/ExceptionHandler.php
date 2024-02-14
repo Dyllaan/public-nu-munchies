@@ -1,11 +1,9 @@
 <?php
 
 /**
- * ExceptionHandler is used to handle exceptions thrown by the api, uses code from the module
- * @author Louis Figes
- * @generated Github CoPilot was used during the creation of this code
+ * class ExceptionHandler
+ * This class is used to handle exceptions thrown by the api for output in json
  */
-
 abstract class ExceptionHandler
 {
 
@@ -17,7 +15,7 @@ abstract class ExceptionHandler
     {
         set_exception_handler(array(__CLASS__, 'handleException'));
     }
- 
+
     /**
      * handleException is used to handle exceptions thrown by the api for output in json
      * @generated Github CoPilot was used during the creation of this code
@@ -27,7 +25,7 @@ abstract class ExceptionHandler
     {
         $output['file'] = $e->getFile();
         $output['line'] = $e->getLine();
-    
+
         if ($e instanceof \Core\ClientErrorException) {
             $code = $e->getResponseCode();
             if (!empty($e->getAdditionalData())) {
@@ -38,8 +36,7 @@ abstract class ExceptionHandler
         }
         $output['message'] = $e->getMessage();
         new \Core\HTTP\Classes\Response($code, "error", $output);
-        
+
         exit();
     }
-    
 }

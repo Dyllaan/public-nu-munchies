@@ -1,11 +1,13 @@
 <?php
+
 /**
+ * interface CrudInterface
  * Defines rules for each of the objects that the API uses, like Content
- * @author Louis Figes
  */
+
 namespace Core\Database;
 
-interface CrudInterface 
+interface CrudInterface
 {
     public function get();
     public function save();

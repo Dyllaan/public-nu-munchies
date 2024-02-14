@@ -1,0 +1,11 @@
+{
+    "name": "nu-web/foodwaste-backend",
+    "autoload": {
+        "psr-4": {
+            "NuWeb\\FoodwasteBackend\\": "app/"
+        }
+    },
+    "require": {
+        "firebase/php-jwt": "^6.10"
+    }
+}

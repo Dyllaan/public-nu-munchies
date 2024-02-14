@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * class InsertQuery
  * InsertQuery is used to build an insert query in an object oriented way
  * @author Louis Figes
  * @generated Github CoPilot was used during the creation of this code
@@ -14,19 +15,19 @@ class InsertQuery extends \Core\Database\Query implements \Core\Database\QueryIn
     private $values = [];
     private $parameters = [];
 
-    public function into($table) 
+    public function into($table)
     {
         $this->table = "INSERT INTO $table";
         return $this;
     }
 
-    public function cols($cols) 
+    public function cols($cols)
     {
         $this->cols = $cols;
         return $this;
     }
 
-    public function values($values) 
+    public function values($values)
     {
         foreach ($values as $key => $value) {
             $placeholder = ":value" . count($this->parameters);
@@ -36,10 +37,10 @@ class InsertQuery extends \Core\Database\Query implements \Core\Database\QueryIn
         return $this;
     }
 
-    public function execute() 
+    public function execute()
     {
         if (empty($this->table) || empty($this->cols) || empty($this->values)) {
-            throw new \Core\ClientErrorException(422, ["message"=>"Incomplete query"]);
+            throw new \Core\ClientErrorException(422, ["message" => "Incomplete query"]);
         }
 
         $valuesPart = implode(", ", $this->values);

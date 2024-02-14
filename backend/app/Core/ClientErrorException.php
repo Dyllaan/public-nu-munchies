@@ -1,10 +1,12 @@
 <?php
+
 /**
  * ClientErrorException is used to handle exceptions thrown by the api, uses code from the module
- * @author Louis Figes
  * @generated Github CoPilot was used during the creation of this code
  */
+
 namespace Core;
+
 class ClientErrorException extends \Exception
 {
     /**
@@ -35,7 +37,7 @@ class ClientErrorException extends \Exception
      * @param $code
      * @return string
      */
- 
+
     public function errorResponses($code)
     {
         $message = '';

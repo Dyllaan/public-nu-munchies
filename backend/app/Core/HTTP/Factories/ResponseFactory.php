@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @author Louis Figes
- */
-
 namespace Core\HTTP\Factories;
 
 use Core\HTTP\Classes\Response;

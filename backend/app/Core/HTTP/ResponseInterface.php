@@ -1,11 +1,10 @@
 <?php
 
-/**
- * @author Louis Figes W21O17657
- */
+
 namespace Core\HTTP;
 
-interface ResponseInterface {
+interface ResponseInterface
+{
     public function isSuccess();
     public function getData();
     public function getResponseCode();

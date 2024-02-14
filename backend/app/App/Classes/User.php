@@ -1,10 +1,12 @@
 <?php
+
 /**
+ * class User
  * User is used to handle user data, including login and registration
  * Implements the CrudInterface to allow for easy database interaction
- * @author Louis Figes
  * @generated Github CoPilot was used during the creation of this code
  */
+
 namespace App\Classes;
 
 use Firebase\JWT\JWT;
@@ -20,23 +22,25 @@ class User extends CrudModel implements CrudInterface
     private $token;
     private static $instance = null;
 
-    public static function getInstance($db) {
+    public static function getInstance($db)
+    {
         if (self::$instance === null) {
             self::$instance = new User($db);
         }
         return self::$instance;
     }
 
-    public function exists() {
-        if($this->getId() != null) {
-            $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["user_id = '".$this->getId()."'"])->execute();
+    public function exists()
+    {
+        if ($this->getId() != null) {
+            $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["user_id = '" . $this->getId() . "'"])->execute();
             if (count($data) == 0) {
                 return false;
             } else {
                 return true;
             }
-        } elseif($this->getEmail() != null) {
-            $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["email = '".$this->getEmail()."'"])->execute();
+        } elseif ($this->getEmail() != null) {
+            $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["email = '" . $this->getEmail() . "'"])->execute();
             if (count($data) == 0) {
                 return false;
             } else {
@@ -47,14 +51,14 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
-    public function login() 
+    public function login()
     {
         $cons[] = "email = '$this->email'";
         $data = $this->getDb()->createSelect()->cols("*")->from("users")->where($cons)->execute();
         if (count($data) == 0) {
             $this->setResponse(401, "Invalid email");
         } else {
-            if(!$this->checkPassword($this->password, $data[0]['password'])) {
+            if (!$this->checkPassword($this->password, $data[0]['password'])) {
                 $this->setResponse(401, "Invalid password");
             } else {
                 $this->setId($data[0]['user_id']);
@@ -63,9 +67,9 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
-    public function register() 
+    public function register()
     {
-        if($this->exists()) {
+        if ($this->exists()) {
             $this->setResponse(400, "User already exists");
         } else {
             $this->save();
@@ -75,6 +79,8 @@ class User extends CrudModel implements CrudInterface
     private function checkSavable()
     {
         $errors = [];
+
+        // TODO: maybe lets predefine these messages in some other file as constants and then just reference to them ie. $errorMessages['missingName']
 
         if (empty($this->getName())) {
             $errors[] = "Missing name";
@@ -111,15 +117,12 @@ class User extends CrudModel implements CrudInterface
         return true;
     }
 
-    public function save() 
+    public function save()
     {
-        if($this->checkSavable()) {
+        if ($this->checkSavable()) {
             $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-            $id = $this->getDb()->createInsert()->into('users')->
-            cols('name, email, password')->
-            values([$this->getName(), $this->getEmail(), $this->getPassword()])->
-            execute();
-            if($id != null) {
+            $id = $this->getDb()->createInsert()->into('users')->cols('name, email, password')->values([$this->getName(), $this->getEmail(), $this->getPassword()])->execute();
+            if ($id != null) {
                 $this->setId($id);
                 return $this->toArray();
             }
@@ -128,38 +131,40 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
-    public function get() 
+    public function get()
     {
-        $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["user_id = '".$this->getId()."'"])->execute();
+        $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["user_id = '" . $this->getId() . "'"])->execute();
         if (count($data) == 0) {
             $this->setResponse(400, "User does not exist");
         } else {
             $this->setName($data[0]['name']);
             $this->setEmail($data[0]['email']);
-        } 
+        }
     }
 
-    public function update() 
+    public function update()
     {
-        if(!$this->exists()) {
+        if (!$this->exists()) {
             $this->setResponse(400, "User does not exist");
         }
-        $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["user_id = '".$this->getId()."'"])->execute();
+        // TODO: lets create constants of the table name and columns and then just reference them here so it is not hardcoded
+        $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["user_id = '" . $this->getId() . "'"])->execute();
         if (count($data) == 0) {
             $this->setResponse(400, "User does not exist");
         } else {
             $changed = [];
-            if($this->getName() != $data[0]['name']) {
+            // TODO: i am wondering if we can make this if statement bit more cleaner
+            if ($this->getName() != $data[0]['name']) {
                 $changed['name'] = $this->getName();
             }
-            if($this->getEmail() != $data[0]['email']) {
+            if ($this->getEmail() != $data[0]['email']) {
                 $changed['email'] = $this->getEmail();
             }
-            if($this->getPassword() != null) {
+            if ($this->getPassword() != null) {
                 $changed['password'] = password_hash($this->getPassword(), PASSWORD_DEFAULT);
             }
-            if($changed != []) {
-                $this->getDb()->createUpdate()->table('users')->set($changed)->where(["user_id = '".$this->getId()."'"])->execute();
+            if ($changed != []) {
+                $this->getDb()->createUpdate()->table('users')->set($changed)->where(["user_id = '" . $this->getId() . "'"])->execute();
                 return ['message' => "User updated"];
             } else {
                 return ['message' => "No changes"];
@@ -167,17 +172,18 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
-    public function delete() 
+    public function delete()
     {
-        if($this->exists()) {
-            $this->getDb()->createDelete()->from('users')->where(["user_id = '".$this->getId()."'"])->execute();
+        if ($this->exists()) {
+            $this->getDb()->createDelete()->from('users')->where(["user_id = '" . $this->getId() . "'"])->execute();
             return ['message' => "User deleted"];
         } else {
             $this->setResponse(400, "User does not exist");
         }
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         $user['user'] = [
             'name' => $this->name,
             'email' => $this->email,
@@ -187,7 +193,7 @@ class User extends CrudModel implements CrudInterface
         return $user;
     }
 
-    private function checkPassword($password, $hash) 
+    private function checkPassword($password, $hash)
     {
         if (password_verify($this->password, $hash)) {
             return true;
@@ -196,9 +202,10 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
-    public function verifyToken() {
+    public function verifyToken()
+    {
         $token = new Token();
-        if($token->isValid()) {
+        if ($token->isValid()) {
             $this->setId($token->getUserId());
             $this->get();
             return true;
@@ -207,8 +214,8 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
-    private function generateJWT($id) 
-    { 
+    private function generateJWT($id)
+    {
         $secretKey = SECRET;
 
         $iat = time();
@@ -224,40 +231,42 @@ class User extends CrudModel implements CrudInterface
         return $jwt;
     }
 
-    public function getToken() {
+    public function getToken()
+    {
         return $this->token;
     }
 
-    public function setToken($jwt) {
-        $this->token = $token;
+    public function setToken($jwt)
+    {
+        $this->token = $jwt;
     }
 
-    public function getName() 
+    public function getName()
     {
         return $this->name;
     }
 
-    public function setName($name) 
+    public function setName($name)
     {
         $this->name = $name;
     }
 
-    public function getEmail() 
+    public function getEmail()
     {
         return $this->email;
     }
 
-    public function setEmail($email) 
+    public function setEmail($email)
     {
         $this->email = $email;
     }
 
-    public function getPassword() 
+    public function getPassword()
     {
         return $this->password;
     }
 
-    public function setPassword($password) 
+    public function setPassword($password)
     {
         $this->password = $password;
     }

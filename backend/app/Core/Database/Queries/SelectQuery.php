@@ -1,7 +1,8 @@
 <?php
+
 /**
+ * class SelectQuery
  * SelectQuery is used to build a select query in an object oriented way
- * @author Louis Figes W21017657
  * @generated Github CoPilot was used during the creation of this code
  */
 
@@ -16,43 +17,43 @@ class SelectQuery extends \Core\Database\Query implements \Core\Database\QueryIn
     private $offset;
     private $orderBy;
 
-    public function cols($cols) 
+    public function cols($cols)
     {
         $this->cols = "SELECT $cols";
         return $this;
     }
 
-    public function from($table) 
+    public function from($table)
     {
         $this->table = "FROM $table";
         return $this;
     }
 
-    public function where($conditions) 
+    public function where($conditions)
     {
         $this->where = $this->conditionFormatter($conditions);
         return $this;
     }
 
-    public function join($table, $on) 
+    public function join($table, $on)
     {
         $this->joins[] = "LEFT JOIN $table ON $on";
         return $this;
     }
 
-    public function limit($limit) 
+    public function limit($limit)
     {
         $this->limit = "LIMIT $limit";
         return $this;
     }
 
-    public function offset($offset) 
+    public function offset($offset)
     {
         $this->offset = "OFFSET $offset";
         return $this;
     }
 
-    public function orderBy($orderBy) 
+    public function orderBy($orderBy)
     {
         $this->orderBy = "ORDER BY $orderBy";
         return $this;
@@ -62,7 +63,7 @@ class SelectQuery extends \Core\Database\Query implements \Core\Database\QueryIn
      * Assembles the query and executes it
      * does a check on joins or it throws an error that joins is not an array
      */
-    public function execute() 
+    public function execute()
     {
         $parts = [
             $this->cols,

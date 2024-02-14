@@ -1,8 +1,5 @@
 <?php
-/**
- * 
- * @author Louis Figes
- */
+
 include_once 'config/autoloader.php';
 include_once 'config/ExceptionHandler.php';
 

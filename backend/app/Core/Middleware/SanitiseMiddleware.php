@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The aim of this class it to sanitise any parameters or variables BEFORE the program uses them inspired by Laravel's middleware
  * I think this is the best solution as it avoids doing it in each endpoint and it seems more secure this way
@@ -13,7 +14,7 @@ class SanitiseMiddleware
     /**
      * Sanitise all the request variables
      */
-    public function __construct() 
+    public function __construct()
     {
         $this->sanitiseRequest();
     }
@@ -24,20 +25,20 @@ class SanitiseMiddleware
      */
     private function sanitiseRequest()
     {
-        if($this->isClean($_GET)) {
+        if ($this->isClean($_GET)) {
             $_GET = $this->sanitiseArray($_GET);
         }
-        if($this->isClean($_POST)) {
+        if ($this->isClean($_POST)) {
             $_POST = $this->sanitiseArray($_POST);
         }
-        if($this->isClean($_REQUEST)) {
+        if ($this->isClean($_REQUEST)) {
             $_REQUEST = $this->sanitiseArray($_REQUEST);
         }
     }
 
     private function isClean($input)
     {
-        if($this->sanitiseArray($input) !== $input) {
+        if ($this->sanitiseArray($input) !== $input) {
             throw new \Core\ClientErrorException(400, ['message' => 'Invalid characters in request']);
         }
         return true;

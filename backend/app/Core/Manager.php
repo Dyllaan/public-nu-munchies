@@ -2,7 +2,6 @@
 
 /**
  * Abstract parent class for the middleare, endpoint manager classes
- * @author Louis Figes W21017657
  */
 
 namespace Core;
@@ -14,7 +13,7 @@ abstract class Manager extends GivesResponse
 
     private $items;
 
-    public function __construct() 
+    public function __construct()
     {
         $this->add();
     }
@@ -36,15 +35,18 @@ abstract class Manager extends GivesResponse
         $this->items[] = $item;
     }
 
-    public function hasItem($item) {
+    public function hasItem($item)
+    {
         return in_array($item, $this->items);
     }
 
-    public function hasKey($key) {
+    public function hasKey($key)
+    {
         return array_key_exists($key, $this->items);
     }
 
-    public function getItem($key) {
+    public function getItem($key)
+    {
         return $this->items[$key];
     }
 }

@@ -1,16 +1,14 @@
 <?php
 
 /**
- * @author Louis Figes W21017657
+ * class EndpointManager
  * Just to add endpoint to the application, to prevent the router file being updated too often
  */
 
 namespace App\Managers;
 
-use App\Endpoints\DeveloperEndpoint;
 use App\Endpoints\UserEndpoint;
 use Core\Manager;
-use Core\Util\EndpointUtil;
 use Core\HTTP\Classes\Request;
 
 class EndpointManager extends Manager
@@ -18,13 +16,13 @@ class EndpointManager extends Manager
 
     private $request;
 
-    public function __construct() 
+    public function __construct()
     {
         parent::__construct();
         $this->allocate();
     }
 
-    public function getRequest() 
+    public function getRequest()
     {
         if ($this->request == null) {
             return new Request($_SERVER['REQUEST_METHOD']);
@@ -38,11 +36,12 @@ class EndpointManager extends Manager
         $this->addItemWithKey('user', new UserEndpoint());
     }
 
-    public function allocate() {
-        if($this->hasKey($this->getRequest()->getMainEndpoint())) {
+    public function allocate()
+    {
+        if ($this->hasKey($this->getRequest()->getMainEndpoint())) {
             $endpoint = $this->getItem($this->getRequest()->getMainEndpoint());
             $handler = $endpoint->getSubEndpointHandler();
-            if($handler->hasSubEndpoint($this->getRequest()->getSubEndpoint())) {
+            if ($handler->hasSubEndpoint($this->getRequest()->getSubEndpoint())) {
                 $subEndpoint = $handler->getSubEndpoint($this->getRequest()->getSubEndpoint());
                 $subEndpoint->process($this->getRequest());
             } else {
@@ -52,6 +51,4 @@ class EndpointManager extends Manager
             $this->setResponse(404, 'Endpoint not found', ['endpoint' => $this->getRequest()->getMainEndpoint()]);
         }
     }
-
-    
 }

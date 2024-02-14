@@ -1,9 +1,9 @@
 <?php
 
 /**
+ * class SubEndpoint
  * Runs a specific sub endpoint
  * this reduces clutter in the endpoint class and increases abstraction
- * @author Louis Figes
  */
 
 namespace Core\Endpoint\SubEndpoint;
@@ -17,8 +17,8 @@ class SubEndpoint extends GivesResponse
     protected $method;
     protected $name;
     protected $attributes;
-    
-    public function __construct($db, $method, $name) 
+
+    public function __construct($db, $method, $name)
     {
         $this->db = $db;
         $this->method = $method;
@@ -26,38 +26,38 @@ class SubEndpoint extends GivesResponse
         $this->attributes = new EndpointAttributes();
     }
 
-    public function process($request) {
+    public function process($request)
+    {
         $this->getAttributes()->validate($request->getAttributes());
     }
 
-    public function getDb() 
+    public function getDb()
     {
         return $this->db;
     }
 
-    public function getMethod() 
+    public function getMethod()
     {
         return $this->method;
     }
 
-    public function getName() 
+    public function getName()
     {
         return $this->name;
     }
 
-    protected function setMethod($method) 
+    protected function setMethod($method)
     {
         $this->method = $method;
     }
 
-    protected function setName($name) 
+    protected function setName($name)
     {
         $this->name = $name;
     }
 
-    protected function getAttributes() 
+    protected function getAttributes()
     {
         return $this->attributes;
     }
 }
-

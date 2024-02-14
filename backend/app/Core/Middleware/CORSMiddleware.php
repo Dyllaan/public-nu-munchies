@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The aim of this class it to sanitise any parameters or variables BEFORE the program uses them inspired by Laravel's middleware
  * I think this is the best solution as it avoids doing it in each endpoint and it seems more secure this way
@@ -10,13 +11,13 @@ namespace Core\Middleware;
 
 class CORSMiddleware
 {
-    
-    public function __construct() 
+
+    public function __construct()
     {
         $this->handle();
     }
 
-    public function handle() 
+    public function handle()
     {
         header('Content-Type: application/json');
         header('Access-Control-Allow-Origin: *');

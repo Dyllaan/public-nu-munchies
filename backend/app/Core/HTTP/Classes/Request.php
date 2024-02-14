@@ -1,9 +1,11 @@
 <?php
+
 /**
+ * class Request
  * Request stores the request method and attributes so an endpoint can access them
- * @author Louis Figes
  * @generated Github CoPilot was used during the creation of this code
  */
+
 namespace Core\HTTP\Classes;
 
 use Core\Util\EndpointUtil;
@@ -24,7 +26,7 @@ class Request
      * Request constructor, sets the request method and attributes
      * @param $requestMethod
      */
-    public function __construct($requestMethod) 
+    public function __construct($requestMethod)
     {
         $this->requestMethod = $requestMethod;
         $this->parseRequest();
@@ -32,8 +34,7 @@ class Request
 
     private function parseRequest()
     {
-        switch($this->requestMethod) 
-        {
+        switch ($this->requestMethod) {
             case 'GET':
             case 'DELETE':
                 $this->attributes = $_GET;
@@ -72,10 +73,9 @@ class Request
         } elseif (strpos($contentType, 'multipart/form-data') !== false) {
             $this->attributes = $_POST;
         }
-
     }
 
-    public function getRequestMethod() 
+    public function getRequestMethod()
     {
         return $this->requestMethod;
     }
@@ -84,12 +84,12 @@ class Request
     {
         $this->attributes = $attributes;
     }
-    
+
     /**
      * getAttribute is used to get a specific attribute from the request
      * @generated Github CoPilot was used during the creation of this code
      */
-    public function getAttribute($key) 
+    public function getAttribute($key)
     {
         return isset($this->attributes[$key]) ? $this->attributes[$key] : null;
     }
@@ -97,7 +97,7 @@ class Request
     /**
      * hasAttribute is used to check if a specific attribute exists in the request
      */
-    public function hasAttribute($key) 
+    public function hasAttribute($key)
     {
         return isset($this->attributes[$key]);
     }
@@ -105,16 +105,18 @@ class Request
     /**
      * getAttributes is used to get all the attributes from the request
      */
-    public function getAttributes() 
+    public function getAttributes()
     {
         return $this->attributes;
     }
 
-    public function getMainEndpoint() {
+    public function getMainEndpoint()
+    {
         return EndpointUtil::getMainEndpointName();
     }
 
-    public function getSubEndpoint() {
+    public function getSubEndpoint()
+    {
         return EndpointUtil::getSubEndpointName();
     }
 }

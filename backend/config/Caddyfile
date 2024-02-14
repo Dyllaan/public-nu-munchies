@@ -3,13 +3,31 @@
 	frankenphp {
 		{$FRANKENPHP_CONFIG}
 	}
+	auto_https off
 }
 
 # Default Caddy configuration
-{$SERVER_NAME:localhost} {
-	log
+:80 {
+	log {
+		output stdout
+		format filter {
+			wrap console
+			fields {
+				request>headers delete
+				request>remote_ip delete
+				request>remote_port delete
+				request>client_ip delete
+				request>proto delete
+				request>host delete
+				resp_headers delete
+				duration delete
+				size delete
+				bytes_read delete
+			}
+		}
+	}
 	route {
-		root * /public
+		root * /app
 
 		# Add trailing slash for directory requests
 		@canonicalPath {

@@ -16,14 +16,15 @@ class Response implements \Core\HTTP\ResponseInterface
         $this->respond();
     }
 
-    public function respond() 
+    public function respond()
     {
-        header('HTTP/1.1 ' . $this->getResponseCode());
+        header('HTTP/2 ' . $this->getResponseCode());
         echo json_encode($this->buildResponse());
         exit;
     }
 
-    private function buildResponse() {
+    private function buildResponse()
+    {
         $r = [];
         if ($this->responseCode >= 400) {
             $r['status'] = "error";
@@ -36,7 +37,7 @@ class Response implements \Core\HTTP\ResponseInterface
         }
         return $r;
     }
-    
+
     public function isSuccess()
     {
         return $this->responseCode < 400;
@@ -56,5 +57,4 @@ class Response implements \Core\HTTP\ResponseInterface
     {
         return $this->message;
     }
-
 }

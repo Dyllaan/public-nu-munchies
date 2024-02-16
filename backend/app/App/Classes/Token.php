@@ -1,9 +1,11 @@
 <?php
+
 /**
  * Token is used to handle the JWT token in an object oriented way
  * @author Louis Figes
  * @generated Github CoPilot was used during the creation of this code
  */
+
 namespace App\Classes;
 
 use \Firebase\JWT\JWT;
@@ -13,18 +15,22 @@ class Token extends GivesResponse
 {
   private $valid;
   private $userId;
-  
-  public function __construct() 
+
+  private \AppConfig $appConfigInstance;
+
+  public function __construct()
   {
     $this->valid = false;
-    if($id = $this->validateToken()) {
-        $this->valid = true;
-        $this->userId = $id;
+    $this->appConfigInstance = new \AppConfig();
+
+    if ($id = $this->validateToken()) {
+      $this->valid = true;
+      $this->userId = $id;
     }
   }
   private function validateToken()
   {
-    $key = SECRET;
+    $key = $this->appConfigInstance->get('JWT_SECRET');
     $authorizationHeader = $this->getAuthorizationHeaders();
     if (substr($authorizationHeader, 0, 7) != 'Bearer ') {
       $this->setResponse(401, 'Invalid token3');
@@ -53,12 +59,12 @@ class Token extends GivesResponse
     return $authorizationHeader;
   }
 
-  public function isValid() 
+  public function isValid()
   {
     return $this->valid;
   }
 
-  public function getUserId() 
+  public function getUserId()
   {
     return $this->userId;
   }

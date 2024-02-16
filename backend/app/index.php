@@ -14,8 +14,10 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-define('SECRET', 'j332BPkxV9');
 
 include_once('API.php');
+
+// Load the composer autoloader
+require_once __DIR__ . '/vendor/autoload.php';
 
 $api = new API();

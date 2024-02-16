@@ -1,6 +1,6 @@
 services:
   php:
-    build: .
+    image: dunglas/frankenphp
     container_name: php-service
     ports:
       - "8080:80"

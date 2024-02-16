@@ -22,6 +22,14 @@ class User extends CrudModel implements CrudInterface
     private $token;
     private static $instance = null;
 
+    private \AppConfig $appConfigInstance;
+
+    public function __construct($db)
+    {
+        parent::__construct($db);
+        $this->appConfigInstance = new \AppConfig();
+    }
+
     public static function getInstance($db)
     {
         if (self::$instance === null) {
@@ -216,7 +224,7 @@ class User extends CrudModel implements CrudInterface
 
     private function generateJWT($id)
     {
-        $secretKey = SECRET;
+        $secretKey = $this->appConfigInstance->get('JWT_SECRET');
 
         $iat = time();
         $exp = strtotime('+5 hour', $iat);

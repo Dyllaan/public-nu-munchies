@@ -13,23 +13,27 @@ use Core\Database\Queries\InsertQuery;
 use Core\Database\Queries\UpdateQuery;
 use Core\Database\Queries\DeleteQuery;
 
+require_once __DIR__ . "/../Config/AppConfig.php";
+
 class Database
 {
     private $dbConnection;
 
-    private $dbName;
+
+    private $appConfigInstance;
 
     public function __construct($dbName)
     {
-        $this->dbName = $dbName;
-        $this->setDbConnection($dbName);
+        $this->appConfigInstance = new \AppConfig();
+
+        $this->setDbConnection();
     }
 
-    private function setDbConnection($dbName)
+    private function setDbConnection()
     {
         try {
-            // TODO: we will need to change this to use postgress + env variables to not expose our db url
-            $this->dbConnection = new \PDO('sqlite:' . $_SERVER['DOCUMENT_ROOT'] . "/db/" . $dbName);
+            $dbUrl = $this->appConfigInstance->get('DB_URL');
+            $this->dbConnection = new \PDO($dbUrl);
             $this->dbConnection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         } catch (\PDOException $e) {
             $error['message'] = "Database Connection Error";

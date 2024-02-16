@@ -2,6 +2,7 @@
 namespace Core\Util;
 
 class EndpointUtil {
+    // TODO: how does this work? it just strips away /api prefix?
     public static function parseRequestURI() {
         $url = $_SERVER["REQUEST_URI"];
         $url = parse_url($url, PHP_URL_PATH);

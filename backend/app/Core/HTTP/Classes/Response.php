@@ -18,7 +18,7 @@ class Response implements \Core\HTTP\ResponseInterface
 
     public function respond()
     {
-        header('HTTP/2 ' . $this->getResponseCode());
+        header('HTTP/1.1 ' . $this->getResponseCode());
         echo json_encode($this->buildResponse());
         exit;
     }

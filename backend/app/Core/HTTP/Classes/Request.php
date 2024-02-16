@@ -63,6 +63,8 @@ class Request
              * User: Henrik P. Hessel
              * User: Your Common Sense
              */
+
+            // TODO: json_validate is valid in php 8.3
             $json = file_get_contents('php://input');
             $this->attributes = json_decode($json, true);
             if (json_last_error() !== JSON_ERROR_NONE) {

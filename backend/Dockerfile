@@ -11,17 +11,17 @@ RUN xcaddy build \
     --with github.com/dunglas/frankenphp/caddy=./caddy/ \
     --with github.com/ueffel/caddy-brotli 
 
-
-
 FROM dunglas/frankenphp AS runner
 
 RUN install-php-extensions \
     pdo_pgsql \
     pgsql
 
-
 # Replace the official binary by the one contained your custom modules
 COPY --from=builder /usr/local/bin/frankenphp /usr/local/bin/frankenphp
 
+COPY config/Caddyfile /etc/caddy/Caddyfile
 
 COPY config/php.ini.development $PHP_INI_DIR/php.ini
+
+COPY ./app /app

@@ -1,0 +1,11 @@
+{
+  "name": "nu-munchies",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "cd frontend && npm run dev & cd backend && docker-compose up"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

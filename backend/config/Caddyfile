@@ -4,6 +4,7 @@
 		{$FRANKENPHP_CONFIG}
 	}
 	auto_https off
+	admin off
 }
 
 # Default Caddy configuration

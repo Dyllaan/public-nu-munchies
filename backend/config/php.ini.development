@@ -1,5 +1,0 @@
-[Date]
-date.timezone="UTC"
-expose_php= Off
-extension=pdo_pgsql
-extension=pgsql

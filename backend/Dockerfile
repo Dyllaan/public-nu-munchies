@@ -22,6 +22,4 @@ COPY --from=builder /usr/local/bin/frankenphp /usr/local/bin/frankenphp
 
 COPY config/Caddyfile /etc/caddy/Caddyfile
 
-COPY config/php.ini.development $PHP_INI_DIR/php.ini
-
 COPY ./app /app

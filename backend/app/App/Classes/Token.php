@@ -37,24 +37,27 @@ class Token extends GivesResponse
     }
     $jwt = trim(substr($authorizationHeader, 7));
 
+    $userId = null;
+
     try {
       $decodedJWT = JWT::decode($jwt, new \Firebase\JWT\Key($key, 'HS256'));
-      return $decodedJWT->id;
+      $userId = $decodedJWT;
     } catch (\Firebase\JWT\ExpiredException $e) {
       $this->setResponse(401, 'Token expired');
     } catch (\Exception $e) {
       $this->setResponse(401, 'Invalid token');
     }
+    return $userId;
   }
 
   private function getAuthorizationHeaders()
   {
-    $allHeaders = getallheaders();
-    $authorizationHeader = "";
-    if (array_key_exists('Authorization', $allHeaders)) {
-      $authorizationHeader = $allHeaders['Authorization'];
-    } elseif (array_key_exists('authorization', $allHeaders)) {
-      $authorizationHeader = $allHeaders['authorization'];
+    if (array_key_exists('HTTP_AUTHORIZATION', $_SERVER)) {
+
+      $authorizationHeader = $_SERVER['HTTP_AUTHORIZATION'];
+      /// uncomment if you want to see the headers is passed
+      //var_dump($authorizationHeader);
+
     }
     return $authorizationHeader;
   }
@@ -67,5 +70,19 @@ class Token extends GivesResponse
   public function getUserId()
   {
     return $this->userId;
+  }
+
+  // use this if you need to see the headers
+
+  function getCustomHeaders()
+  {
+    $headers = array();
+    foreach ($_SERVER as $key => $value) {
+      if (preg_match("/^HTTP_/", $key)) {
+        $key = preg_replace("/^HTTP_/", "", $key);
+        $headers[$key] = $value;
+      }
+    }
+    return $headers;
   }
 }

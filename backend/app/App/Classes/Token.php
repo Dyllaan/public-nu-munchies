@@ -33,7 +33,7 @@ class Token extends GivesResponse
     $key = $this->appConfigInstance->get('JWT_SECRET');
     $authorizationHeader = $this->getAuthorizationHeaders();
     if (substr($authorizationHeader, 0, 7) != 'Bearer ') {
-      $this->setResponse(401, 'Invalid token3');
+      $this->setResponse(401, 'Bearer token not found!');
     }
     $jwt = trim(substr($authorizationHeader, 7));
 
@@ -41,7 +41,7 @@ class Token extends GivesResponse
 
     try {
       $decodedJWT = JWT::decode($jwt, new \Firebase\JWT\Key($key, 'HS256'));
-      $userId = $decodedJWT;
+      $userId = $decodedJWT->id;
     } catch (\Firebase\JWT\ExpiredException $e) {
       $this->setResponse(401, 'Token expired');
     } catch (\Exception $e) {

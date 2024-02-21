@@ -41,7 +41,7 @@ class User extends CrudModel implements CrudInterface
     public function exists()
     {
         if ($this->getId() != null) {
-            $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["user_id = '" . $this->getId() . "'"])->execute();
+            $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["id = '" . $this->getId() . "'"])->execute();
             if (count($data) == 0) {
                 return false;
             } else {
@@ -69,7 +69,7 @@ class User extends CrudModel implements CrudInterface
             if (!$this->checkPassword($this->password, $data[0]['password'])) {
                 $this->setResponse(401, "Invalid password");
             } else {
-                $this->setId($data[0]['user_id']);
+                $this->setId($data[0]['id']);
                 $this->setName($data[0]['name']);
             }
         }
@@ -141,7 +141,7 @@ class User extends CrudModel implements CrudInterface
 
     public function get()
     {
-        $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["user_id = '" . $this->getId() . "'"])->execute();
+        $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["id = '" . $this->getId() . "'"])->execute();
         if (count($data) == 0) {
             $this->setResponse(400, "User does not exist");
         } else {
@@ -156,7 +156,7 @@ class User extends CrudModel implements CrudInterface
             $this->setResponse(400, "User does not exist");
         }
         // TODO: lets create constants of the table name and columns and then just reference them here so it is not hardcoded
-        $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["user_id = '" . $this->getId() . "'"])->execute();
+        $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["id = '" . $this->getId() . "'"])->execute();
         if (count($data) == 0) {
             $this->setResponse(400, "User does not exist");
         } else {
@@ -183,7 +183,7 @@ class User extends CrudModel implements CrudInterface
     public function delete()
     {
         if ($this->exists()) {
-            $this->getDb()->createDelete()->from('users')->where(["user_id = '" . $this->getId() . "'"])->execute();
+            $this->getDb()->createDelete()->from('users')->where(["id = '" . $this->getId() . "'"])->execute();
             return ['message' => "User deleted"];
         } else {
             $this->setResponse(400, "User does not exist");

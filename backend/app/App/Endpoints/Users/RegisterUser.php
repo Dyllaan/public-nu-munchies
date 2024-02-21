@@ -11,9 +11,9 @@ use App\Classes\User;
 
 class RegisterUser extends SubEndpoint
 {
-    public function __construct($db) 
+    public function __construct() 
     {
-        parent::__construct($db, 'POST', 'register');
+        parent::__construct('POST', 'register');
         $this->getAttributes()->addRequiredStrings(['name', 'email', 'password']);
     }
 

@@ -19,16 +19,16 @@ class UserEndpoint extends Endpoint
 
     public function __construct()
     {
-        parent::__construct();
-        $this->addSubEndpoint(new RegisterUser($this->getDb()));
-        $this->addSubEndpoint(new EditUser($this->getDb()));
-        $this->addSubEndpoint(new LoginUser($this->getDb()));
+        parent::__construct('GET', 'user');
+        $this->addSubEndpoint(new RegisterUser());
+        $this->addSubEndpoint(new EditUser());
+        $this->addSubEndpoint(new LoginUser());
+        $this->setRequiresAuth(true);
     }
 
     public function process($request)
     {
-        $user = User::getInstance($this->getDb());
-        $user->verifyToken();
-        $this->setResponse(200, 'User retrieved', $user->toArray());
+        parent::process($request);
+        $this->setResponse(200, 'User retrieved', $this->getUser()->toArray());
     }
 }

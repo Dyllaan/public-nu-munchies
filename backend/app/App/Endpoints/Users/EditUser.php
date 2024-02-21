@@ -6,15 +6,15 @@
  */
 namespace App\Endpoints\Users;
 
-use Core\Endpoint\SubEndpoint\AuthSubEndpoint;
+use Core\Endpoint\SubEndpoint\SubEndpoint;
 use App\Classes\User;
 
-class EditUser extends AuthSubEndpoint
+class EditUser extends SubEndpoint
 {
 
-    public function __construct($db) 
+    public function __construct() 
     {
-        parent::__construct($db, 'PUT', 'edit');
+        parent::__construct('PUT', 'edit');
         $this->getAttributes()->addAllowedStrings(['name', 'email', 'password']);
     }
 

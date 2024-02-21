@@ -33,7 +33,12 @@ class EndpointManager extends Manager
 
     protected function add()
     {
-        $this->addItemWithKey('user', new UserEndpoint());
+        $this->addEndpoint(new UserEndpoint());
+    }
+
+    public function addEndpoint($endpoint)
+    {
+        $this->addItemWithKey($endpoint->getUrl(), $endpoint);
     }
 
     public function allocate()
@@ -45,7 +50,11 @@ class EndpointManager extends Manager
                 $subEndpoint = $handler->getSubEndpoint($this->getRequest()->getSubEndpoint());
                 $subEndpoint->process($this->getRequest());
             } else {
-                $endpoint->process($this->getRequest());
+                if($this->getRequest()->getRequestMethod() == $endpoint->getMethod()) {
+                    $endpoint->process($this->getRequest());
+                } else {
+                    $this->setResponse(405, 'Method not allowed', ['method' => $this->getRequest()->getRequestMethod()]);
+                }
             }
         } else {
             $this->setResponse(404, 'Endpoint not found', ['endpoint' => $this->getRequest()->getMainEndpoint()]);

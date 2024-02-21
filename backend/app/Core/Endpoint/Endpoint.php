@@ -5,37 +5,22 @@
  */
 namespace Core\Endpoint;
 
-use Core\HTTP\Classes\GivesResponse;
+use Core\Endpoint\EndpointBase;
 use Core\Util\EndpointUtil;
 use Core\Endpoint\SubEndpoint\SubEndpointHandler;
 use Core\Database\Database;
 
-abstract class Endpoint extends GivesResponse
+abstract class Endpoint extends EndpointBase
 {
-    private $db;
     private $subEndpointHandler;
     private $request;
 
-    public function __construct() 
+    public function __construct($method, $url) 
     {
-        $this->setupDatabase();
+        parent::__construct();
+        $this->setMethod($method);
+        $this->setUrl($url);
         $this->subEndpointHandler = new SubEndpointHandler();
-    }
-    
-    abstract public function process($request);
-
-    protected function setDB($dbName) 
-    {
-        $this->db = new Database($dbName);
-    }
-
-    protected function setupDatabase() 
-    {
-        $this->setDB('nu-munchies.db');
-    }
-
-    public function getDb() {
-        return $this->db;
     }
 
     public function getSubEndpointHandler() {

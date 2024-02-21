@@ -26,7 +26,7 @@ class SubEndpointHandler extends GivesResponse
     public function getSubEndpoint($subEndpointName)
     {
         foreach ($this->subEndpoints as $subEndpoint) {
-            if ($subEndpoint->getName() === $subEndpointName) {
+            if ($subEndpoint->getUrl() === $subEndpointName) {
                 return $subEndpoint;
             }
         }
@@ -36,7 +36,7 @@ class SubEndpointHandler extends GivesResponse
     public function hasSubEndpoint($subEndpointName)
     {
         foreach ($this->subEndpoints as $subEndpoint) {
-            if ($subEndpoint->getName() === $subEndpointName) {
+            if ($subEndpoint->getUrl() === $subEndpointName) {
                 return true;
             }
         }

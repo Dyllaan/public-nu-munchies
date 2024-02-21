@@ -12,7 +12,6 @@ namespace App\Classes;
 use Firebase\JWT\JWT;
 use Core\Database\CrudModel;
 use Core\Database\CrudInterface;
-use \App\Classes\Token;
 
 class User extends CrudModel implements CrudInterface
 {
@@ -128,7 +127,7 @@ class User extends CrudModel implements CrudInterface
     public function save()
     {
         if ($this->checkSavable()) {
-            $this->password = password_hash($this->password, PASSWORD_DEFAULT);
+            $this->password = password_hash($this->password, PASSWORD_BCRYPT);
             $id = $this->getDb()->createInsert()->into('users')->cols('name, email, password')->values([$this->getName(), $this->getEmail(), $this->getPassword()])->execute();
             if ($id != null) {
                 $this->setId($id);
@@ -169,7 +168,7 @@ class User extends CrudModel implements CrudInterface
                 $changed['email'] = $this->getEmail();
             }
             if ($this->getPassword() != null) {
-                $changed['password'] = password_hash($this->getPassword(), PASSWORD_DEFAULT);
+                $changed['password'] = password_hash($this->getPassword(), PASSWORD_BCRYPT);
             }
             if ($changed != []) {
                 $this->getDb()->createUpdate()->table('users')->set($changed)->where(["user_id = '" . $this->getId() . "'"])->execute();
@@ -210,18 +209,6 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
-    public function verifyToken()
-    {
-        $token = new Token();
-        if ($token->isValid()) {
-            $this->setId($token->getUserId());
-            $this->get();
-            return true;
-        } else {
-            $this->setResponse(400, "Invalid token");
-        }
-    }
-
     private function generateJWT($id)
     {
         $secretKey = $this->appConfigInstance->get('JWT_SECRET');
@@ -237,6 +224,18 @@ class User extends CrudModel implements CrudInterface
         ];
         $jwt = JWT::encode($payload, $secretKey, 'HS256');
         return $jwt;
+    }
+
+    public function verifyToken()
+    {
+        $token = new Token();
+        if ($token->isValid()) {
+            $this->setId($token->getUserId());
+            $this->get();
+            return true;
+        } else {
+            $this->setResponse(400, "Invalid token");
+        }
     }
 
     public function getToken()

@@ -11,9 +11,9 @@ use App\Classes\User;
 
 class LoginUser extends SubEndpoint
 {
-    public function __construct($db) 
+    public function __construct() 
     {
-        parent::__construct($db, 'POST', 'login');
+        parent::__construct('POST', 'login');
         $this->getAttributes()->addRequiredStrings(['email', 'password']);
     }
 

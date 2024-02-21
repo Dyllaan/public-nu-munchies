@@ -28,6 +28,7 @@ class Token extends GivesResponse
       $this->userId = $id;
     }
   }
+
   private function validateToken()
   {
     $key = $this->appConfigInstance->get('JWT_SECRET');
@@ -53,13 +54,9 @@ class Token extends GivesResponse
   private function getAuthorizationHeaders()
   {
     if (array_key_exists('HTTP_AUTHORIZATION', $_SERVER)) {
-
-      $authorizationHeader = $_SERVER['HTTP_AUTHORIZATION'];
-      /// uncomment if you want to see the headers is passed
-      //var_dump($authorizationHeader);
-
+      return $_SERVER['HTTP_AUTHORIZATION'];
     }
-    return $authorizationHeader;
+    $this->setResponse(401, 'Authorization via Bearer token is required!');
   }
 
   public function isValid()

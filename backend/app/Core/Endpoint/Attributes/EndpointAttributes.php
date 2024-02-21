@@ -89,26 +89,32 @@ class EndpointAttributes extends GivesResponse
     private function validateAllowedAttributes($requestAttributes)
     {
         $allowedAttributes = $this->getAll();
-
-        if (empty($allowedAttributes)) {
-            return;
+    
+        if (empty($allowedAttributes) && !empty($requestAttributes)) {
+            foreach ($requestAttributes as $name => $value) {
+                $this->setResponse(400, 'Disallowed attribute', ['disallowed' => $name]);
+                return;
+            }
         }
-
+    
         if (!is_array($requestAttributes)) {
             $this->setResponse(400, 'Request Must be an array', ['invalid' => $requestAttributes]);
+            return;
         }
-
+    
         foreach ($requestAttributes as $name => $value) {
             if (!isset($allowedAttributes[$name])) {
                 $this->setResponse(400, 'Disallowed attribute', ['disallowed' => $name]);
+                continue;
             }
-
+    
             $attribute = $this->getAttributeByName($name);
             if (!$attribute->isValid($name, $value)) {
                 $this->setResponse(400, 'Invalid attribute', ['invalid' => $name]);
             }
         }
     }
+    
 
     public function getExclusiveAttributes()
     {

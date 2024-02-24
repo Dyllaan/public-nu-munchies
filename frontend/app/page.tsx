@@ -1,5 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { RocketIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -13,6 +14,9 @@ export default function Home() {
         </AlertDescription>
       </Alert>
       <h1 className="text-4xl font-bold">Welcome to Frontend</h1>
+      <Link href="/demo" className="mt-6 text-lg underline">
+        Go to Demo Page
+      </Link>
     </main>
   );
 }

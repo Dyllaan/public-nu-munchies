@@ -15,11 +15,12 @@ export const NestedComponent: React.FC<Props> = ({ name }) => {
         find it under the appropriate folder in the app/demo/components folder.
       </p>
       <button
+        className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
         onClick={() => {
           callSomeApi();
         }}
       >
-        Call Some API
+        Call Some API (check browser console)
       </button>
     </>
   );

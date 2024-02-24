@@ -25,7 +25,7 @@ export default function Login() {
         }}
         className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
       >
-        Change name
+        Change name to John Doe
       </button>
     </main>
   );

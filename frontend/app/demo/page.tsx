@@ -6,7 +6,7 @@ import { NestedComponent } from "./components/nested-component";
 // import useState hook directly from react
 import { useState } from "react";
 
-export default function Home() {
+export default function DemoPage() {
   const [name, setName] = useState("Filip");
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">

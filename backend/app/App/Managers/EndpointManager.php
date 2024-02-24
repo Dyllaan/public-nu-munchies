@@ -10,6 +10,7 @@ namespace App\Managers;
 use App\Endpoints\UserEndpoint;
 use Core\Manager;
 use Core\HTTP\Classes\Request;
+use App\Endpoints\UBIntegration\ItemUpload;
 
 class EndpointManager extends Manager
 {
@@ -34,6 +35,8 @@ class EndpointManager extends Manager
     protected function add()
     {
         $this->addEndpoint(new UserEndpoint());
+        $this->addEndpoint(new ItemUpload());
+
     }
 
     public function addEndpoint($endpoint)

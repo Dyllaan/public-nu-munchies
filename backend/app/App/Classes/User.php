@@ -63,7 +63,7 @@ class User extends CrudModel implements CrudInterface
         $cons[] = "email = '$this->email'";
         $data = $this->getDb()->createSelect()->cols("*")->from("users")->where($cons)->execute();
         if (count($data) == 0) {
-            $this->setResponse(401, "Invalid email");
+            $this->setResponse(401, "Account not found!");
         } else {
             if (!$this->checkPassword($this->password, $data[0]['password'])) {
                 $this->setResponse(401, "Invalid password");

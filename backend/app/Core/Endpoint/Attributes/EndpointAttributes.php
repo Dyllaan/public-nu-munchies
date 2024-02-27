@@ -37,7 +37,7 @@ class EndpointAttributes extends GivesResponse
         }
 
         if (!is_array($requestAttributes)) {
-            $this->setResponse(400, 'Request Must be an array', ['invalid' => $requestAttributes]);
+            $this->setResponse(400, 'Invalid Request Attributes', ['expected' => array_keys($this->getRequiredAttributes())]);
         }
 
         $intersection = array_intersect_key($requestAttributes, array_flip(array_keys($this->getRequiredAttributes())));
@@ -65,7 +65,7 @@ class EndpointAttributes extends GivesResponse
             return;
         }
         if (!is_array($requestAttributes)) {
-            $this->setResponse(400, 'Request Must be an array', ['invalid' => $requestAttributes]);
+            $this->setResponse(400, 'Invalid Request Attributes', ['expected' => array_keys($this->getExclusiveAttributes())]);
         }
 
         $exclusiveNames = array_keys($this->getExclusiveAttributes());

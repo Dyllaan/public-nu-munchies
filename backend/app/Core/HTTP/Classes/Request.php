@@ -9,6 +9,7 @@
 namespace Core\HTTP\Classes;
 
 use Core\Util\EndpointUtil;
+use Core\HTTP\Factories\ResponseFactory;
 
 class Request
 {
@@ -41,6 +42,7 @@ class Request
                 break;
             case 'POST':
             case 'PUT':
+            case 'OPTIONS':
                 $this->handleBody();
                 break;
             default:

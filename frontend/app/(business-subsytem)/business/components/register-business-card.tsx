@@ -10,12 +10,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+
 import { toast } from "sonner";
 
 export const RegisterBusinessCard = () => {
-  const showAlert = () => {};
+  const showAlert = () => {
+    toast.success("Business request submitted successfully");
+  };
   return (
     <Card className="py-4 md:max-w-[550px]">
       <CardHeader>
@@ -32,12 +36,7 @@ export const RegisterBusinessCard = () => {
         <Input placeholder="Business Phone Number" />
         <Input placeholder="Business Email" />
         <Input placeholder="Business Website" />
-        <Button
-          className="py-6 text-md"
-          onClick={() => {
-            toast.success("Business request submitted successfully");
-          }}
-        >
+        <Button className="py-6 text-md" onClick={showAlert}>
           Submit
         </Button>
       </CardContent>

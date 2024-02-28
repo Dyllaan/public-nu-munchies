@@ -1,6 +1,7 @@
 // form will definitely need to use javascript, therefore we need to use the "use client"
 "use client";
 
+// import all shadcn components
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,7 +20,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
+
 import {
   Select,
   SelectContent,
@@ -27,7 +30,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { Textarea } from "@/components/ui/textarea";
+
+// these are libraries for validation
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -56,10 +62,12 @@ const formSchema = z.object({
 type UserInput = z.infer<typeof formSchema>;
 
 export const RegisterBusinessCard = () => {
+  // defibining the form logic using react-hook-form library
   const form = useForm<UserInput>({
     resolver: zodResolver(formSchema),
   });
 
+  // our main func to handle the data after submit
   const handleData = (data: UserInput) => {
     toast.success("Business request submitted successfully", {
       description: "Debug Data: " + JSON.stringify(data),
@@ -78,6 +86,8 @@ export const RegisterBusinessCard = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-y-4">
+            {/* these could be generated via some for loop but for now i am just writing them manually to keep clear what i am doing */}
+            {/* these wrapper components are needed for automatic validation and error messages */}
             <FormField
               control={form.control}
               name="businessName"
@@ -91,6 +101,7 @@ export const RegisterBusinessCard = () => {
                 </FormItem>
               )}
             />
+            {/* there is another one */}
             <FormField
               control={form.control}
               name="businessDescription"

@@ -87,7 +87,7 @@ export const RegisterBusinessCard = () => {
                   <FormControl>
                     <Input placeholder="My Restaurant" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -103,7 +103,7 @@ export const RegisterBusinessCard = () => {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -116,7 +116,7 @@ export const RegisterBusinessCard = () => {
                   <FormControl>
                     <Input placeholder="1234 Main St" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -141,7 +141,7 @@ export const RegisterBusinessCard = () => {
                     </SelectContent>
                   </Select>
 
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -154,7 +154,7 @@ export const RegisterBusinessCard = () => {
                   <FormControl>
                     <Input placeholder="123-456-7890" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -167,7 +167,7 @@ export const RegisterBusinessCard = () => {
                   <FormControl>
                     <Input placeholder="business@example.com" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -180,7 +180,7 @@ export const RegisterBusinessCard = () => {
                   <FormControl>
                     <Input placeholder="www.example.com" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />

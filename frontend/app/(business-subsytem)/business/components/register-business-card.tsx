@@ -43,6 +43,7 @@ import { toast } from "sonner";
 // zod is a library for data validation
 import { z } from "zod";
 
+// this is definition of the form schema via zod library for validation
 const formSchema = z.object({
   businessName: z
     .string()

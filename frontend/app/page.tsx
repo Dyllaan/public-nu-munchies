@@ -17,6 +17,12 @@ export default function Home() {
       <Link href="/demo" className="mt-6 text-lg underline">
         Go to Demo Page
       </Link>
+      <Link href="/signin" className="mt-6 text-lg underline">
+        Go to Login Page
+      </Link>
+      <Link href="/register" className="mt-6 text-lg underline">
+        Go to Register page
+      </Link>
     </main>
   );
 }

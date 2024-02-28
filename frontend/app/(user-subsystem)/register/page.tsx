@@ -6,7 +6,8 @@ import { useState } from "react";
 import "../css/user.css";
 
 export default function Register() {
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,7 +15,7 @@ export default function Register() {
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    await register(name, email, password);
+    await register(firstName, lastName, email, password);
   }
 
   return (
@@ -22,9 +23,15 @@ export default function Register() {
       <h1 className="text-4xl font-bold">Register Page</h1>
       <form onSubmit={(e) => handleLogin(e)} className="">
         <input
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setFirstName(e.target.value)}
           type="text"
-          placeholder="Name"
+          placeholder="First Name"
+          className="border-2 border-gray-300 rounded-md px-4 py-2 mt-4"
+        />
+        <input
+          onChange={(e) => setLastName(e.target.value)}
+          type="text"
+          placeholder="Last Name"
           className="border-2 border-gray-300 rounded-md px-4 py-2 mt-4"
         />
         <input

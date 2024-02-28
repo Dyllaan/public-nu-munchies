@@ -14,14 +14,15 @@ class RegisterUser extends SubEndpoint
     public function __construct() 
     {
         parent::__construct('POST', 'register');
-        $this->getAttributes()->addRequiredStrings(['name', 'email', 'password']);
+        $this->getAttributes()->addRequiredStrings(['first_name', 'last_name', 'email', 'password']);
     }
 
     public function process($request)
     {
         parent::process($request);
         $user = new User($this->getDb());
-        $user->setName($request->getAttribute('name'));
+        $user->setFirstName($request->getAttribute('first_name'));
+        $user->setLastName($request->getAttribute('last_name'));
         $user->setEmail($request->getAttribute('email'));
         $user->setPassword($request->getAttribute('password'));
         $user->register($this->getDb());

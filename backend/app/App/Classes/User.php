@@ -15,7 +15,8 @@ use Core\Database\CrudInterface;
 
 class User extends CrudModel implements CrudInterface
 {
-    private $name;
+    private $firstName;
+    private $lastName;
     private $email;
     private $password;
     private $token;
@@ -69,7 +70,8 @@ class User extends CrudModel implements CrudInterface
                 $this->setResponse(401, "Invalid password");
             } else {
                 $this->setId($data[0]['id']);
-                $this->setName($data[0]['name']);
+                $this->setFirstName($data[0]['first_name']);
+                $this->setLastName($data[0]['last_name']);
             }
         }
     }
@@ -89,8 +91,12 @@ class User extends CrudModel implements CrudInterface
 
         // TODO: maybe lets predefine these messages in some other file as constants and then just reference to them ie. $errorMessages['missingName']
 
-        if (empty($this->getName())) {
-            $errors[] = "Missing name";
+        if (empty($this->getFirstName())) {
+            $errors[] = "Missing first name";
+        }
+
+        if (empty($this->getLastName())) {
+            $errors[] = "Missing last name";
         }
 
         if (empty($this->getEmail())) {
@@ -111,10 +117,16 @@ class User extends CrudModel implements CrudInterface
             $errors[] = "Email must be less than 60 characters";
         }
 
-        if (strlen($this->getName()) < 3) {
-            $errors[] = "Name must be at least 3 characters";
-        } elseif (strlen($this->getName()) > 30) {
-            $errors[] = "Name must be less than 30 characters";
+        if (strlen($this->getFirstName()) < 3) {
+            $errors[] = "First name must be at least 3 characters";
+        } elseif (strlen($this->getFirstName()) > 30) {
+            $errors[] = "First name must be less than 30 characters";
+        }
+
+        if (strlen($this->getLastName()) < 3) {
+            $errors[] = "Last name must be at least 3 characters";
+        } elseif (strlen($this->getLastName()) > 30) {
+            $errors[] = "Last name must be less than 30 characters";
         }
 
         if (!empty($errors)) {
@@ -128,7 +140,7 @@ class User extends CrudModel implements CrudInterface
     {
         if ($this->checkSavable()) {
             $this->password = password_hash($this->password, PASSWORD_BCRYPT);
-            $id = $this->getDb()->createInsert()->into('users')->cols('name, email, password')->values([$this->getName(), $this->getEmail(), $this->getPassword()])->execute();
+            $id = $this->getDb()->createInsert()->into('users')->cols('first_name, last_name, email, password')->values([$this->getFirstName(), $this->getLastName(), $this->getEmail(), $this->getPassword()])->execute();
             if ($id != null) {
                 $this->setId($id);
                 return $this->toArray();
@@ -144,7 +156,8 @@ class User extends CrudModel implements CrudInterface
         if (count($data) == 0) {
             $this->setResponse(400, "User does not exist");
         } else {
-            $this->setName($data[0]['name']);
+            $this->setFirstName($data[0]['first_name']);
+            $this->setLastName($data[0]['last_name']);
             $this->setEmail($data[0]['email']);
         }
     }
@@ -161,8 +174,11 @@ class User extends CrudModel implements CrudInterface
         } else {
             $changed = [];
             // TODO: i am wondering if we can make this if statement bit more cleaner
-            if ($this->getName() != $data[0]['name']) {
-                $changed['name'] = $this->getName();
+            if ($this->getFirstName() != $data[0]['first_name']) {
+                $changed['first_name'] = $this->getFirstName();
+            }
+            if ($this->getLastName() != $data[0]['last_name']) {
+                $changed['last_name'] = $this->getLastName();
             }
             if ($this->getEmail() != $data[0]['email']) {
                 $changed['email'] = $this->getEmail();
@@ -192,8 +208,9 @@ class User extends CrudModel implements CrudInterface
     public function toArray()
     {
         $user['user'] = [
-            'name' => $this->name,
-            'email' => $this->email,
+            'first_name' => $this->getFirstName(),
+            'last_name' => $this->getLastName(),
+            'email' => $this->getEmail(),
         ];
         $jwt = $this->generateJWT($this->getId());
         $user['jwt'] = $jwt;
@@ -248,14 +265,24 @@ class User extends CrudModel implements CrudInterface
         $this->token = $jwt;
     }
 
-    public function getName()
+    public function getFirstName()
     {
-        return $this->name;
+        return $this->firstName;
     }
 
-    public function setName($name)
+    public function setFirstName($firstName)
     {
-        $this->name = $name;
+        $this->firstName = $firstName;
+    }
+
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
     }
 
     public function getEmail()

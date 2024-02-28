@@ -11,7 +11,7 @@ namespace Core\Database\Queries;
 
 class InsertQuery extends \Core\Database\Query implements \Core\Database\QueryInterface
 {
-    private $cols;
+    private string $cols;
     private $values = [];
     private $parameters = [];
 

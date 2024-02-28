@@ -6,12 +6,12 @@ import { useEffect } from "react";
  * Rehydrates the user subsystem on the client side
  */
 
-type ProviderProps = {
+type AuthProviderProps = {
   children: React.ReactNode;
 };
 
-export default function AuthProvider({ children }: ProviderProps) {
-  const { getCurrentUser, user } = useUserSubsystem();
+export default function AuthProvider({ children }: AuthProviderProps) {
+  const { getCurrentUser, user, showMessages } = useUserSubsystem();
 
   useEffect(() => {
     if (!user && localStorage.getItem("token")) {

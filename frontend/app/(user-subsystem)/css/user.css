@@ -15,4 +15,12 @@
   form input {
     @apply m-2 p-2 rounded-lg bg-slate-300;
   }
+
+  .success {
+    @apply bg-green-500;
+  }
+
+  .error {
+    @apply bg-red-500;
+  }
 }

@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 
 import "../assets/globals.css";
 
-import AuthProvider from "./(user-subsystem)/components/Provider";
+import AuthProvider from "./(user-subsystem)/components/AuthProvider";
 
 import { Toaster } from "@/components/ui/sonner";
 

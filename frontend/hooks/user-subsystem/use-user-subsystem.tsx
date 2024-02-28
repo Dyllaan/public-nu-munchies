@@ -3,8 +3,7 @@ import { useAtom } from "jotai";
 import { UserState, userAtom } from "@/stores/auth";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import SuccessAlert from "@/app/(user-subsystem)/components/SuccessAlert";
-import ErrorAlert from "@/app/(user-subsystem)/components/ErrorAlert";
+import UserAlert from "@/app/(user-subsystem)/components/UserAlert";
 
 /**
  * @author Louis Figes
@@ -13,25 +12,10 @@ import ErrorAlert from "@/app/(user-subsystem)/components/ErrorAlert";
 export const useUserSubsystem = () => {
   const [user, setUser] = useAtom(userAtom);
   const [loading, setLoading] = useState(false);
-  const [successMessages, setSuccessMessages] = useState<string[]>([]);
-  const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const router = useRouter();
 
   const setUserState = ({ first_name, last_name, email, token }: { first_name: string; last_name: string; email: string; token: string }) => {
     setUser({ firstName: first_name, lastName: last_name, email, token });
-  };
-
-  const showMessages = () => {
-    if (successMessages.length > 0) {
-      successMessages.map((message) => {
-        <SuccessAlert message={message} />;
-      });
-    }
-    if (errorMessages.length > 0) {
-      errorMessages.map((message) => {
-        <ErrorAlert message={message} />;
-      });
-    }
   };
 
   const login = async (email: string, password: string) => {
@@ -47,8 +31,8 @@ export const useUserSubsystem = () => {
       router.push("/profile");
     } catch (error: any) {
       console.error("Login failed:", error);
-      setErrorMessages(error.response.data.message);
       setLoading(false);
+      return error.response.data.message;
     }
   };
 
@@ -66,8 +50,8 @@ export const useUserSubsystem = () => {
       router.push("/profile");
     } catch (error: any) {
       console.error("Register failed:", error);
-      setErrorMessages(error.response.data.message);
       setLoading(false);
+      return error.response.data.message;
     }
   };
 
@@ -93,6 +77,5 @@ export const useUserSubsystem = () => {
     register,
     user,
     loading,
-    showMessages,
   };
 };

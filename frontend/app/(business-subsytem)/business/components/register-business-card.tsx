@@ -1,3 +1,6 @@
+// form will definitely need to use javascript, therefore we need to use the "use client"
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,8 +12,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 export const RegisterBusinessCard = () => {
+  const showAlert = () => {};
   return (
     <Card className="py-4 md:max-w-[550px]">
       <CardHeader>
@@ -27,7 +32,14 @@ export const RegisterBusinessCard = () => {
         <Input placeholder="Business Phone Number" />
         <Input placeholder="Business Email" />
         <Input placeholder="Business Website" />
-        <Button className="py-6 text-md">Submit</Button>
+        <Button
+          className="py-6 text-md"
+          onClick={() => {
+            toast.success("Business request submitted successfully");
+          }}
+        >
+          Submit
+        </Button>
       </CardContent>
       <CardFooter>
         <p className="text-center text-gray-500 text-sm">

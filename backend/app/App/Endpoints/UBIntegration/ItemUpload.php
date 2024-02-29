@@ -1,8 +1,12 @@
 <?php
 
 /**
- * class TestEndpoint
- * Delete later...
+ * class ItemUpload
+ * @author Cameron Bramley w21020682
+ * 
+ * Used by businesses to insert a new item into the items database.
+ * 
+ * @generated ChatGPT was used to help understand and use the the InsertQuery and Database classes developed by Louis.
  */
 
 namespace App\Endpoints\UBIntegration;
@@ -10,40 +14,25 @@ namespace App\Endpoints\UBIntegration;
 
 use Core\Endpoint\Endpoint;
 use Core\HTTP\Classes\Request;
+use Core\Database\Queries;
+use Core\Database;
 
 class ItemUpload extends Endpoint
 {
 
     public function __construct()
     {
-        $business_id = isset($_GET["business-id"]) ? $_GET["business-id"] : null;
-        $name = isset($_GET["name"]) ? $_GET["name"] : null;
-        $price = isset($_GET["price"]) ? $_GET["price"] : null;
-        $date = isset($_GET["date"]) ? $_GET["date"] : null;
-        $time = isset($_GET["time"]) ? $_GET["time"] : null;
-        $business_name = isset($_GET["business-name"]) ? $_GET["business-name"] : null;
-        $status = isset($_GET["status"]) ? $_GET["status"] : null;
-        $request = new Request("GET");
-        $requestMethod = $request->getRequestMethod();
-
-        switch($requestMethod){
-            case 'GET':
-                $sql = "INSERT INTO 
-                items (business_id, name, price, date, time, business_name, status) 
-                VALUES (:business_id, :name, :price, :date, :time, :business_name, :status)";
-                $dbConn = new \Core\Database\Database('DB_URL');
-                $data = $dbConn->executeQuery($sql, [":business_id" => $business_id, ":name" => $name, ":price" => $price, ":date" => $date, ":time" => $time, ":business_name" => $business_name, ":status" => $status]);
-                parent::__construct($data);
-                break;
-        }
-        
-       
-
+        parent::__construct('POST', 'insertitem');
+        $this->setRequiresAuth(true);
+        $this->getAttributes()->addRequiredStrings(['name', 'date', 'time', 'business_name', 'status']);
+        $this->getAttributes()->addRequiredInts(['business_id', 'price']);
     }
 
     public function process($request)
     {
-        $msg = 1;
-        $this->setResponse(200, 'request received', $user);
+        
+        $id = $this->getDb()->createInsert()->into('items')->cols('business_id, name, price, date, time, business_name, status')->values([$request->getAttribute('business_id'), $request->getAttribute('name'), $request->getAttribute('price'), $request->getAttribute('date'), $request->getAttribute('time'), $request->getAttribute('business_name'), $request->getAttribute('status')])->execute();
+        
+        $this->setResponse(200, 'Item inserted', ['id' => $id]);
     }
 }

@@ -126,7 +126,11 @@ abstract class Entity extends CrudModel implements CrudInterface
     protected function _setProperties(array $data)
     {
         foreach ($this->propertyColumnMap as $property => $column) {
-            $this->{$property} = $data[$column];
+            if (property_exists($this, $property)) {
+                $this->{$property} = $data[$column];
+            } else {
+                $this->setResponse(400, "Property " . $property . " does not exist in " . static::getEntityName());
+            }
         }
     }
 
@@ -136,6 +140,8 @@ abstract class Entity extends CrudModel implements CrudInterface
         foreach ($this->propertyColumnMap as $property => $column) {
             if (property_exists($this, $property)) {
                 $mappedProperties[$column] = $this->{$property};
+            } else {
+                $this->setResponse(400, "Property " . $property . " does not exist in " . static::getEntityName());
             }
         }
         return $mappedProperties;

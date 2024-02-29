@@ -1,0 +1,43 @@
+# Default FrankenPHP configuration
+{
+	frankenphp {
+		{$FRANKENPHP_CONFIG}
+	}
+	auto_https off
+	admin off
+}
+
+# Default Caddy configuration
+:80 {
+	log {
+		output stdout
+		format filter {
+			wrap console
+			fields {
+				request>headers delete
+				request>remote_ip delete
+				request>remote_port delete
+				request>client_ip delete
+				user_id delete
+				request>proto delete
+				request>host delete
+				resp_headers delete
+				duration delete
+				size delete
+				bytes_read delete
+			}
+		}
+	}
+	route {
+		root * /app
+
+		# Rewrite everything to index.php (API handling)
+		rewrite * /index.php
+
+		# FrankenPHP!
+		@phpFiles path *.php
+		php @phpFiles
+		encode zstd br gzip
+		file_server
+	}
+}

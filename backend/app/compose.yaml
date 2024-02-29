@@ -1,0 +1,11 @@
+services:
+  php:
+    image: dunglas/frankenphp
+    container_name: php-service
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/app
+      - ./config/Caddyfile:/etc/caddy/Caddyfile
+    tty: true
+

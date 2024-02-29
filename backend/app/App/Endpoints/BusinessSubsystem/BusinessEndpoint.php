@@ -21,6 +21,7 @@ class BusinessEndpoint extends Endpoint
         $id = $request->getAttribute('id');
 
         $business = new Business($this->getDb());
+
         $data = [];
         if ($id) {
             $business->id = $id;

@@ -7,7 +7,7 @@ use Core\Database\Entity;
 
 class Business extends Entity
 {
-    protected $id, $name, $address;
+    protected $id, $name, $address_optional, $email_optional;
 
     protected function getEntityName(): string
     {
@@ -29,7 +29,8 @@ class Business extends Entity
         return [
             "id" => "id",
             "name" => "business_name",
-            "email" => "business_email"
+            "email_optional" => "business_email",
+            "address_optional" => "business_address",
         ];
     }
 }

@@ -20,7 +20,7 @@ class RegisterUser extends SubEndpoint
     public function process($request)
     {
         parent::process($request);
-        $user = new User($this->getDb());
+        $user = User::getInstance($this->getDb());
         $user->setFirstName($request->getAttribute('first_name'));
         $user->setLastName($request->getAttribute('last_name'));
         $user->setEmail($request->getAttribute('email'));

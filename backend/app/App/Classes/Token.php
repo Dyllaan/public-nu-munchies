@@ -15,6 +15,7 @@ class Token extends GivesResponse
 {
   private $valid;
   private $userId;
+  private $providerId;
 
   private \AppConfig $appConfigInstance;
 
@@ -22,11 +23,7 @@ class Token extends GivesResponse
   {
     $this->valid = false;
     $this->appConfigInstance = new \AppConfig();
-
-    if ($id = $this->validateToken()) {
-      $this->valid = true;
-      $this->userId = $id;
-    }
+    $this->validateToken();
   }
 
   private function validateToken()
@@ -38,17 +35,16 @@ class Token extends GivesResponse
     }
     $jwt = trim(substr($authorizationHeader, 7));
 
-    $userId = null;
-
     try {
       $decodedJWT = JWT::decode($jwt, new \Firebase\JWT\Key($key, 'HS256'));
-      $userId = $decodedJWT->id;
+      $this->setUserId($decodedJWT->id);
+      $this->setProviderId($decodedJWT->provider_id);
+      $this->setValid(true);
     } catch (\Firebase\JWT\ExpiredException $e) {
       $this->setResponse(401, 'Token expired');
     } catch (\Exception $e) {
       $this->setResponse(401, 'Invalid token');
     }
-    return $userId;
   }
 
   private function getAuthorizationHeaders()
@@ -64,9 +60,29 @@ class Token extends GivesResponse
     return $this->valid;
   }
 
+  private function setValid($valid)
+  {
+    $this->valid = $valid;
+  }
+
   public function getUserId()
   {
     return $this->userId;
+  }
+
+  public function getProviderId()
+  {
+    return $this->providerId;
+  }
+
+  private function setProviderId($providerId)
+  {
+    $this->providerId = $providerId;
+  }
+
+  private function setUserId($userId)
+  {
+    $this->userId = $userId;
   }
 
   // use this if you need to see the headers

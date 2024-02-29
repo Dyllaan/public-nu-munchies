@@ -71,10 +71,26 @@ export const useUserSubsystem = () => {
     }
   };
 
+  const oAuthLogin = async (redirectUri:string, data: any) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(redirectUri, data);
+      setUserState(response.data.data.user);
+      localStorage.setItem("token", response.data.data.jwt);
+      setLoading(false);
+      router.push("/profile");
+    } catch (error: any) {
+      console.error("Login failed:", error);
+      setLoading(false);
+      return error.response.data.message;
+    }
+  }
+
   return {
     login,
     getCurrentUser,
     register,
+    oAuthLogin,
     user,
     loading,
   };

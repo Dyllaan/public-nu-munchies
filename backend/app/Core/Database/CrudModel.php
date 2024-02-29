@@ -14,6 +14,7 @@ class CrudModel extends GivesResponse
 {
 
     private Database $db;
+    private $table;
     private $id;
 
     public function __construct($db)
@@ -39,5 +40,15 @@ class CrudModel extends GivesResponse
     private function setDb($db)
     {
         $this->db = $db;
+    }
+
+    protected function getTable()
+    {
+        return $this->table;
+    }
+
+    protected function setTable($table)
+    {
+        $this->table = $table;
     }
 }

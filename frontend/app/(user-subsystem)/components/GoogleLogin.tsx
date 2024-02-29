@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import Script from 'next/script';
 
 const GoogleSignIn = () => {
@@ -8,6 +9,47 @@ const GoogleSignIn = () => {
         src="https://accounts.google.com/gsi/client" 
         strategy="lazyOnload"
         async
+=======
+import { GoogleLogin } from "@react-oauth/google";
+import { oAuthConfig } from "@/config/oauth";
+import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsystem";
+import { toast } from "sonner";
+
+
+const GoogleSignIn = () => {
+
+  const { oAuthLogin } = useUserSubsystem();
+
+  const handleLogin = async(data: any) => {
+    const { email, password } = data;
+
+    const response = await oAuthLogin(email, password);
+    if (response) {
+        toast.error(response);
+    }
+};
+
+  return (
+    <div>
+      <GoogleLogin
+        onSuccess={(credentialResponse) => {
+          console.log(credentialResponse);
+          const parsedFormData = new FormData();
+          parsedFormData.append(
+            "credential",
+            credentialResponse.credential ?? ""
+          );
+          /* send as formdata
+          fetch(oAuthConfig.redirectUri, {
+            method: "POST",
+            body: parsedFormData,
+          }).then((response) => console.log);*/
+          oAuthLogin(oAuthConfig.redirectUri, parsedFormData);
+        }}
+        onError={() => {
+          console.log("Login Failed");
+        }}
+>>>>>>> Stashed changes
       />
       <button>Google Sign In</button>
       <div id="g_id_onload"

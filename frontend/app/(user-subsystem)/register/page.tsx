@@ -54,9 +54,9 @@ export default function RegistrationPage() {
         <>
         <div className="m-2">
             <h2>
-                Need an account? 
-                <Link href="/register" className="underline m-1">
-                    Register here
+                Already have an account?
+                <Link href="/login" className="underline m-1">
+                    Login Here
                 </Link>
             </h2>
         </div>

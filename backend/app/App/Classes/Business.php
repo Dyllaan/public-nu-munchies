@@ -29,7 +29,7 @@ class Business extends Entity
         return [
             "id" => "id",
             "name" => "business_name",
-            "address" => "business_email"
+            "email" => "business_email"
         ];
     }
 }

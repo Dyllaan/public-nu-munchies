@@ -18,7 +18,7 @@ class OAuthCallback extends Endpoint
     public function __construct()
     {
         parent::__construct('POST', 'oauthcallback');
-        $this->getAttributes()->addRequiredStrings(['credential', 'g_csrf_token']);
+        $this->getAttributes()->addRequiredStrings(['credential']);
     }
 
     public function process($request)

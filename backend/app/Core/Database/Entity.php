@@ -127,6 +127,9 @@ abstract class Entity extends CrudModel implements CrudInterface
     {
         foreach ($this->propertyColumnMap as $property => $column) {
             if (property_exists($this, $property)) {
+                if (!array_key_exists($column, $data)) {
+                    $this->setResponse(400, "Column " . $column . " does not exist in " . static::getEntityName() . " column map");
+                }
                 $this->{$property} = $data[$column];
             } else {
                 $this->setResponse(400, "Property " . $property . " does not exist in " . static::getEntityName());

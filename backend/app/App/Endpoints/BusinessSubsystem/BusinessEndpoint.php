@@ -19,9 +19,16 @@ class BusinessEndpoint extends Endpoint
         parent::process($request);
 
         $id = $request->getAttribute('id');
+
         $business = new Business($this->getDb());
-        $business->id = 2;
-        $business->delete();
-        $this->setResponse(200, $business->toArray());
+        $data = [];
+        if ($id) {
+            $business->id = $id;
+            $data = $business->getById();
+        } else {
+            $data = $business->get();
+        }
+
+        $this->setResponse(200, $data);
     }
 }

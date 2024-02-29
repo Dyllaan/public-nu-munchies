@@ -31,9 +31,13 @@ abstract class Entity extends CrudModel implements CrudInterface
         if (count($data) == 0) {
             $this->setResponse(404, "There is no " . static::getEntityName() . " in the database");
         } else {
-            $this->_setProperties($data[0]);
+            $formattedData = [];
+            foreach ($data as $row) {
+                $this->_setProperties($row);
+                array_push($formattedData, $this->toArray());
+            }
         }
-        return $data;
+        return $formattedData;
     }
     public function getById()
     {
@@ -45,7 +49,7 @@ abstract class Entity extends CrudModel implements CrudInterface
             return null;
         } else {
             $this->_setProperties($data[0]);
-            return $this;
+            return $this->toArray();
         }
     }
 

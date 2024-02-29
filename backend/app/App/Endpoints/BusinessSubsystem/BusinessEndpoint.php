@@ -20,8 +20,8 @@ class BusinessEndpoint extends Endpoint
 
         $id = $request->getAttribute('id');
         $business = new Business($this->getDb());
-        $business->setId($id);
-        $business->get();
+        $business->id = 2;
+        $business->delete();
         $this->setResponse(200, $business->toArray());
     }
 }

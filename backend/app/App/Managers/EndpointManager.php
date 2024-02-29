@@ -9,6 +9,7 @@ namespace App\Managers;
 
 use App\Endpoints\UserEndpoint;
 use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
+use App\Endpoints\OAuthCallback;
 use Core\Manager;
 use Core\HTTP\Classes\Request;
 use Core\ClientErrorException;
@@ -37,6 +38,7 @@ class EndpointManager extends Manager
     {
         $this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new BusinessEndpoint());
+        $this->addEndpoint(new OAuthCallback());
     }
 
     public function addEndpoint($endpoint)

@@ -11,7 +11,7 @@ type AuthProviderProps = {
 };
 
 export default function AuthProvider({ children }: AuthProviderProps) {
-  const { getCurrentUser, user, showMessages } = useUserSubsystem();
+  const { getCurrentUser, user } = useUserSubsystem();
 
   useEffect(() => {
     if (!user && localStorage.getItem("token")) {

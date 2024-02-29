@@ -33,6 +33,13 @@ export default function RegistrationPage() {
 
     const form = useForm<RegistrationFormInput>({
         resolver: zodResolver(registrationFormSchema),
+        defaultValues: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            passwordConfirmation: "",
+        },
     });
 
     const handleRegistration = async (data: RegistrationFormInput) => {

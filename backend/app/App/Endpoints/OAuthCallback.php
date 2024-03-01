@@ -18,7 +18,7 @@ class OAuthCallback extends Endpoint
     public function __construct()
     {
         parent::__construct('POST', 'oauthcallback');
-        $this->getAttributes()->addRequiredStrings(['credential', 'g_csrf_token']);
+        $this->getAttributes()->addRequiredStrings(['credential']);
     }
 
     public function process($request)
@@ -26,6 +26,8 @@ class OAuthCallback extends Endpoint
         parent::process($request);
 
         $CLIENT_ID = '1063028006737-bf6rpohsbau9qaqijibvmg8p6sfhn9ch.apps.googleusercontent.com';
+
+        $id_token = $request->getAttribute('credential');
 
         $client = new GoogleClient(['client_id' => $CLIENT_ID]);
         $payload = $client->verifyIdToken($id_token);

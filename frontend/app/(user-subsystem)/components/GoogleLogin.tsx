@@ -10,7 +10,7 @@ const GoogleSignIn = () => {
     const parsedFormData = new FormData();
     parsedFormData.append("credential", credentialResponse.credential ?? "");
     oAuthLogin(oAuthConfig.redirectUri, parsedFormData).catch((err) =>
-      toast.error(err)
+      toast.error(JSON.stringify(err))
     );
   };
 

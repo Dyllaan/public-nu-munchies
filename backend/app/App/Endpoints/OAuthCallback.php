@@ -35,7 +35,10 @@ class OAuthCallback extends Endpoint
             $user = OAuthUser::getInstance($this->getDb());
             $user->setId($payload['sub']);
             $user->setFirstName($payload['given_name']);
-            $user->setLastName($payload['family_name']);
+            // Google allows users without last names
+            if(isset($payload['family_name'])) {
+                $user->setLastName($payload['family_name']);
+            }
             $user->setEmail($payload['email']);
             if($user->exists()) {
                 $user->login();

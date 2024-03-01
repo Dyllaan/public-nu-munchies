@@ -17,10 +17,11 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const { getCurrentUser, user } = useUserSubsystem();
 
   useEffect(() => {
-    if (!user && localStorage.getItem("token")) {
+    if (localStorage.getItem("token") && !user.firstName) {
+      console.log("now here");
       getCurrentUser();
     }
-  }, [user, getCurrentUser]);
+  }, []);
 
   return (
     <GoogleOAuthProvider clientId={oAuthConfig.clientId}>

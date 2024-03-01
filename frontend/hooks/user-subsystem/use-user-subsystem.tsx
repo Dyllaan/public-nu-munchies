@@ -55,6 +55,31 @@ export const useUserSubsystem = () => {
     }
   };
 
+  const editUser = async(data: any) => {
+    setLoading(true);
+    try {
+      const response = await axios.put("http://localhost:8080/user/edit", data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+        },
+      });
+      if(response.data.success) {
+        setUserState(response.data.data.user);
+        setLoading(false);
+        return response.data.message;
+      } else {
+        console.error("Profile update failed:", response.data.message);
+        setLoading(false);
+        return 
+      }
+    } catch (error: any) {
+      console.error("Profile update failed:", error);
+      setLoading(false);
+      return error.response.data.message;
+    }
+  }
+
   const getCurrentUser = async () => {
     setLoading(true);
     try {
@@ -91,6 +116,7 @@ export const useUserSubsystem = () => {
     getCurrentUser,
     register,
     oAuthLogin,
+    editUser,
     user,
     loading,
   };

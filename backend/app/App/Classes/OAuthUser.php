@@ -36,33 +36,43 @@ class OAuthUser extends User
 
     public function login()
     {
-        if ($this->exists()) {
-            $this->setResponse(200, 'Login Successful', $this->get());
+        if(!$this->isOAuthEmail()) {
+            $this->setResponse(401, "This email is not registered as OAuth, please delete your account and re-register via Google.");
         } else {
-            $this->setResponse(404, "User not found");
+            if ($this->exists()) {
+                $this->setResponse(200, 'Login Successful', $this->get());
+            } else {
+                $this->setResponse(404, "User not found");
+            }
         }
+    }
+
+    private function isOAuthEmail()
+    {
+        $subQuery = $this->getDb()->createSelect()->cols("*")->from("oauth_users")->join('users', 'oauth_users.user_id = users.id')->where(["users.email = '" . $this->getEmail() . "'"])->assemble();
+        $data = $this->getDb()->createSelect()->exists($subQuery, "oauth")->execute();
+        return $data[0]['oauth'];
     }
 
     public function exists()
     {
-        if ($this->getId() != null) {
+        if ($this->getEmail() != null) {
+            $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["email = '" . $this->getEmail() . "'"])->execute();
+            if (count($data) > 0) {
+                return true;
+            }
+        } elseif ($this->getId() != null) {
             $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["id = '" . $this->getId() . "'"])->execute();
             if (count($data) > 0) {
                 return true;
             }
         
-        } elseif ($this->getEmail() != null) {
-            $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["email = '" . $this->getEmail() . "'"])->execute();
-            if (count($data) > 0) {
-                return true;
-            }
         } else if ($this->getUserId() != null) {
             $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["user_id = '" . $this->getUserId() . "'"])->execute();
             if (count($data) > 0) {
                 return true;
             }
         }
-
         return false;
     }
 

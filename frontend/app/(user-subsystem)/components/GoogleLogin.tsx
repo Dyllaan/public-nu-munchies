@@ -1,30 +1,27 @@
-import Script from "next/script";
-
-import { GoogleLogin } from "@react-oauth/google";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { oAuthConfig } from "@/config/oauth";
+import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsystem";
+import { toast } from "sonner";
 
 const GoogleSignIn = () => {
+  const { oAuthLogin } = useUserSubsystem();
+
+  const handleLogin = async (credentialResponse: CredentialResponse) => {
+    const parsedFormData = new FormData();
+    parsedFormData.append("credential", credentialResponse.credential ?? "");
+    oAuthLogin(oAuthConfig.redirectUri, parsedFormData).catch((err) =>
+      toast.error(JSON.stringify(err))
+    );
+  };
+
   return (
     <div>
       <GoogleLogin
-        onSuccess={(credentialResponse) => {
-          console.log(credentialResponse);
-          const parsedFormData = new FormData();
-          parsedFormData.append(
-            "credential",
-            credentialResponse.credential ?? ""
-          );
-          // send as formdata
-          fetch(oAuthConfig.redirectUri, {
-            method: "POST",
-            body: parsedFormData,
-          }).then((response) => console.log);
-        }}
+        onSuccess={handleLogin}
         onError={() => {
-          console.log("Login Failed");
+          toast.error("Google login failed");
         }}
       />
-      ;
     </div>
   );
 };

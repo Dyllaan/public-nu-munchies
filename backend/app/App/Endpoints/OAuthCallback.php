@@ -8,7 +8,7 @@
 
 namespace App\Endpoints;
 
-use App\Classes\User;
+use App\Classes\OAuthUser;
 use Core\Endpoint\Endpoint;
 use \Google\Client as GoogleClient;
 
@@ -32,8 +32,16 @@ class OAuthCallback extends Endpoint
         $client = new GoogleClient(['client_id' => $CLIENT_ID]);
         $payload = $client->verifyIdToken($id_token);
         if ($payload) {
-            $userid = $payload['sub'];
-            $this->setResponse(200, 'User retrieved', ['user' => $userid]);
+            $user = OAuthUser::getInstance($this->getDb());
+            $user->setId($payload['sub']);
+            $user->setFirstName($payload['given_name']);
+            $user->setLastName($payload['family_name']);
+            $user->setEmail($payload['email']);
+            if($user->exists()) {
+                $user->login();
+            } else {
+                $user->register();
+            }
         } else {
             $this->setResponse(401, 'Invalid token');
         }

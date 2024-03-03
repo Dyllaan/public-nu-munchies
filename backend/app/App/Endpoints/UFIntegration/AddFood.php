@@ -9,5 +9,11 @@
      * the amount of nutrients that they are also consuming.
      */
 
-     namespace App\Endpoints\UFInegration
+     namespace App\Endpoints\UFIntegration;
+
+    use Core\Endpoint\Endpoint;
+    use Core\HTTP\Classes\Request;
+    use Core\Database\Queries;
+    use Core\Database;
+
 ?>

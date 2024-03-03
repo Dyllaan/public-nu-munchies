@@ -17,11 +17,14 @@
         {
             parent::_construct('POST', 'removecategory');
             $this->setRequiresAuth(true);
-            $this->getAttributes()->addRequiredInts(['food_id']);
+            $this->getAttributes()->addRequiredInts(['cat']);
         }
         public function process($request)
         {
-            $id = $this->getDb()->createDelete()->from('nutrition_details');
+            $category = ['category' => 'removed'];
+            $id = $this->getDb()->createDelete()->table("categories")->set($category)->where(["id - '" . $request->getAttribute('cat_id'). "'"])->execute();
+
+            $this->setResponse(200, 'Category Removed', ['id' => $id]);
         }
     }
 ?>

@@ -13,6 +13,8 @@ import { toast } from "sonner";
 // zod library for schema validation
 import { z } from "zod";
 
+import requireAuth from "../components/requireAuth";
+
 // User subsystem
 import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsystem";
 
@@ -27,7 +29,7 @@ const loginFormSchema = z.object({
 // Type inference for the login form data
 type LoginFormInput = z.infer<typeof loginFormSchema>;
 
-export default function LoginPage() {
+function LoginPage() {
     const { login } = useUserSubsystem();
 
     const form = useForm<LoginFormInput>({
@@ -98,3 +100,4 @@ export default function LoginPage() {
         </>
     );      
 }
+export default requireAuth(LoginPage, false);

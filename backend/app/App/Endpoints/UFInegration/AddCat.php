@@ -18,8 +18,19 @@
     {
         public function _construct()
         {
-            parent::_construct('POST', 'addcatagory');
+            parent::_construct('POST', 'category');
             $this->setRequiresAuth(true);
+            $this->getAttributes()->addRequiredString(['cat_name', 'cat_image']);
+        }
+
+        public function process($request)
+        {
+            parent::process($request);
+            $cat = Cat::getInstance($this->getDb());
+            $cat->setCatName($request->getAttribute('cat_name'));
+            $cat->setCatImage($request->getAttribute('cat_image'));
+            $cat->category($this->getDb());
+            $this->setResponse(200, 'Category Created', $cat->toArray());
         }
     }
 ?>

@@ -17,7 +17,7 @@ class OrderCollect extends Endpoint
 
     public function __construct()
     {
-        parent::__construct('POST', 'ordercollect');
+        parent::__construct('PUT', 'ordercollect');
         $this->setRequiresAuth(true);
         $this->getAttributes()->addRequiredInts(['order_id']);
     }
@@ -27,6 +27,6 @@ class OrderCollect extends Endpoint
         $status = ['status' => 'collected'];
         $id = $this->getDb()->createUpdate()->table("orders")->set($status)->where(["id = '" . $request->getAttribute('order_id'). "'"])->execute();
         
-        $this->setResponse(200, 'Order cancelled', ['id' => $id]);
+        $this->setResponse(200, 'Order collected', ['id' => $id]);
     }
 }  

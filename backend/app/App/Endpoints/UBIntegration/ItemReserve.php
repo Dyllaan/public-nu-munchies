@@ -27,6 +27,6 @@ class ItemReserve extends Endpoint
         $status = ['status' => 'reserved'];
         $id = $this->getDb()->createUpdate()->table('items')->set($status)->where(["id = '" . $request->getAttribute('item_id'). "'"])->execute();
         
-        $this->setResponse(200, 'Item updated', ['id' => $id]);
+        $this->setResponse(200, 'Item Reserved', ['id' => $id]);
     }
 }  

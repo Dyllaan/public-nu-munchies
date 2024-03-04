@@ -17,7 +17,7 @@ class OrderCancel extends Endpoint
 
     public function __construct()
     {
-        parent::__construct('POST', 'ordercancel');
+        parent::__construct('PUT', 'ordercancel');
         $this->setRequiresAuth(true);
         $this->getAttributes()->addRequiredInts(['order_id']);
     }

@@ -23,7 +23,7 @@ export default function DemoPage() {
       {/* SharedComponent is a component that is shared between different subsystems */}
       <SharedComponent name={name}></SharedComponent>
       {/* Just separator */}
-      <hr className="my-4 border-gray-600 border-2 w-[80%] mx-auto"></hr>
+      <hr className="my-6 border-gray-600 border-2 w-[80%] mx-auto"></hr>
       {/* NestedComponent is a component that is only available in the demo subsystem */}
       <NestedComponent name={name}></NestedComponent>
     </main>

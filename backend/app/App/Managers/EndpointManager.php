@@ -8,6 +8,8 @@
 namespace App\Managers;
 
 use App\Endpoints\UserEndpoint;
+use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
+use App\Endpoints\OAuthCallback;
 use Core\Manager;
 use Core\HTTP\Classes\Request;
 use App\Endpoints\UBIntegration\ItemUpload;
@@ -19,6 +21,7 @@ use App\Endpoints\UBIntegration\ApproveReview;
 use App\Endpoints\UBIntegration\InsertReview;
 use App\Endpoints\UBIntegration\DeleteReview;
 use App\Endpoints\UBIntegration\CheckoutItem;
+use Core\ClientErrorException;
 
 class EndpointManager extends Manager
 {
@@ -52,6 +55,8 @@ class EndpointManager extends Manager
         $this->addEndpoint(new DeleteReview());
         $this->addEndpoint(new CheckoutItem());
 
+        $this->addEndpoint(new BusinessEndpoint());
+        $this->addEndpoint(new OAuthCallback());
     }
 
     public function addEndpoint($endpoint)
@@ -59,7 +64,7 @@ class EndpointManager extends Manager
         $this->addItemWithKey($endpoint->getUrl(), $endpoint);
     }
 
-    public function allocate()
+    /*public function allocate()
     {
         if ($this->hasKey($this->getRequest()->getMainEndpoint())) {
             $endpoint = $this->getItem($this->getRequest()->getMainEndpoint());
@@ -76,6 +81,53 @@ class EndpointManager extends Manager
             }
         } else {
             $this->setResponse(404, 'Endpoint not found', ['endpoint' => $this->getRequest()->getMainEndpoint()]);
+        }
+    }*/
+
+    public function allocate()
+    {
+        if ($this->hasKey($this->getRequest()->getMainEndpoint())) {
+            $mainEndpoint = $this->getItem($this->getRequest()->getMainEndpoint());
+            $endpointToRun = null;
+            if ($this->wasSubEndpointRequested()) {
+                $handler = $mainEndpoint->getSubEndpointHandler();
+                if ($handler->hasSubEndpoint($this->getRequest()->getSubEndpoint())) {
+                    $endpointToRun = $handler->getSubEndpoint($this->getRequest()->getSubEndpoint());
+                } else {
+                    throw new ClientErrorException(404, ['sub-endpoint' => $this->getRequest()->getSubEndpoint()]);
+                }
+            } else {
+                $endpointToRun = $this->getItem($this->getRequest()->getMainEndpoint());
+            }
+
+            if ($endpointToRun != null) {
+                $this->checkEndpointMethod($endpointToRun);
+                $this->runEndpoint($endpointToRun);
+            } else {
+                throw new ClientErrorException(404, ['endpoint' => $this->getRequest()->getMainEndpoint()]);
+            }
+        } else {
+            throw new ClientErrorException(404, ['endpoint' => $this->getRequest()->getMainEndpoint()]);
+        }
+    }
+
+    public function wasSubEndpointRequested()
+    {
+        return $this->getRequest()->getSubEndpoint() != null;
+    }
+
+    public function runEndpoint($endpoint)
+    {
+        $endpoint->process($this->getRequest());
+    }
+
+    private function checkEndpointMethod($endpoint)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
+            $this->setResponse(200, 'Pre-flight ok');
+        }
+        if ($endpoint->getMethod() != $this->getRequest()->getRequestMethod()) {
+            throw new ClientErrorException(405, ['allowed' => $endpoint->getMethod(), 'requested' => $this->getRequest()->getRequestMethod()]);
         }
     }
 }

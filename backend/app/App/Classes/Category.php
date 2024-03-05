@@ -1,6 +1,7 @@
 <?php
     /**
      * class Category
+     * @author Nathan Nordstrom-Hearne w21025072
      * 
      * Category is used to store cat data such as adding and removing a category.
      */

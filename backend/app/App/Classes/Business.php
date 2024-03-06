@@ -7,7 +7,7 @@ use Core\Database\Entity;
 
 class Business extends Entity
 {
-    protected $id, $name, $address_optional, $email_optional;
+    public $id, $name, $description, $address, $email_optional, $phone_optional, $verified_optional_hidden;
 
     protected function getEntityName(): string
     {
@@ -29,8 +29,28 @@ class Business extends Entity
         return [
             "id" => "id",
             "name" => "business_name",
+            "description" => "business_description",
             "email_optional" => "business_email",
-            "address_optional" => "business_address",
+            "address" => "business_address",
+            "phone_optional" => "business_phone",
+            "verified_optional_hidden" => "business_verification",
         ];
+    }
+
+    public function get()
+    {
+        $data = $this->getDb()->createSelect()->cols("*")->from(static::getTableName())->execute();
+        if (count($data) == 0) {
+            $this->setResponse(404, "There is no business in the database");
+        } else {
+            $formattedData = [];
+            foreach ($data as $row) {
+                $this->_setProperties($row);
+                if ($this->verified_optional_hidden) {
+                    array_push($formattedData, $this->toArray());
+                }
+            }
+        }
+        return $formattedData;
     }
 }

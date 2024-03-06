@@ -110,7 +110,6 @@ abstract class Entity extends CrudModel implements CrudInterface
     private function _checkSavable()
     {
         foreach ($this->getPropertyMap() as $column => $property) {
-            var_dump($column);
             if (!isset($this->{$column}) && $column != static::getIdColumnName()) {
                 if (strpos($column, "_optional") !== false) {
                     continue;
@@ -156,12 +155,15 @@ abstract class Entity extends CrudModel implements CrudInterface
             if (property_exists($this, $property)) {
                 if (str_contains($property, "_optional")) {
                     $newProperty = str_replace("_optional", "", $property);
-                    $properties[$newProperty] = $this->{$property};
-                } else {
+                    if (!str_contains($newProperty, "_hidden")) {
+                        $properties[$newProperty] = $this->{$property};
+                    }
+                } else if (!str_contains($property, "_hidden")) {
                     $properties[$property] = $this->{$property};
                 }
             }
         }
+
         return $properties;
     }
 

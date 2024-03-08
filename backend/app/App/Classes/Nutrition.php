@@ -14,20 +14,16 @@
 
     class Nutrition extends CrudModel  implements CrudInterface
     {
-        public function __construct($db)
-        {
-            parent::_construct($db);
-            $this->appConfigInstance = new \Appconfig();
-        }
+        //More to be added
 
-    }
-    class FoodLogger extends User
-    {
+        private \AppConfig $appConfigInstance;
+        
         public function __construct($db)
         {
             parent::_construct($db);
             $this->appConfigInstance = new \Appconfig();
         }
+        
         public function logFood($food_id, $food_name, $weight, $calories, $protein, $carbs, $fat, $salt, $quantity)
         {
             //Sanitize inputs

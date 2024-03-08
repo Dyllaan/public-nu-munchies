@@ -21,7 +21,7 @@
 
         private \AppConfig $appConfigInstance;
 
-        public function _construct($db)
+        public function __construct($db)
         {
             parent::_construct($db);
             $this->appConfigInstance = new \Appconfig();

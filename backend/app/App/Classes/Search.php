@@ -1,3 +1,0 @@
-<?php
-    //Yet to be completed...
-?>

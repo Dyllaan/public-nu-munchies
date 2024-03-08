@@ -13,6 +13,7 @@
 
     class SearchEngine extends CrudModel implements CrudInterface
     {
+        //More to be added
         private $data;
 
         private \AppConfig $appConfigInstance;

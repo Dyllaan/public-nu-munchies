@@ -18,9 +18,9 @@
 
     class AddNutrition extends Endpoint
     {
-        public function _construct()
+        public function __construct()
         {
-            parent::_construct('POST', 'addnutrition');
+            parent::__construct('POST', 'addnutrition');
             $this->getAttribute()->addRequiredStrings(['food_name']);
             $this->getAttribute()->addRequiredInts(['weight', 'calories', 'protein', 'carbs', 'fat', 'salt']);
         }

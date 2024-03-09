@@ -10,9 +10,6 @@
      namespace App\Endpoints\UFIntegration;
 
     use Core\Endpoint\Endpoint;
-    use Core\HTTP\Classes\Request;
-    use Core\Database\Queries;
-    use Core\Database;
 
     class AddCat extends Endpoint
     {

@@ -10,23 +10,24 @@
      namespace App\Endpoints\UFIntegration;
 
     use Core\Endpoint\Endpoint;
+    use App\Classes\Category;
 
     class AddCat extends Endpoint
     {
-        public function _construct()
+        public function __construct()
         {
-            parent::_construct('POST', 'addcategory');
+            parent::__construct('POST', 'addcategory');
             $this->setRequiresAuth(true);
-            $this->getAttributes()->addRequiredString(['cat_name', 'cat_image']);
+            $this->getAttributes()->addRequiredStrings(['cat_name', 'cat_image']);
         }
 
         public function process($request)
         {
             parent::process($request);
-            $cat = categories::getInstance($this->getDb());
+            $cat = Category::getInstance($this->getDb());
             $cat->setCatName($request->getAttribute('cat_name'));
             $cat->setCatImage($request->getAttribute('cat_image'));
-            $cat->category($this->getDb());
+            $cat->save();
             $this->setResponse(200, 'Category Created', $cat->toArray());
         }
     }

@@ -8,6 +8,7 @@
 namespace App\Managers;
 
 use App\Endpoints\UserEndpoint;
+use App\Endpoint\UFIntegration\AddCat;
 use Core\Manager;
 use Core\HTTP\Classes\Request;
 use Core\ClientErrorException;

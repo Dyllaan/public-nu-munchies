@@ -10,7 +10,6 @@
      namespace App\Endpoints\UFIntegration;
 
     use Core\Endpoint\Endpoint;
-    use App\Managers\EndpointManager;
     use Core\HTTP\Classes\Request;
     use Core\Database\Queries;
     use Core\Database;

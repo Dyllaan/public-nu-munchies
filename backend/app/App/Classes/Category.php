@@ -59,7 +59,7 @@
                     'cat_name' => $this->getCatName(),
                     'cat_image' => $this->getCatImage()
                 ];
-                $insertQuery = $this->getDb()->createInsert()->into('categories')->cols($userData);
+                $insertQuery = $this->getDb()->createInsert()->into('categories')->cols($catData);
                 $id = $insertQuery->execute();
                 if($id != null)
                 {

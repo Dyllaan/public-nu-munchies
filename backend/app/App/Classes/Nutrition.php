@@ -15,6 +15,17 @@
     class Nutrition extends CrudModel  implements CrudInterface
     {
         //More to be added
+        private $food_id;
+        private $food_name;
+        private $weight;
+        private $calories;
+        private $protein;
+        private $carbs;
+        private $fat;
+        private $salt;
+        private $quantity;
+
+        private static $instance = null;
 
         private \AppConfig $appConfigInstance;
         
@@ -23,7 +34,17 @@
             parent::_construct($db);
             $this->appConfigInstance = new \Appconfig();
         }
-        
+        public static function getInstance($db)
+        {
+            if(self::$instance === null)
+            {
+                self::$instance = new Nutrition($db);
+            }
+        }
+        public function exist($request)
+        {
+            
+        }
         public function logFood($food_id, $food_name, $weight, $calories, $protein, $carbs, $fat, $salt, $quantity)
         {
             //Sanitize inputs

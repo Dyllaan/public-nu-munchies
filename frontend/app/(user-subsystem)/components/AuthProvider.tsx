@@ -1,6 +1,10 @@
 "use client";
-import { useUserSubsystem } from "@/hooks/user-subsystem/use-user-subsystem";
+import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useEffect } from "react";
+
+import { oAuthConfig } from "@/config/oauth";
+import { init } from "next/dist/compiled/webpack/webpack";
 
 /**
  * Rehydrates the user subsystem on the client side
@@ -11,13 +15,17 @@ type AuthProviderProps = {
 };
 
 export default function AuthProvider({ children }: AuthProviderProps) {
-  const { getCurrentUser, user, showMessages } = useUserSubsystem();
+  const { initFromLocalStorage, status} = useUserSubsystem();
 
   useEffect(() => {
-    if (!user && localStorage.getItem("token")) {
-      getCurrentUser();
+    if (localStorage.getItem("token") && localStorage.getItem("user") && !status.logged) {
+      initFromLocalStorage();
     }
-  }, [user, getCurrentUser]);
+  }, [status.logged]);
 
-  return <>{children}</>;
+  return (
+    <GoogleOAuthProvider clientId={oAuthConfig.clientId}>
+      {children}
+    </GoogleOAuthProvider>
+  );
 }

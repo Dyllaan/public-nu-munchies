@@ -23,33 +23,38 @@ abstract class EndpointBase extends GivesResponse
         $this->attributes = new EndpointAttributes();
     }
 
-    public function getUser() {
-        //singleton
-        if ($this->user == null) {
-            $this->user = User::getInstance($this->getDb());
-        }
-        return $this->user;
-    }
-
     public function process($request)
     {
         $this->getAttributes()->validate($request->getAttributes());
 
         if ($this->requiresAuth()) {
-            $this->getUser()->verifyToken();
+            $this->assignUser();
         }
     }
 
-    public function verifyToken()
+    public function assignUser()
     {
         $token = new Token();
-        if ($token->isValid()) {
-            $this->setId($token->getUserId());
-            $this->get();
-            return true;
-        } else {
-            $this->setResponse(400, "Invalid token");
+        if (!$token->isValid()) {
+            $this->setResponse(401, 'Token is invalid');
         }
+        switch ($token->getProviderId()) {
+            case 1:
+                $this->user = User::getInstance($this->getDb());
+                $this->user->setId($token->getUserId());
+                $this->user->get();
+                break;
+            case 2:
+                $this->user = new OAuthUser($this->getDb());
+                $this->user->setId($token->getUserId());
+                $this->user->get();
+                break;
+        }
+    }
+
+    public function getUser()
+    {
+        return $this->user;
     }
 
     protected function setDB($dbName) 

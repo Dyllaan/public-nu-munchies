@@ -10,11 +10,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import GoogleSignIn from "../components/GoogleLogin";
+
+import requireAuth from "../components/requireAuth";
+
 // zod library for schema validation
 import { z } from "zod";
 
 // User subsystem
-import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsystem";
+import useUserSubsystem from "../../../hooks/user-subsystem/use-user-subsystem";
 
 // Define the registration form schema using zod
 const registrationFormSchema = z.object({
@@ -28,11 +32,18 @@ const registrationFormSchema = z.object({
 // Type inference for the registration form data
 type RegistrationFormInput = z.infer<typeof registrationFormSchema>;
 
-export default function RegistrationPage() {
+function RegistrationPage() {
     const { register } = useUserSubsystem();
 
     const form = useForm<RegistrationFormInput>({
         resolver: zodResolver(registrationFormSchema),
+        defaultValues: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            passwordConfirmation: "",
+        },
     });
 
     const handleRegistration = async (data: RegistrationFormInput) => {
@@ -47,9 +58,9 @@ export default function RegistrationPage() {
         <>
         <div className="m-2">
             <h2>
-                Need an account? 
-                <Link href="/register" className="underline m-1">
-                    Register here
+                Already have an account?
+                <Link href="/login" className="underline m-1">
+                    Login Here
                 </Link>
             </h2>
         </div>
@@ -127,6 +138,9 @@ export default function RegistrationPage() {
                 </Card>
             </form>
         </Form>
+        <GoogleSignIn />
         </>
     );
 }
+
+export default requireAuth(RegistrationPage, false);

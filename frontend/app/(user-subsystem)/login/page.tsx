@@ -13,8 +13,12 @@ import { toast } from "sonner";
 // zod library for schema validation
 import { z } from "zod";
 
+import requireAuth from "../components/requireAuth";
+
 // User subsystem
 import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsystem";
+
+import GoogleSignIn from "../components/GoogleLogin";
 
 // Define the login form schema using zod
 const loginFormSchema = z.object({
@@ -25,11 +29,15 @@ const loginFormSchema = z.object({
 // Type inference for the login form data
 type LoginFormInput = z.infer<typeof loginFormSchema>;
 
-export default function LoginPage() {
+function LoginPage() {
     const { login } = useUserSubsystem();
 
     const form = useForm<LoginFormInput>({
         resolver: zodResolver(loginFormSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        },
     });
 
     const handleLogin = async(data: LoginFormInput) => {
@@ -87,6 +95,9 @@ export default function LoginPage() {
                     </CardContent>
                 </Card>
             </form>
-        </Form></>
+        </Form>
+        <GoogleSignIn />
+        </>
     );      
 }
+export default requireAuth(LoginPage, false);

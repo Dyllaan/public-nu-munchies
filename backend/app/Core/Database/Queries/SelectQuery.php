@@ -59,12 +59,12 @@ class SelectQuery extends \Core\Database\Query implements \Core\Database\QueryIn
         return $this;
     }
 
-    /**
-     * Assembles the query and executes it
-     * does a check on joins or it throws an error that joins is not an array
-     */
-    public function execute()
-    {
+    public function exists($subQuery, $alias = "found") {
+        $this->cols = "SELECT EXISTS ($subQuery) AS $alias";
+        return $this;
+    }
+
+    public function assemble() {
         $parts = [
             $this->cols,
             $this->table,
@@ -78,6 +78,16 @@ class SelectQuery extends \Core\Database\Query implements \Core\Database\QueryIn
         $parts = array_filter($parts);
 
         $query = implode(" ", $parts);
-        return $this->db->executeQuery($query);
+        return $query;
+    }
+
+
+    /**
+     * Assembles the query and executes it
+     * does a check on joins or it throws an error that joins is not an array
+     */
+    public function execute()
+    {
+        return $this->db->executeQuery($this->assemble());
     }
 }

@@ -43,6 +43,21 @@ class Database
         }
     }
 
+    public function beginTransaction()
+    {
+        $this->dbConnection->beginTransaction();
+    }
+
+    public function commit()
+    {
+        $this->dbConnection->commit();
+    }
+    
+    public function rollBack()
+    {
+        $this->dbConnection->rollBack();
+    }
+
     public function createSelect()
     {
         return new SelectQuery($this);

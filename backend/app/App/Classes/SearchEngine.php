@@ -13,7 +13,8 @@
 
     class SearchEngine extends CrudModel implements CrudInterface
     {
-        //More to be added
+        private $cat_name;
+        private $businness_name;
         private $data;
 
         private \AppConfig $appConfigInstance;
@@ -26,16 +27,32 @@
 
         public function search($query)
         {
-            $conn = $this->db->connect();
-            $stmt = $conn->prepare("SELECT * FROM categories WHERE cat_name LIKE :query");
+            $stmt = $this->getDb()->createSelect()->cols("categories.cat_name, businnesses.business_name")->from("categories, businnesses")->where(["search = '" .$query->getAttribute('cat_name, business_name'). "'"])->execute();
             $query = "%$query%";
             $stmt->bindParam(' :query', $query);
             $stmt->execute();
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $results;
         }
+        public function getCatName()
+        {
+            return $this->catName;
+        }
+        public function setCatName()
+        {
+            $this->catName = $cat_name;
+        }
+        public function getBusinessName()
+        {
+            return $this->businessName;
+        }
+        public function setBusinessName()
+        {
+            $this->businnessName = $business_name;
+        }
     }
 
+    
     /**
      * $searchEngine = new SearchEngine();
      * $results = $searchEngine->search("search_query");

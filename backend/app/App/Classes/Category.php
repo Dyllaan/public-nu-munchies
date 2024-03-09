@@ -23,7 +23,7 @@
 
         public function __construct($db)
         {
-            parent::_construct($db);
+            parent::__construct($db);
             $this->appConfigInstance = new \Appconfig();
         }
         public static function getInstance($db)
@@ -33,7 +33,7 @@
             }
             return self::$instance;
         }
-        public function exist($request)
+        public function exists()
         {
             if($this>getId() != null){
                 $data = $this->getDb()->createSelect()->cols("*")->from("categories")->where(["id = '" .$request->getAttribute('cat_id'). "'"])->execute();
@@ -53,20 +53,19 @@
         }
         public function save()
         {
-            if($this->checkSavable())
-            {
+            
                 $catData = [
                     'cat_name' => $this->getCatName(),
                     'cat_image' => $this->getCatImage()
                 ];
-                $insertQuery = $this->getDb()->createInsert()->into('categories')->cols($catData);
-                $id = $insertQuery->execute();
+                $id = $this->getDb()->createInsert()->into('categories')->cols('cat_name, cat_image')->values([$this->getCatName(), $this->getCatImage()])->execute();                
+                
                 if($id != null)
                 {
                     $this->setId($id);
                     return $this->toArray();
                 }
-            }
+            
             $this->setResponse(400, "Category could not be saved");
         }
         private function checkSavable()
@@ -154,32 +153,18 @@
                 'cat_name' => $this->getCatName(),
                 'cat_image' => $this->getCatImage()
             ];
-            $jwt = $this->generateJWT($this->getCatId());
-            $cat['jwt'] = $jwt;
             return $cat;
         }
-        private function generateJWT($id)
-        {
-            $secretKey = $this->appConfigInstance->get('JWT_SECRET');
-
-            $iat = time();
-            $exp = strtotime('+5 hour', $iat);
-            $iss = $_SERVER['HTTP_HOST'];
-            $payload = [
-                'cat_id' => $id,
-                'iat' => $iat,
-                'exp' => $exp,
-                'iss' => $iss
-            ];
-            $jwt = JWT::encode($payload, $secretKey, 'HS256');
-            return $jwt;
-        }
         
+        public function getCatId()
+        {
+            return $this->catId;
+        }
         public function getCatName()
         {
             return $this->catName;
         }
-        public function setCatName()
+        public function setCatName($catName)
         {
             $this->catName = $catName;
         }
@@ -187,7 +172,7 @@
         {
             return $this->catImage;
         }
-        public function setCatImage()
+        public function setCatImage($catImage)
         {
             $this->catImage = $catImage;
         }

@@ -10,12 +10,10 @@
     use Firebase\JWT\JWT;
     use Core\Database\CrudModel;
     use Core\Database\CrudInterface;
-    use App\Classes\User;
 
     class Nutrition extends CrudModel  implements CrudInterface
     {
         //More to be added
-        private $food_id;
         private $food_name;
         private $weight;
         private $calories;
@@ -31,7 +29,7 @@
         
         public function __construct($db)
         {
-            parent::_construct($db);
+            parent::__construct($db);
             $this->appConfigInstance = new \Appconfig();
         }
         public static function getInstance($db)
@@ -41,7 +39,7 @@
                 self::$instance = new Nutrition($db);
             }
         }
-        public function exist($request)
+        public function exists()
         {
             if($this>getId() != null){
                 $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["id = '" .$request->getAttribute('food_id'). "'"])->execute();
@@ -136,10 +134,8 @@
                 return ['message' => "Delete method already exists"];
             }
         }
-        public function logFood()
+        public function save()
         {
-            if($this->checkSavable())
-            {
                 $nutritionData = [
                     'food_name' => $this->getFoodName(),
                     'weight' => $this->getWeight(),
@@ -157,14 +153,14 @@
                     $this->setId($id);
                     return $this->toArray();
                 }
-            }
+            
             $this->setResponse(400, "Nutrition Details could not be saved");
         }
         private function checkSavable()
         {
             $errors = [];
             $checkFields = [
-                'foodName' => ['value' => $this->getFoodName(), 'min' => 3, 'max' => 30, 'message' => 'foodName'],
+                'food_name' => ['value' => $this->getFoodName(), 'min' => 3, 'max' => 30, 'message' => 'foodName'],
                 'weight' => ['value' => $this->getWeight(), 'min' => 0, 'max' => 100, 'message' => 'weight'],
                 'calories' => ['value' => $this->getCalories(), 'min' => 0, 'max' => 100, 'message' => 'calories'],
                 'protein' => ['value' => $this->getProtein(), 'min' => 0, 'max' => 100, 'message' => 'protein'],
@@ -187,7 +183,6 @@
             if(!empty($errors)){
                 $len = count($errors);
                 $this->setResponse(400, "There are: $len", $errors);
-                return false; //Return false indicating there are errors
             }
             return true; //Return true if validation passes
 
@@ -212,89 +207,66 @@
                 'salt' => $this->getSalt(),
                 'quantity' => $this->getQuantity(),
             ];
-            $jwt = $this->generateJWT($this->getId());
-            $nutritionDetails['jwt'] = $jwt;
             return $nutritionDetails;
         }
-        private function generateJWT($id)
-        {
-            $secretKey = $this->appConfigInstance->get('JWT_SECRET');
-
-            $iat = time();
-            $exp = strtotime('+5 hour', $iat);
-            $iss = $_SERVER['HTTP_HOST'];
-            $payload = [
-                'food_id' => $id,
-                'iat' => $iat,
-                'exp' => $exp,
-                'iss' => $iss
-            ];
-            $jwt = JWT::encode($payload, $secretKey, 'HS256');
-            return $jwt;
-        }
-
-        public function getID()
+        public function getId()
         {
             return $this->food_id;
-        }
-        public function setID()
-        {
-            $this->food_id = $food_id;
         }
         public function getFoodName()
         {
             return $this->food_name;
         }
-        public function setFoodName()
+        public function setFoodName($food_name)
         {
             $this->food_name = $food_name;
         }public function getWeight()
         {
             return $this->weight;
         }
-        public function setWeight()
+        public function setWeight($weight)
         {
             $this->weight = $weight;
         }public function getCalories()
         {
             return $this->calories;
         }
-        public function setCalories()
+        public function setCalories($calories)
         {
             $this->calories = $calories;
         }public function getProtein()
         {
             return $this->protein;
         }
-        public function setProtein()
+        public function setProtein($protein)
         {
             $this->protein = $protein;
         }public function getCarbs()
         {
             return $this->carbs;
         }
-        public function setCarbs()
+        public function setCarbs($carbs)
         {
             $this->carbs = $carbs;
         }public function getFat()
         {
             return $this->fat;
         }
-        public function setFat()
+        public function setFat($fat)
         {
             $this->fat = $fat;
         }public function getSalt()
         {
             return $this->salt;
         }
-        public function setSalt()
+        public function setSalt($salt)
         {
             $this->salt = $salt;
         }public function getQuantity()
         {
             return $this->quantity;
         }
-        public function setQuantity()
+        public function setQuantity($quantity)
         {
             $this->quantity = $quantity;
         }

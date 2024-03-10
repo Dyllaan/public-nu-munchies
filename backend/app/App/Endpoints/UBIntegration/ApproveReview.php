@@ -1,7 +1,9 @@
 <?php
 /**
- * class OrderItem
+ * class Approve Review
  * @author Cameron Bramley w21020682
+ * 
+ * class to set status of review to 'approved', allowing it to be seen by users publicly after admin has checked over it.
  */
 
 namespace App\Endpoints\UBIntegration;

@@ -1,8 +1,9 @@
 <?php
 /**
- * class OrderItem
+ * class ItemReserve
  * @author Cameron Bramley w21020682
  * 
+ * sets item status to reserved
  */
 
 namespace App\Endpoints\UBIntegration;

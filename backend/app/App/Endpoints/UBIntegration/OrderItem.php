@@ -3,6 +3,7 @@
  * class OrderItem
  * @author Cameron Bramley w21020682
  * 
+ * Creates a new order in the orders table of the item that was reserved by the user.
  */
 
 namespace App\Endpoints\UBIntegration;

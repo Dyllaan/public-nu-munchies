@@ -1,7 +1,9 @@
 <?php
 /**
- * class OrderItem
+ * class Delete Review
  * @author Cameron Bramley w21020682
+ * 
+ * Deletes review if it does not get approved.
  */
 
 namespace App\Endpoints\UBIntegration;

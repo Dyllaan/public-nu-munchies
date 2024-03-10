@@ -21,6 +21,7 @@ use App\Endpoints\UBIntegration\ApproveReview;
 use App\Endpoints\UBIntegration\InsertReview;
 use App\Endpoints\UBIntegration\DeleteReview;
 use App\Endpoints\UBIntegration\CheckoutItem;
+use App\Endpoints\UBIntegration\Webhook;
 use Core\ClientErrorException;
 
 class EndpointManager extends Manager
@@ -54,9 +55,9 @@ class EndpointManager extends Manager
         $this->addEndpoint(new ApproveReview());
         $this->addEndpoint(new DeleteReview());
         $this->addEndpoint(new CheckoutItem());
-
         $this->addEndpoint(new BusinessEndpoint());
         $this->addEndpoint(new OAuthCallback());
+        $this->addEndpoint(new Webhook());
     }
 
     public function addEndpoint($endpoint)

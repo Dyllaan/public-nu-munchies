@@ -1,7 +1,9 @@
 <?php
 /**
- * class OrderItem
+ * class OrderCancel
  * @author Cameron Bramley w21020682
+ * 
+ * sets order status to cancelled
  * 
  */
 

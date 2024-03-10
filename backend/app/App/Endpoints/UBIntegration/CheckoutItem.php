@@ -2,6 +2,8 @@
 /**
  * class CheckoutItem
  * @author Cameron Bramley w21020682
+ * 
+ * stripe payment checkout... gets the item name and price from the item id and sets up a payment gateway.
  */
 
 namespace App\Endpoints\UBIntegration;
@@ -27,7 +29,7 @@ class CheckoutItem extends Endpoint
         $price = $item[0]['item_price'];
         $item_name = $item[0]['item_name'];
 
-        \Stripe\Stripe::setApiKey($stripeSecretKey);
+        \Stripe\Stripe::setApiKey('sk_test_51MgmQnLvWNjHki0mRKISRuV2qxLQVHxfR1qZGt3cb3cexCsW94zVvM0csTpTCeuRO7QjzrVIYpZXaH17x3csd4d8000Ytk3840');
         header('Content-Type: application/json');
 
         $YOUR_DOMAIN = 'http://localhost:4242';
@@ -36,7 +38,8 @@ class CheckoutItem extends Endpoint
           'line_items' => [[
             'price_data' => [
               'currency' => 'gbp',
-              'unit_amount' => $price * 100, // Stripe expects the price in cents
+              'tax_behavior' => 'inclusive',
+              'unit_amount' => $price * 100, 
               'product_data' => [
                 'name' => $item_name,
               ],
@@ -53,7 +56,8 @@ class CheckoutItem extends Endpoint
         
 
         header("HTTP/1.1 303 See Other");
-        header("Location: " . $checkout_session->url);
+        header("Location: " . $checkout_session->url, true, 301);
+        exit;
 
         $response = [
           'status' => 'Item Checked out',

@@ -1,8 +1,9 @@
 <?php
 /**
- * class OrderItem
+ * class OrderCollect
  * @author Cameron Bramley w21020682
  * 
+ * Sets order status to collected
  */
 
 namespace App\Endpoints\UBIntegration;

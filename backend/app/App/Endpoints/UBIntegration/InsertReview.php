@@ -1,8 +1,10 @@
 <?php
 
 /**
- * class ItemUpload
+ * class InsertReview
  * @author Cameron Bramley w21020682
+ * 
+ * Used to create a review in the reviews table.
  */
 
 namespace App\Endpoints\UBIntegration;

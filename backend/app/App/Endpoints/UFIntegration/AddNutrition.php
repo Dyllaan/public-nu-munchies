@@ -12,15 +12,14 @@
      namespace App\Endpoints\UFIntegration;
 
     use Core\Endpoint\Endpoint;
-    use Core\HTTP\Classes\Request;
-    use Core\Database\Queries;
-    use Core\Database;
+    use App\Classes\Nutrition;
 
     class AddNutrition extends Endpoint
     {
         public function __construct()
         {
             parent::__construct('POST', 'addnutrition');
+            $this->setRequiresAuth(true);
             $this->getAttribute()->addRequiredStrings(['food_name']);
             $this->getAttribute()->addRequiredInts(['weight', 'calories', 'protein', 'carbs', 'fat', 'salt']);
         }
@@ -28,7 +27,7 @@
         public function process($request)
         {
             parent::process($request);
-            $nutrition = nutrition_details::getInstance($this->getDb());
+            $nutrition = Nutrition_details::getInstance($this->getDb());
             $nutrition->setFoodName($request->getAttribute('food_name'));
             $nutrition->setWeight($request>getAttribute('weight'));
             $nutrition->setCalories($request->getAttribute('calories'));
@@ -36,6 +35,7 @@
             $nutrition->setCarbs($request->getAttribute('carbs'));
             $nutrition->setFat($request->getAttribute('fat'));
             $nutrition->setSalt($request->getAttribute('salt'));
+            $nutrition->logFood();
             $this->setResponse(200, 'Food Nutrients Created');
         }
     }

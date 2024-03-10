@@ -14,7 +14,8 @@
     class Nutrition extends CrudModel  implements CrudInterface
     {
         //More to be added
-        private $food_name;
+        private $foodId;
+        private $foodName;
         private $weight;
         private $calories;
         private $protein;
@@ -48,7 +49,7 @@
                 } else {
                     return true;
                 }
-            } elseif ($this->getNutritionName() != null) {
+            } elseif ($this->getFoodName() != null) {
                 $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["name = '" . $request->getAttribute('food_name'). "'"])->execute();
                 if(count($data) == 0){
                     return false;
@@ -57,48 +58,117 @@
                 }
             }
         }
-        public function delete()
+        public function save()
         {
-            if($this->exists())
+            
+                $foodData = [
+                    'food_name' => $this->getFoodName(),
+                    'weight' => $this->getWeight(),
+                    'calories' => $this->getCalories(),
+                    'protein' => $this->getProtein(),
+                    'carbs' => $this->getCarbs(),
+                    'fat' => $this->getFat(),
+                    'salt' => $this->getSalt(),
+                    'quantity' => $this->getQuantity(),
+                ];
+                $id = $this->getDb()->createInsert()->into('nutrition_details')->cols('food_name, weight, calories, protein, carbs, fat, salt, quantity')->values([$this->getFoodName(), $this->getWeight(), $this->getCalories(), $this->getProtein(), $this->getCarbs(), $this->getFat(), $this->getSalt(), $this->getQuantity()])->execute();                
+                
+                if($id != null)
+                {
+                    $this->setId($id);
+                    return $this->toArray();
+                }
+            
+            $this->setResponse(400, "Nutrition could not be saved");
+        }
+        private function checkSavable()
+        {
+            $errors = [];
+            $checkFields = [
+                'FoodName' => ['value' => $this->getFoodName(), 'min' => 3, 'max' => 30, 'message' => 'foodname'],
+                'Weight' => ['value' => $this->getWeight(), 'min' => 0, 'max' => 100, 'message' => 'weight'],
+                'Calories' => ['value' => $this->getCalories(), 'min' => 0, 'max' => 100, 'message' => 'calories'],
+                'Protein' => ['value' => $this->getProtein(), 'min' => 0, 'max' => 100, 'message' => 'protein'],
+                'Carbs' => ['value' => $this->getCarbs(), 'min' => 0, 'max' => 100, 'message' => 'carbs'],
+                'Fat' => ['value' => $this->getFat(), 'min' => 0, 'max' => 100, 'message' => 'fat'],
+                'Salt' => ['value' => $this->getSalt(), 'min' => 0, 'max' => 100, 'message' => 'salt'],
+                'Quantity' => ['value' => $this->getQuantity(), 'min' => 0, 'max' => 100, 'message' => 'quantity']
+
+            ];
+
+            foreach ($checkFields as $field => $data)
             {
-                $delectQuery = $this->getDb()->createDelete()->from('nutrition_details')->where(["food_id" => $this->getId()]);
-                $delectQuery->execute();
-                return ['message' => "Nutrition Details Deleted"];
+                if(empty($data['value']))
+                {
+                    $errors[] = "Missing {$field}";
+                } elseif ($field === 'FoodName' && (strlen($data['value']) < $data['min'] || strlen($data['value']) > $data['max']))
+                {
+                    $errors[] = "{$data['message']} must be between {$data['min']} and {$data['max']} characters";
+                } elseif ($field === 'Weight' && (strlen($data['value']) < $data['min'] || strlen($data['value']) > $data['max']))
+                {
+                    $errors[] = "Invalid {$data['message']}";
+                }elseif ($field === 'Calories' && (strlen($data['value']) < $data['min'] || strlen($data['value']) > $data['max']))
+                {
+                    $errors[] = "Invalid {$data['message']}";
+                }elseif ($field === 'Protein' && (strlen($data['value']) < $data['min'] || strlen($data['value']) > $data['max']))
+                {
+                    $errors[] = "Invalid {$data['message']}";
+                }elseif ($field === 'Carbs' && (strlen($data['value']) < $data['min'] || strlen($data['value']) > $data['max']))
+                {
+                    $errors[] = "Invalid {$data['message']}";
+                }elseif ($field === 'Fat' && (strlen($data['value']) < $data['min'] || strlen($data['value']) > $data['max']))
+                {
+                    $errors[] = "Invalid {$data['message']}";
+                }elseif ($field === 'Salt' && (strlen($data['value']) < $data['min'] || strlen($data['value']) > $data['max']))
+                {
+                    $errors[] = "Invalid {$data['message']}";
+                }elseif ($field === 'Quantity' && (strlen($data['value']) < $data['min'] || strlen($data['value']) > $data['max']))
+                {
+                    $errors[] = "Invalid {$data['message']}";
+                }
+                 elseif (strlen($data['value']) > $data['max'])
+                {
+                    $errors[] = "{$data['message']} must be less than {$data['max']} characters";
+                }
             }
-            $this->setResponse(400, "Nutrition Details does not Exist");
+            if(!empty($errors)){
+                $len = count($errors);
+                $this->setResponse(400, "There are: $len", $errors);
+            }
+            return true;
         }
         public function get()
         {
-            $selectQuery = $this->getDb()->createSelect()->cols(["*"])->from("nutrition_details")->where(["food_id" => $this->getId()]);
-            $data = $selectQuery->execute();
+            $selectQuery = $this->getDb()->createSelect()->into("nutrition_details")->cols(["food_name", "weight", "calories", "protein", "carbs", "fat", "salt", "quantity"])->where(["food_id" => $this->getFoodId()]);
+            
             if(empty($data))
             {
-                $this->setResponse(400, "Nutrition Detail does not Exist");
+                $this->setResponse(400, "Nutrition does not Exist");
             } else 
             {
-                $nutritionData = $data[0];
-                $this->setFoodName($nutritionData['food_name']);
-                $this->setWeight($nutritionData['weight']);
-                $this->setCalories($nutritionData['calories']);
-                $this->setProtein($nutritionData['protein']);
-                $this->setCarbs($nutritionData['carbs']);
-                $this->setFat($nutritionData['fat']);
-                $this->setSalt($nutritionData['salt']);
-                $this->setQuantity($nutritionData['quantity']);
+                $foodData = $data[0];
+                $this->setFoodName($foodData['food_name']);
+                $this->setWeight($foodData['weight']);
+                $this->setCalories($foodData['calories']);
+                $this->setProtein($foodData['protein']);
+                $this->setCarbs($foodData['carbs']);
+                $this->setFat($foodData['fat']);
+                $this->setSalt($foodData['salt']);
+                $this->setQuantity($foodData['quantity']);
             }
         }
         public function update()
         {
             if(!$this->exists())
             {
-                $this->setResponse(400, "Nutrition Details does not Exists");
+                $this->setResponse(400, "Nutrition does not Exists");
                 return;
             }
-            $selectQuery = $this->getDb()->createSelect()->cols(["*"])->from("nutrition_details")->where(["food_id" => $this->getId()]);
-            $data = $selectQuery->execute();
+            $data = $this->getDb()->createSelect()->into("nutrition_details")->cols(["food_name", "weight", "calories", "protein", "carbs", "fat", "salt", "quantity"])->where(["food_id" => $this->getId()]);
+            
             if(empty($data))
             {
-                $this->setResponse(400, "Nutrition Details does not Exist");
+                $this->setResponse(400, "Nutrition does not Exist");
                 return;
             }
             $changed = array_filter([
@@ -109,95 +179,28 @@
                 'carbs' => $this->getCarbs() !== $data[0]['carbs'] ? $this->getCarbs() : null,
                 'fat' => $this->getFat() !== $data[0]['fat'] ? $this->getFat() : null,
                 'salt' => $this->getSalt() !== $data[0]['salt'] ? $this->getSalt() : null,
-                'quantity' => $this->getQuantity() !== $data[0]['quantity'] ? $this->getQuantity() : null,
+                'quantity' => $this->getQuantity() !== $data[0]['quantity'] ? $this->getQuantity() : null
             ]);
             if(empty($changed))
             {
                 return['message' => "No changes"];
             }
             $this->getDb()->createUpdate()->table('nutrition_details')->set($changed)->where(["food_id" => $this->getId()]);
-            return['message' => "Nutrition Details Updated"];
+            return['message' => "Nutrition Updated"];
         }
-        public function deleteNutrition()
+        public function delete()
         {
-            if (!method_exists($this, 'delete')) {
-                if($this->exists())
-                {
-                    $deleteQuery = $this->getDb()->createDelete()->from('nutrition_details')->where(["food_id" => $this->getId()]);
-                    $deleteQuery->execute();
-                    return ['message' => "Nutrition Deleted"];
-                }
-                $this->setResponse(400, "Nutrition Details does not Exist");
-            } else {
-                // Method already exists, handle accordingly
-                // You can throw an exception, log an error, or simply return a message
-                return ['message' => "Delete method already exists"];
-            }
-        }
-        public function save()
-        {
-                $nutritionData = [
-                    'food_name' => $this->getFoodName(),
-                    'weight' => $this->getWeight(),
-                    'calories' => $this->getCalories(),
-                    'protein' => $this->getProtein(),
-                    'carbs' => $this->getCarbs(),
-                    'fat' => $this->getFat(),
-                    'salt' => $this->getSalt(),
-                    'quantity' => $this->getQuantity(),
-                ];
-                $id = $this->getDb()->createInsert()->into('nutrition_details')->cols('food_name', 'weight', 'calories', 'protein', 'carbs', 'fat', 'salt', 'quantity')->values([$this->getFoodName(), $this->getWeight(), $this->getCalories(), $this->getProtein(), $this->getCarbs(), $this->getFat(), $this->getSalt(), $this->getQuantity()])->execute();                
-                
-                if($id != null)
-                {
-                    $this->setId($id);
-                    return $this->toArray();
-                }
-            
-            $this->setResponse(400, "Nutrition Details could not be saved");
-        }
-        private function checkSavable()
-        {
-            $errors = [];
-            $checkFields = [
-                'food_name' => ['value' => $this->getFoodName(), 'min' => 3, 'max' => 30, 'message' => 'foodName'],
-                'weight' => ['value' => $this->getWeight(), 'min' => 0, 'max' => 100, 'message' => 'weight'],
-                'calories' => ['value' => $this->getCalories(), 'min' => 0, 'max' => 100, 'message' => 'calories'],
-                'protein' => ['value' => $this->getProtein(), 'min' => 0, 'max' => 100, 'message' => 'protein'],
-                'carbs' => ['value' => $this->getCarbs(), 'min' => 0, 'max' => 100, 'message' => 'carbs'],
-                'fat' => ['value' => $this->getFat(), 'min' => 0, 'max' => 100, 'message' => 'fat'],
-                'salt' => ['value' => $this->getSalt(), 'min' => 0, 'max' => 100, 'message' => 'Salt'],
-                'quantity' => ['value' => $this->getQuantity(), 'min' => 0, 'max' => 100, 'message' => 'quantity']
-            ];
-
-            foreach ($checkFields as $field => $data)
+            if($this->exists())
             {
-                if(empty($data['value']))
-                {
-                    $errors[] = "Missing {$field}";
-                } elseif (strlen($data['value']) < $data['min'] || strlen($data['value']) > $data['max'])
-                {
-                    $errors[] = "{$data['message']} must be between {$data['min']} and {$data['max']} characters";
-                }
+                $delectQuery = $this->getDb()->createDelete()->from('nutrition_details')->where(["food_id" => $this->getId()]);
+                $delectQuery->execute();
+                return ['message' => "Nutrition Deleted"];
             }
-            if(!empty($errors)){
-                $len = count($errors);
-                $this->setResponse(400, "There are: $len", $errors);
-            }
-            return true; //Return true if validation passes
-
-            /**
-             * if($this->checkSavable()) 
-             * {
-             *      Database query here
-             *      $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["id = '" . $this->getId() . "'"])->execute();
-
-             * }
-             */
+            $this->setResponse(400, "Nutrition does not Exist");
         }
         public function toArray()
         {
-            $nutritionDetails['nutrition_details'] = [
+            $nutrition['nutrition_details'] = [
                 'food_name' => $this->getFoodName(),
                 'weight' => $this->getWeight(),
                 'calories' => $this->getCalories(),
@@ -207,62 +210,73 @@
                 'salt' => $this->getSalt(),
                 'quantity' => $this->getQuantity(),
             ];
-            return $nutritionDetails;
+            return $nutrition;
         }
         public function getId()
         {
-            return $this->food_id;
+            return $this->foodId;
+        }
+        public function setId($foodId)
+        {
+            $this->foodId =$foodId;
         }
         public function getFoodName()
         {
-            return $this->food_name;
+            return $this->foodName;
         }
-        public function setFoodName($food_name)
+        public function setFoodName($foodName)
         {
-            $this->food_name = $food_name;
-        }public function getWeight()
+            $this->foodName = $foodName;
+        }
+        public function getWeight()
         {
             return $this->weight;
         }
         public function setWeight($weight)
         {
             $this->weight = $weight;
-        }public function getCalories()
+        }
+        public function getCalories()
         {
             return $this->calories;
         }
         public function setCalories($calories)
         {
             $this->calories = $calories;
-        }public function getProtein()
+        }
+        public function getProtein()
         {
             return $this->protein;
         }
         public function setProtein($protein)
         {
             $this->protein = $protein;
-        }public function getCarbs()
+        }
+        public function getCarbs()
         {
             return $this->carbs;
         }
         public function setCarbs($carbs)
         {
             $this->carbs = $carbs;
-        }public function getFat()
+        }
+        public function getFat()
         {
             return $this->fat;
         }
         public function setFat($fat)
         {
             $this->fat = $fat;
-        }public function getSalt()
+        }
+        public function getSalt()
         {
             return $this->salt;
         }
         public function setSalt($salt)
         {
             $this->salt = $salt;
-        }public function getQuantity()
+        }
+        public function getQuantity()
         {
             return $this->quantity;
         }

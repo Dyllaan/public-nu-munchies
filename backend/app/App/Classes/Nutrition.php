@@ -150,8 +150,8 @@
                     'salt' => $this->getSalt(),
                     'quantity' => $this->getQuantity(),
                 ];
-                $insertQuery = $this->getDb()->createInsert()->into('nutrition_details')->cols($nutritionData);
-                $id = $insertQuery->execute();
+                $id = $this->getDb()->createInsert()->into('nutrition_details')->cols('food_name', 'weight', 'calories', 'protein', 'carbs', 'fat', 'salt', 'quantity')->values([$this->getFoodName(), $this->getWeight(), $this->getCalories(), $this->getProtein(), $this->getCarbs(), $this->getFat(), $this->getSalt(), $this->getQuantity()])->execute();                
+                
                 if($id != null)
                 {
                     $this->setId($id);

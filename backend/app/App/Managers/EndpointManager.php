@@ -38,9 +38,11 @@ class EndpointManager extends Manager
     protected function add()
     {
         $this->addEndpoint(new UserEndpoint());
-        $this->addEndpoint(new AddCat());
         $this->addEndpoint(new BusinessEndpoint());
         $this->addEndpoint(new OAuthCallback());
+
+        $this->addEndpoint(new AddCat());
+        $this->addEndpoint(new AddNutrition());
     }
 
     public function addEndpoint($endpoint)

@@ -27,7 +27,9 @@
         public function process($request)
         {
             parent::process($request);
-            $nutrition = Nutrition::getInstance($this->getDb());
+            //var_dump($request->getAttributes());
+            //$nutrition = Nutrition::getInstance($this->getDb());
+            $nutrition = new Nutrition($this->getDb());
 
             $nutrition->setFoodName($request->getAttribute('food_name'));
             $nutrition->setWeight($request->getAttribute('weight'));

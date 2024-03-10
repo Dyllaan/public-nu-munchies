@@ -9,6 +9,7 @@ namespace App\Managers;
 
 use App\Endpoints\UserEndpoint;
 use App\Endpoints\UFIntegration\AddCat;
+use App\Endpoints\UFIntegration\AddNutrition;
 use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
 use App\Endpoints\OAuthCallback;
 use Core\Manager;

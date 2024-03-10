@@ -26,7 +26,8 @@
         public function process($request)
         {
             parent::process($request);
-            $this->setResponse(200, 'Category Taken', $this->getCategory()->toArray());
+            $cat = Category::getInstance($this->getDb());
+            $this->setResponse(200, 'Category Taken', $cat->toArray());
         }
     }
 ?>

@@ -10,6 +10,7 @@ namespace App\Managers;
 use App\Endpoints\UserEndpoint;
 use App\Endpoints\UFIntegration\AddCat;
 use App\Endpoints\UFIntegration\AddNutrition;
+use App\Endpoints\CatEndpoint;
 use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
 use App\Endpoints\OAuthCallback;
 use Core\Manager;
@@ -44,6 +45,7 @@ class EndpointManager extends Manager
 
         $this->addEndpoint(new AddCat());
         $this->addEndpoint(new AddNutrition());
+        $this->addEndpoint(new CatEndpoint());
     }
 
     public function addEndpoint($endpoint)

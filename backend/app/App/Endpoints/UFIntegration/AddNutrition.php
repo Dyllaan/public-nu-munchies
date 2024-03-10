@@ -20,23 +20,25 @@
         {
             parent::__construct('POST', 'addnutrition');
             $this->setRequiresAuth(true);
-            $this->getAttribute()->addRequiredStrings(['food_name']);
-            $this->getAttribute()->addRequiredInts(['weight', 'calories', 'protein', 'carbs', 'fat', 'salt']);
+            $this->getAttributes()->addRequiredStrings(['food_name']);
+            $this->getAttributes()->addRequiredInts(['weight', 'calories', 'protein', 'carbs', 'fat', 'salt', 'quantity']);
         }
 
         public function process($request)
         {
             parent::process($request);
-            $nutrition = Nutrition_details::getInstance($this->getDb());
+            $nutrition = Nutrition::getInstance($this->getDb());
+
             $nutrition->setFoodName($request->getAttribute('food_name'));
-            $nutrition->setWeight($request>getAttribute('weight'));
+            $nutrition->setWeight($request->getAttribute('weight'));
             $nutrition->setCalories($request->getAttribute('calories'));
             $nutrition->setProtein($request->getAttribute('protein'));
             $nutrition->setCarbs($request->getAttribute('carbs'));
             $nutrition->setFat($request->getAttribute('fat'));
             $nutrition->setSalt($request->getAttribute('salt'));
-            $nutrition->logFood();
-            $this->setResponse(200, 'Food Nutrients Created');
+            $nutrition->setQuantity($request->getAttribute('quantity'));
+            $nutrition->save();
+            $this->setResponse(200, 'Food Nutrients Created', $nutrition->toArray());
         }
     }
 ?>

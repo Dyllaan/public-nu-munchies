@@ -6,16 +6,16 @@
      * This class is used to remove a category from the Category table.
      */
 
-    use Core\Endpoint\Endpoint;
-    use Core\HTTP\Classes\Request;
-    use Core\Database\Queries;
-    use Core\Database;
+    namespace App\Endpoints\UFIntegration;
+
+    use Core\Endpoint\SubEndpoint\SubEndpoint;
+    use App\Classes\Category;
     
-    class RemoveCat extends Endpoint
+    class RemoveCat extends SubEndpoint
     {
         public function _construct()
         {
-            parent::_construct('POST', 'removecategory');
+            parent::_construct('DELETE', 'removecategory');
             $this->setRequiresAuth(true);
             $this->getAttributes()->addRequiredInts(['cat']);
         }

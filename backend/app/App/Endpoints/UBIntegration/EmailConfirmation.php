@@ -9,16 +9,13 @@
 namespace App\Endpoints\UBIntegration;
 
 use Core\Endpoint\Endpoint;
-use Core\HTTP\Classes\Request;
-use Core\Database\Queries;
-use Core\Database;
 
 class EmailConfirmation extends Endpoint
 {
 
     public function __construct()
     {
-        parent::__construct('DELETE', 'emailconfirmation');
+        parent::__construct('POST', 'emailConfirmation');
         $this->setRequiresAuth(true);
         $this->getAttributes()->addRequiredStrings(['email, item_name']);
         $this->getAttributes()->addRequiredInts(['price']);

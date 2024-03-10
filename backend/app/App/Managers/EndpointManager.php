@@ -23,6 +23,7 @@ use App\Endpoints\UBIntegration\DeleteReview;
 use App\Endpoints\UBIntegration\CheckoutItem;
 use App\Endpoints\UBIntegration\Webhook;
 use Core\ClientErrorException;
+use App\Endpoints\UBIntegration\GetItems;
 
 class EndpointManager extends Manager
 {
@@ -58,6 +59,7 @@ class EndpointManager extends Manager
         $this->addEndpoint(new BusinessEndpoint());
         $this->addEndpoint(new OAuthCallback());
         $this->addEndpoint(new Webhook());
+        $this->addEndpoint(new GetItems());
     }
 
     public function addEndpoint($endpoint)

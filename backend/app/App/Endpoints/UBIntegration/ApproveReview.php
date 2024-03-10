@@ -7,18 +7,14 @@
  */
 
 namespace App\Endpoints\UBIntegration;
-
 use Core\Endpoint\Endpoint;
-use Core\HTTP\Classes\Request;
-use Core\Database\Queries;
-use Core\Database;
 
 class ApproveReview extends Endpoint
 {
 
     public function __construct()
     {
-        parent::__construct('PUT', 'approvereview');
+        parent::__construct('PUT', 'approveReview');
         $this->setRequiresAuth(true);
         $this->getAttributes()->addRequiredInts(['review_id']);
     }

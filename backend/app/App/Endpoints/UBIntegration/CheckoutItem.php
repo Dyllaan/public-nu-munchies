@@ -16,7 +16,7 @@ class CheckoutItem extends Endpoint
 
     public function __construct()
     {
-        parent::__construct('GET', 'checkoutitem');
+        parent::__construct('GET', 'checkoutItem');
         $this->setRequiresAuth(true);
         $this->getAttributes()->addRequiredInts(['item_id']);
     }

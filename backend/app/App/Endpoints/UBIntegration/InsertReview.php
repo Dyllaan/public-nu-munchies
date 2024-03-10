@@ -10,9 +10,6 @@
 namespace App\Endpoints\UBIntegration;
 
 use Core\Endpoint\Endpoint;
-use Core\HTTP\Classes\Request;
-use Core\Database\Queries;
-use Core\Database;
 
 class InsertReview extends Endpoint
 {

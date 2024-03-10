@@ -7,19 +7,21 @@
      */
     namespace App\Endpoints;
 
-    use App\Classes\Category;
+    use \App\Classes\Category;
     use \App\Endpoints\UFIntegration\AddCat;
     use \App\Endpoints\UFIntegration\EditCat;
     use \App\Endpoints\UFIntegration\RemoveCat;
+    use Core\Endpoint\Endpoint;
 
     class CatEndpoint extends Endpoint
     {
         public function __construct()
         {
             parent::__construct('GET', 'category');
-            $this->addSubEndpoint(new AddCat());
-            $this->addSubEndpoint(new EditCat());
-            $this->addSubEndpoint(new RemoveCat());
+            $this->addSubEndpoint(new AddCat('POST', 'addcategory'));
+            $this->addSubEndpoint(new EditCat('PUT', 'edit'));
+            $this->addSubEndpoint(new RemoveCat('DELETE', 'removecategory'));
+            $this->setRequiresAuth(true);
         }
         public function process($request)
         {

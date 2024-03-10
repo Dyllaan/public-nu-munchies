@@ -181,7 +181,7 @@ abstract class Entity extends CrudModel implements CrudInterface
         }
     }
 
-    private function _checkForId()
+    protected function _checkForId()
     {
         if (!$this->id) {
             $this->setResponse(400, "ID is required, define it in the object");

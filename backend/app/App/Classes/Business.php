@@ -50,7 +50,39 @@ class Business extends Entity
                     array_push($formattedData, $this->toArray());
                 }
             }
+            if ($this->address > 0) {
+                $address = new Address($this->getDb());
+                $address->id = $this->address;
+                $addressData = $address->getById();
+                unset($addressData['id']);
+                $formattedData[0]['address'] = $addressData;
+            }
         }
         return $formattedData;
+    }
+
+    public function getById()
+    {
+        $this->_checkForId();
+
+        $data = $this->getDb()->createSelect()->cols("*")->from(static::getTableName())->where([static::getIdColumnName() . " = '" . $this->id . "'"])->execute();
+        if (count($data) == 0) {
+            $this->setResponse(404, "No " . static::getEntityName() . " found with ID " . $this->id);
+            return null;
+        } else {
+            $this->_setProperties($data[0]);
+            if ($this->address > 0) {
+                $address = new Address($this->getDb());
+                $address->id = $this->address;
+                $addressData = $address->getById();
+                unset($addressData['id']);
+                $this->address = $addressData;
+            }
+            if ($this->verified_optional_hidden) {
+                return $this->toArray();
+            } else {
+                $this->setResponse(404, "No " . static::getEntityName() . " found with ID " . $this->id . " or it is not verified");
+            }
+        }
     }
 }

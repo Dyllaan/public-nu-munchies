@@ -18,16 +18,16 @@
         public function __construct()
         {
             parent::__construct('GET', 'nutrition');
-            $this->addSubEndpoint(new AddNutrition('POST', 'addnutrition'));
-            $this->addSubEndpoint(new EditNutrition('PUT', 'editnutrition'));
-            $this->addSubEndpoint(new RemoveNutrition('DELETE', 'removenutrition'));
-            $this->setRequiresAuth(true);
+            $this->addSubEndpoint(new AddNutrition());
+            $this->addSubEndpoint(new EditNutrition());
+            $this->addSubEndpoint(new RemoveNutrition());
         }
         public function process($request)
         {
             parent::process($request);
             $nutrition = Nutrition::getInstance($this->getDb());
             $this->setResponse(200, 'Nutrition Taken', $nutrition->toArray());
+            
         }
     }
 ?>

@@ -4,11 +4,11 @@ export interface UserState {
   firstName: string | undefined;
   lastName: string | undefined;
   email: string | undefined;
-  token: string | undefined;
+  verified: boolean;
 }
 export const userAtom = atom<UserState>({
   firstName: undefined,
   lastName: undefined,
   email: undefined,
-  token: undefined,
+  verified: false,
 });

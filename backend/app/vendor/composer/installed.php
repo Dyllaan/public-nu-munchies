@@ -3,13 +3,35 @@
         'name' => 'nu-web/foodwaste-backend',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'b125d0bee2fa2a14edf9dd264b336fd9b918b6fe',
+<<<<<<< Updated upstream
+        'reference' => '8048566d882ebb4fe16f5284c817f7d6cd6bb51d',
+=======
+        'reference' => '2b5dc316859e5918e9170fb610c3d3a20e94b86e',
+>>>>>>> Stashed changes
         'type' => 'library',
         'install_path' => __DIR__ . '/../../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
+        'beberlei/assert' => array(
+            'pretty_version' => 'v3.3.2',
+            'version' => '3.3.2.0',
+            'reference' => 'cb70015c04be1baee6f5f5c953703347c0ac1655',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../beberlei/assert',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'clue/stream-filter' => array(
+            'pretty_version' => 'v1.7.0',
+            'version' => '1.7.0.0',
+            'reference' => '049509fef80032cb3f051595029ab75b49a3c2f7',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../clue/stream-filter',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'firebase/php-jwt' => array(
             'pretty_version' => 'v6.10.0',
             'version' => '6.10.0.0',
@@ -82,6 +104,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'mailersend/mailersend' => array(
+            'pretty_version' => 'v0.20.0',
+            'version' => '0.20.0.0',
+            'reference' => 'ebe36631ee944229d79b4ec107605f788d6c896f',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../mailersend/mailersend',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'monolog/monolog' => array(
             'pretty_version' => '3.5.0',
             'version' => '3.5.0.0',
@@ -94,9 +125,22 @@
         'nu-web/foodwaste-backend' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b125d0bee2fa2a14edf9dd264b336fd9b918b6fe',
+<<<<<<< Updated upstream
+            'reference' => '8048566d882ebb4fe16f5284c817f7d6cd6bb51d',
+=======
+            'reference' => '2b5dc316859e5918e9170fb610c3d3a20e94b86e',
+>>>>>>> Stashed changes
             'type' => 'library',
             'install_path' => __DIR__ . '/../../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'nyholm/psr7' => array(
+            'pretty_version' => '1.8.1',
+            'version' => '1.8.1.0',
+            'reference' => 'aa5fc277a4f5508013d571341ade0c3886d4d00e',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../nyholm/psr7',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -118,6 +162,104 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'php-http/async-client-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+<<<<<<< Updated upstream
+                0 => '1.0',
+                1 => '*',
+=======
+                0 => '*',
+                1 => '1.0',
+>>>>>>> Stashed changes
+            ),
+        ),
+        'php-http/client-common' => array(
+            'pretty_version' => '2.7.1',
+            'version' => '2.7.1.0',
+            'reference' => '1e19c059b0e4d5f717bf5d524d616165aeab0612',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../php-http/client-common',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'php-http/client-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+<<<<<<< Updated upstream
+                0 => '1.0',
+                1 => '*',
+=======
+                0 => '*',
+                1 => '1.0',
+>>>>>>> Stashed changes
+            ),
+        ),
+        'php-http/discovery' => array(
+            'pretty_version' => '1.19.2',
+            'version' => '1.19.2.0',
+            'reference' => '61e1a1eb69c92741f5896d9e05fb8e9d7e8bb0cb',
+            'type' => 'composer-plugin',
+            'install_path' => __DIR__ . '/../php-http/discovery',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'php-http/guzzle7-adapter' => array(
+            'pretty_version' => '1.0.0',
+            'version' => '1.0.0.0',
+            'reference' => 'fb075a71dbfa4847cf0c2938c4e5a9c478ef8b01',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../php-http/guzzle7-adapter',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'php-http/httplug' => array(
+            'pretty_version' => '2.4.0',
+            'version' => '2.4.0.0',
+            'reference' => '625ad742c360c8ac580fcc647a1541d29e257f67',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../php-http/httplug',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'php-http/message' => array(
+            'pretty_version' => '1.16.1',
+            'version' => '1.16.1.0',
+            'reference' => '5997f3289332c699fa2545c427826272498a2088',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../php-http/message',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'php-http/message-factory-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '1.0',
+            ),
+        ),
+        'php-http/promise' => array(
+            'pretty_version' => '1.3.0',
+            'version' => '1.3.0.0',
+            'reference' => '2916a606d3b390f4e9e8e2b8dd68581508be0f07',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../php-http/promise',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+<<<<<<< Updated upstream
+=======
+        'phpgangsta/googleauthenticator' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '505c2af8337b559b33557f37cda38e5f843f3768',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpgangsta/googleauthenticator',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
+>>>>>>> Stashed changes
         'phpoption/phpoption' => array(
             'pretty_version' => '1.9.2',
             'version' => '1.9.2.0',
@@ -158,6 +300,7 @@
             'dev_requirement' => false,
             'provided' => array(
                 0 => '1.0',
+                1 => '*',
             ),
         ),
         'psr/http-factory' => array(
@@ -173,6 +316,7 @@
             'dev_requirement' => false,
             'provided' => array(
                 0 => '1.0',
+                1 => '*',
             ),
         ),
         'psr/http-message' => array(
@@ -188,6 +332,7 @@
             'dev_requirement' => false,
             'provided' => array(
                 0 => '1.0',
+                1 => '*',
             ),
         ),
         'psr/log' => array(
@@ -214,21 +359,21 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'stripe/stripe-php' => array(
-            'pretty_version' => 'v13.13.0',
-            'version' => '13.13.0.0',
-            'reference' => '8dc58bab25f222a74d1157d4ca9e9e48451dd0c1',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../stripe/stripe-php',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'symfony/deprecation-contracts' => array(
             'pretty_version' => 'v3.4.0',
             'version' => '3.4.0.0',
             'reference' => '7c3aff79d10325257a001fcf92d991f24fc967cf',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/deprecation-contracts',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/options-resolver' => array(
+            'pretty_version' => 'v7.0.0',
+            'version' => '7.0.0.0',
+            'reference' => '700ff4096e346f54cb628ea650767c8130f1001f',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/options-resolver',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -256,6 +401,24 @@
             'reference' => '87b68208d5c1188808dd7839ee1e6c8ec3b02f1b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-php80',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/var-dumper' => array(
+            'pretty_version' => 'v6.4.4',
+            'version' => '6.4.4.0',
+            'reference' => 'b439823f04c98b84d4366c79507e9da6230944b1',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/var-dumper',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'tightenco/collect' => array(
+            'pretty_version' => 'v8.83.27',
+            'version' => '8.83.27.0',
+            'reference' => '07eed6cf7441c7a69c379fdcb118eec1a1fdd0e6',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../tightenco/collect',
             'aliases' => array(),
             'dev_requirement' => false,
         ),

@@ -46,6 +46,7 @@ class EndpointManager extends Manager
         $this->addEndpoint(new OAuthCallback());
 
         $this->addEndpoint(new CatEndpoint());
+        $this->addEndpoint(new AddCat());
         $this->addEndpoint(new NutritionEndpoint());
         $this->addEndpoint(new AddCat());
         $this->addEndpoint(new AddNutrition());

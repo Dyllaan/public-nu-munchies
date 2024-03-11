@@ -19,7 +19,6 @@
         public function __construct()
         {
             parent::__construct('POST', 'addnutrition');
-            $this->setRequiresAuth(true);
             $this->getAttributes()->addRequiredStrings(['food_name']);
             $this->getAttributes()->addRequiredInts(['weight', 'calories', 'protein', 'carbs', 'fat', 'salt', 'quantity']);
         }

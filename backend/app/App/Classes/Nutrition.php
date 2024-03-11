@@ -208,7 +208,7 @@
                 'carbs' => $this->getCarbs(),
                 'fat' => $this->getFat(),
                 'salt' => $this->getSalt(),
-                'quantity' => $this->getQuantity(),
+                'quantity' => $this->getQuantity()
             ];
             return $nutrition;
         }

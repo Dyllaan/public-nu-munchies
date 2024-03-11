@@ -7,10 +7,12 @@
 
 namespace App\Managers;
 
-use App\Endpoints\UserEndpoint;
-use App\Endpoints\UFIntegration\AddCat;
-use App\Endpoints\UFIntegration\AddNutrition;
 use App\Endpoints\CatEndpoint;
+use App\Endpoints\UFIntegration\AddCat;
+use App\Endpoints\NutritionEndpoint;
+use App\Endpoints\UFIntegration\AddNutrition;
+
+use App\Endpoints\UserEndpoint;
 use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
 use App\Endpoints\OAuthCallback;
 use Core\Manager;
@@ -43,9 +45,11 @@ class EndpointManager extends Manager
         $this->addEndpoint(new BusinessEndpoint());
         $this->addEndpoint(new OAuthCallback());
 
+        $this->addEndpoint(new CatEndpoint());
+        $this->addEndpoint(new NutritionEndpoint());
         $this->addEndpoint(new AddCat());
         $this->addEndpoint(new AddNutrition());
-        $this->addEndpoint(new CatEndpoint());
+        
     }
 
     public function addEndpoint($endpoint)

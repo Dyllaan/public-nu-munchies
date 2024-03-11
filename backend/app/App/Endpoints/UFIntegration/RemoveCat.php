@@ -13,11 +13,11 @@
     
     class RemoveCat extends SubEndpoint
     {
-        public function _construct()
+        public function __construct()
         {
-            parent::_construct('DELETE', 'removecategory');
+            parent::__construct('DELETE', 'removecategory');
             $this->setRequiresAuth(true);
-            $this->getAttributes()->addRequiredInts(['cat']);
+            $this->getAttributes()->addRequiredInts(['cat_id']);
         }
         public function process($request)
         {

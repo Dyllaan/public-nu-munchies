@@ -8,15 +8,14 @@
 
     namespace App\Endpoints\UFIntegration;
 
-    use Core\Endpoint\SubEndpoint\SubEndpoint;
+    use Core\Endpoint\Endpoint;
     use App\Classes\Category;
     
-    class RemoveCat extends SubEndpoint
+    class RemoveCat extends Endpoint
     {
         public function __construct()
         {
             parent::__construct('DELETE', 'removecategory');
-            $this->setRequiresAuth(true);
             $this->getAttributes()->addRequiredInts(['cat_id']);
         }
         public function process($request)

@@ -5,17 +5,16 @@
      * 
      * This class is used to remove a food Nutrition from the nutrition_details table.
      */
+    namespace App\Endpoints\UFIntegration;
 
-     use Core\Endpoint\Endpoint;
-     use Core\HTTP\Classes\Request;
-     use Core\Database\Queries;
-     use Core\Database;
+    use Core\Endpoint\SubEndpoint\SubEndpoint;
+    use App\Classes\Nutrition;
 
-     class RemoveNutrition extends Endpoint
+     class RemoveNutrition extends SubEndpoint
      {
-        public function _construct()
+        public function __construct()
         {
-            parent::_construct('POST', 'removenutrition');
+            parent::__construct('DELETE', 'removenutrition');
             $this->setRequiresAuth(true);
             $this->getAttributes()->addRequiredInts(['food_id']);
         }

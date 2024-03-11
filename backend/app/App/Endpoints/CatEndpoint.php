@@ -18,10 +18,9 @@
         public function __construct()
         {
             parent::__construct('GET', 'category');
-            $this->addSubEndpoint(new AddCat('POST', 'addcategory'));
-            $this->addSubEndpoint(new EditCat('PUT', 'edit'));
-            $this->addSubEndpoint(new RemoveCat('DELETE', 'removecategory'));
-            $this->setRequiresAuth(true);
+            $this->addSubEndpoint(new AddCat());
+            $this->addSubEndpoint(new EditCat());
+            $this->addSubEndpoint(new RemoveCat());
         }
         public function process($request)
         {

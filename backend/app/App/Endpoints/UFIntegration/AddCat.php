@@ -17,7 +17,6 @@
         public function __construct()
         {
             parent::__construct('POST', 'addcategory');
-            $this->setRequiresAuth(true);
             $this->getAttributes()->addRequiredStrings(['cat_name', 'cat_image']);
         }
 

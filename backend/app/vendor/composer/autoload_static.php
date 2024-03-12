@@ -7,14 +7,20 @@ namespace Composer\Autoload;
 class ComposerStaticInit43a2932787625ae98daa0e93076cb316
 {
     public static $files = array (
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
+        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
+        'a4ecaeafb8cfb009ad0e052c90355e98' => __DIR__ . '/..' . '/beberlei/assert/lib/Assert/functions.php',
         '1f87db08236948d07391152dccb70f04' => __DIR__ . '/..' . '/google/apiclient-services/autoload.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        'fe62ba7e10580d903cc46d808b5961a4' => __DIR__ . '/..' . '/tightenco/collect/src/Collect/Support/helpers.php',
+        'caf31cc6ec7cf2241cb6f12c226c3846' => __DIR__ . '/..' . '/tightenco/collect/src/Collect/Support/alias.php',
         'a8d3953fd9959404dd22d3dfcd0a79f0' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
     );
 
@@ -23,12 +29,17 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
         array (
             'phpseclib3\\' => 11,
         ),
+        'T' => 
+        array (
+            'Tightenco\\Collect\\' => 18,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
-            'Stripe\\' => 7,
+            'Symfony\\Component\\VarDumper\\' => 28,
+            'Symfony\\Component\\OptionsResolver\\' => 34,
         ),
         'P' => 
         array (
@@ -41,11 +52,22 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
         ),
         'N' => 
         array (
+            'Nyholm\\Psr7\\' => 12,
             'NuWeb\\FoodwasteBackend\\' => 23,
         ),
         'M' => 
         array (
             'Monolog\\' => 8,
+            'MailerSend\\' => 11,
+        ),
+        'H' => 
+        array (
+            'Http\\Promise\\' => 13,
+            'Http\\Message\\' => 13,
+            'Http\\Discovery\\' => 15,
+            'Http\\Client\\Common\\' => 19,
+            'Http\\Client\\' => 12,
+            'Http\\Adapter\\Guzzle7\\' => 21,
         ),
         'G' => 
         array (
@@ -65,12 +87,24 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
         array (
             'Dotenv\\' => 7,
         ),
+        'C' => 
+        array (
+            'Clue\\StreamFilter\\' => 18,
+        ),
+        'A' => 
+        array (
+            'Assert\\' => 7,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'phpseclib3\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
+        ),
+        'Tightenco\\Collect\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tightenco/collect/src/Collect',
         ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (
@@ -84,9 +118,13 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Stripe\\' => 
+        'Symfony\\Component\\VarDumper\\' => 
         array (
-            0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
+            0 => __DIR__ . '/..' . '/symfony/var-dumper',
+        ),
+        'Symfony\\Component\\OptionsResolver\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/options-resolver',
         ),
         'Psr\\Log\\' => 
         array (
@@ -113,6 +151,10 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
+        'Nyholm\\Psr7\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nyholm/psr7/src',
+        ),
         'NuWeb\\FoodwasteBackend\\' => 
         array (
             0 => __DIR__ . '/../../..' . '/app',
@@ -120,6 +162,34 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'MailerSend\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mailersend/mailersend/src',
+        ),
+        'Http\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-http/promise/src',
+        ),
+        'Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-http/message/src',
+        ),
+        'Http\\Discovery\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-http/discovery/src',
+        ),
+        'Http\\Client\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-http/client-common/src',
+        ),
+        'Http\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-http/httplug/src',
+        ),
+        'Http\\Adapter\\Guzzle7\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-http/guzzle7-adapter/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -157,6 +227,14 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
         ),
+        'Clue\\StreamFilter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/clue/stream-filter/src',
+        ),
+        'Assert\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/beberlei/assert/lib/Assert',
+        ),
     );
 
     public static $classMap = array (
@@ -182,6 +260,7 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
         'Google_Task_Retryable' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
         'Google_Task_Runner' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
         'Google_Utils_UriTemplate' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'PHPGangsta_GoogleAuthenticator' => __DIR__ . '/..' . '/phpgangsta/googleauthenticator/PHPGangsta/GoogleAuthenticator.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',

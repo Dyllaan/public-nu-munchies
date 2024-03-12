@@ -10,11 +10,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import GoogleSignIn from "../components/GoogleLogin";
+
 // zod library for schema validation
 import { z } from "zod";
 
+import requireAuth from "../components/requireAuth";
+
 // User subsystem
-import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsystem";
+import useUserSubsystem from "../../../hooks/user-subsystem/use-user-subsystem";
 
 // Define the registration form schema using zod
 const registrationFormSchema = z.object({
@@ -28,7 +32,7 @@ const registrationFormSchema = z.object({
 // Type inference for the registration form data
 type RegistrationFormInput = z.infer<typeof registrationFormSchema>;
 
-export default function RegistrationPage() {
+function RegistrationPage() {
     const { register } = useUserSubsystem();
 
     const form = useForm<RegistrationFormInput>({
@@ -134,6 +138,9 @@ export default function RegistrationPage() {
                 </Card>
             </form>
         </Form>
+        <GoogleSignIn />
         </>
     );
 }
+
+export default requireAuth(RegistrationPage, false);

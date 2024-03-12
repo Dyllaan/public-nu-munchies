@@ -1,17 +1,17 @@
 <?php
 
 
-namespace App\Classes;
+namespace App\Classes\BusinessSubsystem;
 
 use Core\Database\Entity;
 
-class Business extends Entity
+class Address extends Entity
 {
-    protected $id, $name, $address_optional, $email_optional;
+    public $id, $address, $city, $postcode, $country;
 
     protected function getEntityName(): string
     {
-        return "business";
+        return "address";
     }
 
     protected function getIdColumnName(): string
@@ -21,16 +21,17 @@ class Business extends Entity
 
     protected function getTableName(): string
     {
-        return "businesses";
+        return "addresses";
     }
 
     protected function getPropertyMap(): array
     {
         return [
             "id" => "id",
-            "name" => "business_name",
-            "email_optional" => "business_email",
-            "address_optional" => "business_address",
+            "address" => "address_line1",
+            "city" => "address_city",
+            "postcode" => "address_postcode",
+            "country" => "address_country",
         ];
     }
 }

@@ -80,8 +80,6 @@
         {
             $errors = [];
 
-        // TODO: maybe lets predefine these messages in some other file as constants and then just reference to them ie. $errorMessages['missingName']
-
         if (empty($this->getCatName())) {
             $errors[] = "Missing Category name";
         }
@@ -100,7 +98,7 @@
         }
         public function get()
         {
-            $data = $this->getDb()->createSelect()->cols(["cat_name"])->from($this->getTable())->where(["cat_id" => $this->getId()]);
+            $data = $this->getDb()->createSelect()->cols(["*"])->from($this->getTable())->where(["cat_id" => $this->getId()]);
             
             if(count($data) == 0)
             {
@@ -148,7 +146,26 @@
                 'cat_name' => $this->getCatName(),
                 'cat_image' => $this->getCatImage()
             ];
+            $jwt = $this->generateJWT($this->getId(), 1);
+            $cat['jwt'] = $jwt;
             return $cat;
+        }
+        public function generateJWT($id, $providerId)
+        {
+            $secretKey = $this->appConfigInstance->get('JWT_SECRET');
+
+                $iat = time();
+                $exp = strtotime('+5 hour', $iat);
+                $iss = $_SERVER['HTTP_HOST'];
+                $payload = [
+                    'cat_id' => $id,
+                    'iat' => $iat,
+                    'exp' => $exp,
+                    'iss' => $iss,
+                    'provider_id' => $providerId
+                ];
+                $jwt = JWT::encode($payload, $secretKey, 'HS256');
+                return $jwt;
         }
         
         public function getCatName()

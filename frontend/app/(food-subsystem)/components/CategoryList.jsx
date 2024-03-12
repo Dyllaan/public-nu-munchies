@@ -1,20 +1,43 @@
-import React from 'react';
-import CategoryList from './CategoryList';
+'use client'
+import {useEffect, useState} from 'react'
 
-const fetchData = () => { 
-    fetch("http://localhost:3000/category")
-    .then( response => response.json() )
-    .then( json => setItems(json) )
-    .catch(error => {
-      console.error('Error fetching data:', error); 
-});}
-const App= () => {
+const CategoryList = () => {
+    const [fetchError, setFetchError] = useState(null)
+    const [cat_name, setCatName] = useState(null)
+
+    useEffect(() => {
+        const fetchCatName = async() => {
+            const { data, error} = await supabase
+                .from(categories)
+                .select()
+
+            if (error)
+            {
+                setFetchError('Could not fetch the name')
+                setCatName(null)
+                console.log(error)
+            }
+            if (data)
+            {
+                setCatName(data)
+                setFetchError(null)
+            }
+        }
+
+        fetchCatName()
+    }, [])
+
     return (
-        <div>
-            <h1>My Application</h1>
-            <CategoryList />
+        <div className="category">
+            {fetchError && (<p>{fetchError}</p>)}
+            {cat_name && (
+                <div className="catName">
+                    {cat_name.map(cat_name => (
+                        <p>{cat_name.title}</p>
+                    ))}
+                </div>
+            )}
         </div>
-    );
-};
-
-export default App;
+    )
+}
+export default CategoryList

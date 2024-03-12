@@ -2,35 +2,31 @@
 
 import {useState, useEffect} from 'react'
 
-function CategoryList()
+function Cat() 
 {
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                let { data: categoryData, error } = await supabase.from('categories').select('*');
-                if (error) {
-                    throw error;
-                }
-                setCategory(categoryData);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        fetchData();
-    }, []);
-
-    const catDisplay = (
-        <div>
-            {category.map((value, key) => (
+    const [categories, setCat] = useState([]);
+        const fetchData = () => {
+            fetch("https://localhost:8080/category")
+            .then (response => response.json())
+            .then (json =>setCat(json))
+            .catch (error => {
+                console.error('Error fetching data: ', error);
+            }); 
+        }
+    useEffect(fetchData, [])
+    const CatDisplay = (
+        <div className="bg-[#eaeaea] my-2 rounded">
+            {categories.map((value, key) => (
                 <div key={key} className="mb-2">
-                    <p className="font-bold">{value.cat_name}</p>
+                    <p className="font-bold">Name: {value.cat_name}</p>
                 </div>
             ))}
         </div>
     );
-
-    return <>{catDisplay}</>;
+    return (
+        <>
+            {CatDisplay}
+        </>
+    )
 }
-
-export default CategoryList;
+export default Cat

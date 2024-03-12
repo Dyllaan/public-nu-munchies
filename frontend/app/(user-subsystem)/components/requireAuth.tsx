@@ -3,10 +3,15 @@ import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 import Loading from './Loading';
 import VerifyEmail from './VerifyEmail';
 import RedirectTo from "./RedirectTo";
+import { useEffect } from "react";
 
 export default function requireAuth(ChildComponents: any, pageNeedsAuth: boolean = true) {
     const RequireAuthComponent = (props: any) => {
-        const { loading, logged, user } = useUserSubsystem();
+        const { loading, logged, user, checkToken } = useUserSubsystem();
+
+        useEffect(() => {
+            checkToken();
+          }, []);
         
         if(loading) {
             return <Loading action={"Logging you in..."} />;

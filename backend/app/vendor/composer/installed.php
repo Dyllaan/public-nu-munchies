@@ -3,7 +3,7 @@
         'name' => 'nu-web/foodwaste-backend',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '055c970b81e78ed862569ac24f3727cc0d96c772',
+        'reference' => '0914917a4f0a76cc6cf4a36e8f5b9ff2bb48d41b',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../../',
         'aliases' => array(),
@@ -94,7 +94,7 @@
         'nu-web/foodwaste-backend' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '055c970b81e78ed862569ac24f3727cc0d96c772',
+            'reference' => '0914917a4f0a76cc6cf4a36e8f5b9ff2bb48d41b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../../',
             'aliases' => array(),

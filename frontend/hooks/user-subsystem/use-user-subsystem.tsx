@@ -33,7 +33,6 @@ export const useUserSubsystem = () => {
   }
 
   async function checkToken() {
-    console.log("here");
     if(localStorage.getItem('token') === null){
       return;
     }

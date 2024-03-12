@@ -25,6 +25,7 @@
         {
             parent::__construct($db);
             $this->appConfigInstance = new \Appconfig();
+            $this->setTable("category");
         }
         public static function getInstance($db)
         {
@@ -35,81 +36,77 @@
         }
         public function exists()
         {
-            if($this>getId() != null){
-                $data = $this->getDb()->createSelect()->cols("*")->from("categories")->where(["id = '" .$request->getAttribute('cat_id'). "'"])->execute();
-                if(count($data) == 0){
+            if ($this->getId() != null) {
+                $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["cat_id = '" . $this->getId() . "'"])->execute();
+                if (count($data) == 0) {
                     return false;
                 } else {
                     return true;
                 }
             } elseif ($this->getCatName() != null) {
-                $data = $this->getDb()->createSelect()->cols("*")->from("categories")->where(["name = '" . $request->getAttribute('cat_name'). "'"])->execute();
-                if(count($data) == 0){
+                $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["cat_name = '" . $this->getCatName() . "'"])->execute();
+                if (count($data) == 0) {
                     return false;
                 } else {
                     return true;
                 }
+            } else {
+                return false;
             }
         }
         public function save()
         {
-            
-                $catData = [
-                    'cat_name' => $this->getCatName(),
-                    'cat_image' => $this->getCatImage()
-                ];
-                $id = $this->getDb()->createInsert()->into('categories')->cols('cat_name, cat_image')->values([$this->getCatName(), $this->getCatImage()])->execute();                
-                
-                if($id != null)
-                {
-                    $this->setId($id);
-                    return $this->toArray();
+            if ($this->checkSavable()) {
+                $this->getDb()->beginTransaction();
+                try {
+                    $id = $this->getDb()->createInsert()->into($this->getTable())->cols('cat_name')->values([$this->getCatName()])->execute();
+                    if ($id != null) {
+                        $this->getDb()->commit();
+                        $this->setId($id);
+                        return $this->toArray();
+                    } else {
+                        $this->getDb()->rollBack();
+                        $this->setResponse(400, "Category could not be saved");
+                    }
+                } catch (\Exception $e) {
+                    $this->getDb()->rollBack();
+                    $this->setResponse(500, "An error occurred: " . $e->getMessage());
                 }
-            
-            $this->setResponse(400, "Category could not be saved");
+            } else {
+                $this->setResponse(400, "Category could not be saved");
+            }
         }
         private function checkSavable()
         {
             $errors = [];
-            $checkFields = [
-                'CatName' => ['value' => $this->getCatName(), 'min' => 3, 'max' => 30, 'message' => 'catname'],
-                'CatImage' => ['value' => $this->getCatImage(), 'min' => 0, 'max' => 100, 'message' => 'catimage']
-            ];
 
-            foreach ($checkFields as $field => $data)
-            {
-                if(empty($data['value']))
-                {
-                    $errors[] = "Missing {$field}";
-                } elseif ($field === 'CatName' && (strlen($data['value']) < $data['min'] || strlen($data['value']) > $data['max']))
-                {
-                    $errors[] = "{$data['message']} must be between {$data['min']} and {$data['max']} characters";
-                } elseif ($field == 'CatImage' && !filter_var($data['value'], FILTER_VALIDATE_EMAIL))
-                {
-                    $errors[] = "Invalid {$data['message']}";
-                } elseif (strlen($data['value']) > $data['max'])
-                {
-                    $errors[] = "{$data['message']} must be less than {$data['max']} characters";
-                }
-            }
-            if(!empty($errors)){
-                $len = count($errors);
-                $this->setResponse(400, "There are: $len", $errors);
-            }
-            return true;
+        // TODO: maybe lets predefine these messages in some other file as constants and then just reference to them ie. $errorMessages['missingName']
+
+        if (empty($this->getCatName())) {
+            $errors[] = "Missing Category name";
+        }
+
+        if (strlen($this->getCatName()) < 3) {
+            $errors[] = "First Category must be at least 3 characters";
+        } elseif (strlen($this->getCatName()) > 30) {
+            $errors[] = "First Category must be less than 30 characters";
+        }
+
+        if (!empty($errors)) {
+            $len = count($errors);
+            $this->setResponse(400, `There are: $len`, $errors);
+        }
+        return true;
         }
         public function get()
         {
-            $selectQuery = $this->getDb()->createSelect()->cols(["cat_name", "cat_image"])->from("categories")->where(["cat_id" => $this->getCatId()]);
-            $data = $selectQuery->execute();
-            if(empty($data))
+            $data = $this->getDb()->createSelect()->cols(["cat_name"])->from($this->getTable())->where(["cat_id" => $this->getId()]);
+            
+            if(count($data) == 0)
             {
                 $this->setResponse(400, "Category does not Exist");
-            } else 
-            {
-                $catData = $data[0];
-                $this->setCatName($catData['cat_name']);
-                $this->setCatImage($catData['cat_image']);
+            } else {
+                $this->setCatName($data[0]['cat_name']);
             }
         }
         public function update()
@@ -117,15 +114,13 @@
             if(!$this->exists())
             {
                 $this->setResponse(400, "Category does not Exists");
-                return;
             }
-            $selectQuery = $this->getDb()->createSelect()->cols(["cat_name", "cat_image"])->from("categories")->where(["cat_id" => $this->getCatId()]);
-            $data = $selectQuery->execute();
-            if(empty($data))
+            $data = $this->getDb()->createSelect()->cols(["cat_name"])->from($this->getTable())->where(["cat_id" => $this->getId()]);
+            
+            if(count($data) == 0)
             {
                 $this->setResponse(400, "Category does not Exist");
-                return;
-            }
+            } 
             $changed = array_filter([
                 'cat_name' => $this->getCatName() !== $data[0]['cat_name'] ? $this->getCatName() : null,
                 'cat_image' => $this->getCatImage() !== $data[0]['cat_image'] ? $this->getCatImage() : null
@@ -134,15 +129,14 @@
             {
                 return['message' => "No changes"];
             }
-            $this->getDb()->createUpdate()->table('categories')->set($changed)->where(["cat_id" => $this->getCatId()]);
+            $this->getDb()->createUpdate()->table('categories')->set($changed)->where(["cat_id" => $this->getId()]);
             return['message' => "Category Updated"];
         }
         public function delete()
         {
             if($this->exists())
             {
-                $delectQuery = $this->getDb()->createDelete()->from('categories')->where(["cat_id" => $this->getCatId()]);
-                $delectQuery->execute();
+                $this->getDb()->createDelete()->from($this->getTable())->where(["cat_id = '" . $this->getId() . "'"])->execute();
                 return ['message' => "Category Deleted"];
             }
             $this->setResponse(400, "Category does not Exist");
@@ -150,16 +144,13 @@
         public function toArray()
         {
             $cat['categories'] = [
+                'cat_id' => $this->getId(),
                 'cat_name' => $this->getCatName(),
                 'cat_image' => $this->getCatImage()
             ];
             return $cat;
         }
         
-        public function getCatId()
-        {
-            return $this->catId;
-        }
         public function getCatName()
         {
             return $this->catName;

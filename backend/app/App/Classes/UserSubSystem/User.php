@@ -136,18 +136,10 @@ class User extends CrudModel implements CrudInterface
     {
         if ($this->getId() != null) {
             $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["id = '" . $this->getId() . "'"])->execute();
-            if (count($data) == 0) {
-                return false;
-            } else {
-                return true;
-            }
+            return count($data) > 0;
         } elseif ($this->getEmail() != null) {
             $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["email = '" . $this->getEmail() . "'"])->execute();
-            if (count($data) == 0) {
-                return false;
-            } else {
-                return true;
-            }
+            return count($data) > 0;
         } else {
             return false;
         }
@@ -156,11 +148,7 @@ class User extends CrudModel implements CrudInterface
     public function doesUserExistAtEmail($email)
     {
         $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["email = '" . $email . "'"])->execute();
-        if (count($data) == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return count($data) > 0;
     }
 
     public function login()

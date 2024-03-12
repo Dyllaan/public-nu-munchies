@@ -1,28 +1,27 @@
 <?php
 
+    namespace App\Endpoints\UFIntegration;
 
-namespace App\Endpoints\UFIntegration;
+    use Core\Endpoint\Endpoint;
 
-use App\Classes\Category;
-use Core\Endpoint\Endpoint;
-
-class GetItems extends Endpoint
-{
-
-    public function __construct()
+    class GetCat extends Endpoint
     {
-        parent::__construct('GET', 'getcategory');
-    }
 
-    public function process($request)
-    {
-        parent::process($request);
-        $id = $this->getDb()->createSelect()
-    ->from('category')
-    ->cols('cat_id, cat_name, cat_image')
-    ->execute();
+        public function __construct()
+        {
+            parent::__construct('GET', 'getcategory');
+            
+            $this->getAttributes()->addRequiredInts(['cat_id']);
+            $this->getAttributes()->addRequiredStrings(['cat_name']);
+        }
 
-        
-        $this->setResponse(200, 'Category Shown',  $id);
+        public function process($request)
+        {
+            parent::process($request);
+            $id = $this->getDb()->createSelect()->table("categories")->cols('cat_id, cat_name')->execute();
+
+            
+            $this->setResponse(200, 'Category Shown',  $id);
+        }
     }
-}
+?>

@@ -1,43 +1,35 @@
 "use client";
-import {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
+function Main() {
+    const [categories, setCategories] = useState([]);
 
-function Main()
-{
-    
-    function Cat() 
-{
-    const [categories, setCat] = useState([]);
-        const fetchData = () => {
-            fetch("https://localhost:8080/category")
-            .then (response => response.json())
-            .then (json =>setCat(json))
-            .catch (error => {
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch("https://localhost:8080/category");
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const json = await response.json();
+                setCategories(json);
+            } catch (error) {
                 console.error('Error fetching data: ', error);
-            }); 
-        }
-    useEffect(fetchData, [])
-    const CatDisplay = (
-        <div className="bg-[#eaeaea] my-2 rounded">
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    return (
+        <div>
             {categories.map((value, key) => (
-                <div key={key} className="mb-2">
+                <div key={key} className="bg-[#eaeaea] my-2 rounded">
                     <p className="font-bold">Name: {value.cat_name}</p>
                 </div>
             ))}
         </div>
     );
-    return (
-        <>
-            <div className="bg-[#eaeaea] my-2 rounded">
-            {categories.map((value, key) => (
-                <div key={key} className="mb-2">
-                    <p className="font-bold">Name: {value.cat_name}</p>
-                </div>
-            ))}
-        </div>
-        </>
-    )
-    
 }
-}
-export default Main
+
+export default Main;

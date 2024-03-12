@@ -47,7 +47,10 @@ class EndpointManager extends Manager
 
     protected function add()
     {
+            
+ 
         $this->addEndpoint(new UserEndpoint());
+            /*
         $this->addEndpoint(new ItemUpload());
         $this->addEndpoint(new ItemReserve());
         $this->addEndpoint(new OrderCancel());
@@ -55,11 +58,14 @@ class EndpointManager extends Manager
         $this->addEndpoint(new InsertReview());
         $this->addEndpoint(new ApproveReview());
         $this->addEndpoint(new DeleteReview());
-        $this->addEndpoint(new CheckoutItem());
+        
         $this->addEndpoint(new BusinessEndpoint());
         $this->addEndpoint(new OAuthCallback());
         $this->addEndpoint(new Webhook());
+        */
         $this->addEndpoint(new GetItems());
+        $this->addEndpoint(new CheckoutItem());
+
     }
 
     public function addEndpoint($endpoint)

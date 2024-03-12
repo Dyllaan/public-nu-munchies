@@ -53,17 +53,13 @@ class CheckoutItem extends Endpoint
             'enabled' => true,
           ],
         ]);
-        
-
-        header("HTTP/1.1 303 See Other");
-        header("Location: " . $checkout_session->url, true, 301);
-        exit;
 
         $response = [
-          'status' => 'Item Checked out',
-          'item' => $item,
-          'checkout_url' => $checkout_session->url // Include the checkout URL in the response
-      ];
+    'status' => 'Item Checked out',
+    'item' => $item,
+    'checkout_url' => $checkout_session->url 
+];
+
   
       $this->setResponse(200, $response['status'], $response);
             }

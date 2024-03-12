@@ -7,7 +7,7 @@
      */
     namespace App\Endpoints;
 
-    use \App\Classes\Category;
+    use App\Classes\Category;
     use \App\Endpoints\UFIntegration\AddCat;
     use \App\Endpoints\UFIntegration\EditCat;
     use \App\Endpoints\UFIntegration\RemoveCat;

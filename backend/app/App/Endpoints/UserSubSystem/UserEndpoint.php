@@ -6,15 +6,15 @@
  * @generated This class was created using Github Copilot
  */
 
-namespace App\Endpoints\Users;
+namespace App\Endpoints\UserSubSystem;
 
 use App\Classes\UserSubSystem\User;
-use \App\Endpoints\Users\UserSubEndpoints\RegisterUser;
-use \App\Endpoints\Users\UserSubEndpoints\EditUser;
-use \App\Endpoints\Users\UserSubEndpoints\LoginUser;
-use \App\Endpoints\Users\UserSubEndpoints\VerifyEmailOTP;
-use \App\Endpoints\Users\UserSubEndpoints\ResendEmail;
-use \App\Endpoints\Users\UserSubEndpoints\ForgotPassword;
+use \App\Endpoints\UserSubSystem\UserSubEndpoints\RegisterUser;
+use \App\Endpoints\UserSubSystem\UserSubEndpoints\EditUser;
+use \App\Endpoints\UserSubSystem\UserSubEndpoints\LoginUser;
+use \App\Endpoints\UserSubSystem\UserSubEndpoints\VerifyEmailOTP;
+use \App\Endpoints\UserSubSystem\UserSubEndpoints\ResendEmail;
+use \App\Endpoints\UserSubSystem\UserSubEndpoints\ForgotPassword;
 use Core\Endpoint\Endpoint;
 
 class UserEndpoint extends Endpoint

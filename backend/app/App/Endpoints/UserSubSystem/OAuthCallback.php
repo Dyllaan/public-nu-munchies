@@ -6,7 +6,7 @@
  * @generated This class was created using Github Copilot
  */
 
-namespace App\Endpoints\Users;
+namespace App\Endpoints\UserSubSystem;
 
 use App\Classes\UserSubSystem\OAuthUser;
 use Core\Endpoint\Endpoint;

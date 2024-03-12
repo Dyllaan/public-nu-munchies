@@ -4,7 +4,7 @@
  * This class is responsible for handling the POST request to login to the /Users endpoint
  * I put this in its own class just to reduce clutter in the user endpoint class and for increases abstraction
  */
-namespace App\Endpoints\Users\UserSubEndpoints;
+namespace App\Endpoints\UserSubSystem\UserSubEndpoints;
 
 use Core\Endpoint\SubEndpoint\SubEndpoint;
 use App\Classes\UserSubSystem\User;

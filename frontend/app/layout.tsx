@@ -7,6 +7,8 @@ import AuthProvider from "./(user-subsystem)/components/AuthProvider";
 
 import { Toaster } from "@/components/ui/sonner";
 
+import Header from "./layout-components/Header";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,8 +24,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
+      <AuthProvider>
+        <Header />
+        {children}
         <Toaster />
+      </AuthProvider>
       </body>
     </html>
   );

@@ -2,7 +2,7 @@
 /**
  * @author Louis Figes W21017657
  */
-namespace App\Endpoints\Users\UserSubEndpoints;
+namespace App\Endpoints\UserSubSystem\UserSubEndpoints;
 
 use Core\Endpoint\SubEndpoint\SubEndpoint;
 

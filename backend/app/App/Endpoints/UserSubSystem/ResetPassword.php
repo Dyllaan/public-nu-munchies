@@ -2,7 +2,7 @@
 /**
  * @author Louis Figes W21017657
  */
-namespace App\Endpoints\Users;
+namespace App\Endpoints\UserSubSystem;
 
 use Core\Endpoint\Endpoint;
 use App\Classes\UserSubSystem\EmailToken;

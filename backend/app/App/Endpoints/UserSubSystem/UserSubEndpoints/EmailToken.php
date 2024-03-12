@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Endpoints\Users\UserSubEndpoints;
+namespace App\Endpoints\UserSubSystem\UserSubEndpoints;
 
 use Core\Endpoint\SubEndpoint\SubEndpoint;
 use MailerSend\MailerSend;

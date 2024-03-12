@@ -44,7 +44,7 @@ class User extends CrudModel implements CrudInterface
 
     public function sendVerificationEmail()
     {
-        $emailOTP = new EmailToken('email_verification');
+        $emailOTP = new EmailToken($this->getDb(), 'email_verification');
         $emailOTP->setUser($this);
         try {
             $emailOTP->sendEmail();
@@ -56,7 +56,11 @@ class User extends CrudModel implements CrudInterface
 
     public function sendPasswordResetEmail()
     {
-        $emailOTP = new PasswordResetJWT();
+        if(!$this->exists()) {
+           return;
+        }
+        
+        $emailOTP = new PasswordResetJWT($this->getDb());
         $emailOTP->setUser($this);
         try {
             $emailOTP->sendEmail();
@@ -72,7 +76,7 @@ class User extends CrudModel implements CrudInterface
             $this->setResponse(400, 'User is already verified');
             return;
         }
-        $emailOTP = new PasswordResetJWT();
+        $emailOTP = new PasswordResetJWT($this->getDb());
         $emailOTP->setUser($this);
         $emailOTP->get();
         $emailOTP->create();
@@ -80,7 +84,7 @@ class User extends CrudModel implements CrudInterface
     }
     
     public function verifyEmailOTP($otp, $type) {
-        $emailOTP = new EmailToken();
+        $emailOTP = new EmailToken($this->getDb());
         $emailOTP->setUser($this);
         $emailOTP->setType($type);
         if($emailOTP->validate($otp)) { 
@@ -94,7 +98,7 @@ class User extends CrudModel implements CrudInterface
     }
 
     public function verifyPasswordResetOTP($otp, $type) {
-        $emailOTP = new PasswordResetJWT();
+        $emailOTP = new PasswordResetJWT($this->getDb());
         $emailOTP->setUser($this);
         $emailOTP->setType($type);
         if($emailOTP->validate($otp)) {

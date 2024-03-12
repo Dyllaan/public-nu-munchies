@@ -4,7 +4,7 @@
  * @generated Github Copilot was used during the creation of this code.
  * This endpoint requests an email to be resent to the user with a new OTP.
  */
-namespace App\Endpoints\Users\UserSubEndpoints;
+namespace App\Endpoints\UserSubSystem\UserSubEndpoints;
 
 use Core\Endpoint\SubEndpoint\SubEndpoint;
 

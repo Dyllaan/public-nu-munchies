@@ -7,7 +7,7 @@
 
 namespace App\Managers;
 
-use App\Endpoints\CatEndpoint;
+use App\Endpoints\UFIntegration\GetCat;
 use App\Endpoints\UFIntegration\AddCat;
 use App\Endpoints\NutritionEndpoint;
 use App\Endpoints\UFIntegration\AddNutrition;
@@ -45,7 +45,7 @@ class EndpointManager extends Manager
         $this->addEndpoint(new BusinessEndpoint());
         $this->addEndpoint(new OAuthCallback());
 
-        $this->addEndpoint(new CatEndpoint());
+        $this->addEndpoint(new GetCat());
         $this->addEndpoint(new AddCat());
         $this->addEndpoint(new NutritionEndpoint());
         $this->addEndpoint(new AddCat());

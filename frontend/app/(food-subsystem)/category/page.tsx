@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
+import * as api from '@/hooks/user-subsystem/api'
 
 function Category() {
     const [category, setCategory] = useState<{ data: any[] }>({
@@ -9,9 +10,17 @@ function Category() {
     const [selectedCategory, setSelectedCategory] = useState<any>(null);
 
     const fetchData = async () => {
-        const res = await fetch("http://localhost:8080/category");
-        return res.json();
-    }
+        const res = await api.get("category", localStorage.getItem("token"));
+        if(res.success)
+        {
+            setCatState(res.data.data.category);
+            setLoading(false);
+        } else {
+            console.error("Failed to get user:", res.data.message);
+            setLoading(false);
+        }
+        return res;
+    };
 
     useEffect(() => {
         if (category.data.length > 0) return;
@@ -45,3 +54,11 @@ function Category() {
 }
 
 export default Category;
+
+function setCatState(category: any) {
+    throw new Error('Function not implemented.');
+}
+function setLoading(arg0: boolean) {
+    throw new Error('Function not implemented.');
+}
+

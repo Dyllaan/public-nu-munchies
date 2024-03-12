@@ -1,43 +1,31 @@
 'use client'
-import {useEffect, useState} from 'react'
 
-const CategoryList = () => {
-    const [fetchError, setFetchError] = useState(null)
-    const [cat_name, setCatName] = useState(null)
+import {useState, useEffect} from 'react'
 
-    useEffect(() => {
-        const fetchCatName = async() => {
-            const { data, error} = await supabase
-                .from(categories)
-                .select()
-
-            if (error)
-            {
-                setFetchError('Could not fetch the name')
-                setCatName(null)
-                console.log(error)
-            }
-            if (data)
-            {
-                setCatName(data)
-                setFetchError(null)
-            }
-        }
-
-        fetchCatName()
-    }, [])
-
-    return (
-        <div className="category">
-            {fetchError && (<p>{fetchError}</p>)}
-            {cat_name && (
-                <div className="catName">
-                    {cat_name.map(cat_name => (
-                        <p>{cat_name.title}</p>
-                    ))}
+function CategoryList()
+{
+    const[category, setCategory] = useState([]);
+        const fetchData = () => { 
+            fetch("http://localhost:3000/category")
+            .then( response => response.json() )
+            .then( json => setItems(json) )
+            .catch(error => {
+            console.error('Error fetching data:', error); 
+        });}
+        useEffect( fetchData, [])
+        const catDisplay = (
+            <div className="bg-[#eaeaea] my-2 rounded">
+                {category.map((value, key) => (
+                <div key={key} className="mb-2">
+                    <p className="font-bold">{value.cat_name}</p>
                 </div>
-            )}
-        </div>
-    )
+                ))}
+            </div>
+        );
+        return (
+            <>
+                {catDisplay}
+            </>
+        )
 }
 export default CategoryList

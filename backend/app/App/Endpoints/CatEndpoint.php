@@ -15,6 +15,7 @@
 
     class CatEndpoint extends Endpoint
     {
+
         public function __construct()
         {
             parent::__construct('GET', 'category');
@@ -26,7 +27,7 @@
         public function process($request)
         {
             parent::process($request);
-            $this->setResponse(200, 'Category Taken', $this->getCategory()->toArray());
+            $this->setResponse(200, 'Category Taken', $this->category->toArray());
         }
     }
 ?>

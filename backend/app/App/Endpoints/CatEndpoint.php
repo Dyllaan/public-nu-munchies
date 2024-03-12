@@ -21,12 +21,12 @@
             $this->addSubEndpoint(new AddCat());
             $this->addSubEndpoint(new EditCat());
             $this->addSubEndpoint(new RemoveCat());
+            
         }
         public function process($request)
         {
             parent::process($request);
-            $cat = Category::getInstance($this->getDb());
-            $this->setResponse(200, 'Category Taken', $cat->toArray());
+            $this->setResponse(200, 'Category Taken', $this->getCategory()->toArray());
         }
     }
 ?>

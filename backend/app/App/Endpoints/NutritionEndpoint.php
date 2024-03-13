@@ -25,9 +25,13 @@
         public function process($request)
         {
             parent::process($request);
-            $nutrition = Nutrition::getInstance($this->getDb());
-            $this->setResponse(200, 'Nutrition Taken', $nutrition->toArray());
-            
+            $nutritionInstance = Nutrition::getInstance($this->getDb());
+            if ($nutritionInstance) {
+                $this->setResponse(200, 'Nutrition Taken', $nutritionInstance->toArray());
+            } else {
+                $this->setResponse(500, 'Error: Nutrition instance not available.');
+            }
         }
+
     }
 ?>

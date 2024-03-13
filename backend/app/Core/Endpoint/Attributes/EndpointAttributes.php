@@ -89,6 +89,10 @@ class EndpointAttributes extends GivesResponse
     private function validateAllowedAttributes($requestAttributes)
     {
         $allowedAttributes = $this->getAll();
+        
+        if($allowedAttributes == null && $requestAttributes == null) {
+            return;
+        }
     
         if (empty($allowedAttributes) && !empty($requestAttributes)) {
             foreach ($requestAttributes as $name => $value) {

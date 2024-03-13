@@ -12,10 +12,10 @@ import { toast } from "sonner";
 
 import GoogleSignIn from "../components/GoogleLogin";
 
-import requireAuth from "../components/requireAuth";
-
 // zod library for schema validation
 import { z } from "zod";
+
+import requireAuth from "../components/requireAuth";
 
 // User subsystem
 import useUserSubsystem from "../../../hooks/user-subsystem/use-user-subsystem";

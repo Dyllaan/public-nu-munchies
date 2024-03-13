@@ -8,9 +8,13 @@
     "require": {
         "firebase/php-jwt": "^6.10",
         "vlucas/phpdotenv": "^5.6",
-        "google/apiclient": "^2.15"
+        "google/apiclient": "^2.15",
+        "phpmailer/phpmailer": "^6.9"
     },
     "config": {
-        "vendor-dir": "./app/vendor"
+        "vendor-dir": "./app/vendor",
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }

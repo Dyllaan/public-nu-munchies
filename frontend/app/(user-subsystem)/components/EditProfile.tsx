@@ -53,7 +53,7 @@ export default function EditProfile() {
 
     return (
         <>
-        <div className="m-2">
+        <div>
             <h2>
                 Want to change your password or email?
                 <Link href="/settings" className="underline m-1">

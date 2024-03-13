@@ -20,6 +20,8 @@ import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsyst
 
 import GoogleSignIn from "../components/GoogleLogin";
 
+import requireAuth from "../components/requireAuth";
+
 // Define the login form schema using zod
 const loginFormSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -50,14 +52,6 @@ function LoginPage() {
 
     return (
         <>
-        <div className="m-2">
-            <h2>
-                Not registered? 
-                <Link href="/register" className="underline m-1">
-                    Register here
-                </Link>
-            </h2>
-        </div>
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleLogin)}>
                 <Card className="py-4 md:max-w-[550px]">
@@ -92,9 +86,17 @@ function LoginPage() {
                         <Button className="py-2 text-md" type="submit">
                             Login
                         </Button>
+                        <h2>
+                            Not registered? 
+                            <Link href="/register" className="underline m-1">
+                                Register here
+                            </Link>
+                        </h2>
+                        <Link href="/forgot" className="underline m-1 mx-auto">Forgot password?</Link>
                     </CardContent>
                 </Card>
             </form>
+
         </Form>
         <GoogleSignIn />
         </>

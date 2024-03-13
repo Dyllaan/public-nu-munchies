@@ -7,16 +7,12 @@
 
 namespace App\Managers;
 
-use App\Endpoints\CatEndpoint;
-use App\Endpoints\UFIntegration\GetCat;
-use App\Endpoints\UFIntegration\EditCat;
-use App\Endpoints\UFIntegration\AddCat;
-use App\Endpoints\NutritionEndpoint;
-use App\Endpoints\UFIntegration\AddNutrition;
-
-use App\Endpoints\UserEndpoint;
+use App\Endpoints\UserSubSystem\UserEndpoint;
 use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
-use App\Endpoints\OAuthCallback;
+use App\Endpoints\UserSubSystem\OAuthCallback;
+use App\Endpoints\UserSubSystem\ForgotPassword;
+use App\Endpoints\UserSubSystem\ResetPassword;
+use App\Endpoints\UserSubSystem\Mod\IsMod;
 use Core\Manager;
 use Core\HTTP\Classes\Request;
 use Core\ClientErrorException;
@@ -46,15 +42,10 @@ class EndpointManager extends Manager
         $this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new BusinessEndpoint());
         $this->addEndpoint(new OAuthCallback());
-
-        $this->addEndpoint(new CatEndpoint());
-        $this->addEndpoint(new GetCat());
-        $this->addEndpoint(new EditCat());
-        $this->addEndpoint(new AddCat());
-        $this->addEndpoint(new NutritionEndpoint());
-        $this->addEndpoint(new AddCat());
-        $this->addEndpoint(new AddNutrition());
-        
+        $this->addEndpoint(new ForgotPassword());
+        $this->addEndpoint(new ResetPassword());
+        $this->addEndpoint(new UserEndpoint());
+        $this->addEndpoint(new IsMod());
     }
 
     public function addEndpoint($endpoint)

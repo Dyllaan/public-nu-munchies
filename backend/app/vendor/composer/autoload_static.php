@@ -37,6 +37,7 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
             'Psr\\Cache\\' => 10,
             'PhpOption\\' => 10,
             'ParagonIE\\ConstantTime\\' => 23,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'N' => 
         array (
@@ -107,6 +108,10 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
         'ParagonIE\\ConstantTime\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'NuWeb\\FoodwasteBackend\\' => 
         array (

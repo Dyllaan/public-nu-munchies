@@ -16,7 +16,7 @@
      {
         public function __construct()
         {
-            parent::__construct('PUT', 'edit');
+            parent::__construct('PUT', 'editcategory');
             $this->getAttributes()->addAllowedStrings(['cat_name', 'cat_image']);
         }
         public function process($request)

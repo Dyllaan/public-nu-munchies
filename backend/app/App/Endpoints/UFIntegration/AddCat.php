@@ -23,7 +23,7 @@
         public function process($request)
         {
             parent::process($request);
-            $cat = Category::getInstance($this->getDb());
+            $cat = new Category($this->getDb());
             $cat->setCatName($request->getAttribute('cat_name'));
             $cat->setCatImage($request->getAttribute('cat_image'));
             $cat->save();

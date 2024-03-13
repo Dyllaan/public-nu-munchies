@@ -27,7 +27,7 @@
         public function process($request)
         {
             parent::process($request);
-            $this->setResponse(200, 'Category Taken', $this->category->toArray());
+            $this->setResponse(200, 'Category Taken', $this->getCategory()->toArray());
         }
     }
 ?>

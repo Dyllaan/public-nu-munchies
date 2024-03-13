@@ -5,8 +5,8 @@ namespace Core\Endpoint;
 use Core\Database\Database;
 use Core\HTTP\Classes\GivesResponse;
 use Core\Endpoint\Attributes\EndpointAttributes;
-use \App\Classes\Token;
-use \App\Classes\User;
+use \App\Classes\UserSubSystem\Token;
+use \App\Classes\UserSubSystem\User;
 
 abstract class EndpointBase extends GivesResponse
 {
@@ -21,6 +21,19 @@ abstract class EndpointBase extends GivesResponse
     {
         $this->setupDatabase();
         $this->attributes = new EndpointAttributes();
+    }
+
+    /**
+     * Performance enhancement: store the instance in a static variable.
+     */
+    public function setupDatabase()
+    {
+        $this->db = Database::getInstance();
+    }
+
+    public function getDb()
+    {
+        return $this->db;
     }
 
     public function process($request)
@@ -55,21 +68,6 @@ abstract class EndpointBase extends GivesResponse
     public function getUser()
     {
         return $this->user;
-    }
-
-    protected function setDB($dbName) 
-    {
-        $this->db = new Database($dbName);
-    }
-
-    protected function setupDatabase() 
-    {
-        $this->setDB('nu-munchies.db');
-    }
-
-    public function getDb() 
-    {
-        return $this->db;
     }
 
     public function getAttributes()

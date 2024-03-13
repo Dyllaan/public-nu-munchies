@@ -1,6 +1,6 @@
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { oAuthConfig } from "@/config/oauth";
-import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsystem";
+import useUserSubsystem from "../../../hooks/user-subsystem/use-user-subsystem";
 import { toast } from "sonner";
 
 const GoogleSignIn = () => {

@@ -28,7 +28,6 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
-            'Stripe\\' => 7,
         ),
         'P' => 
         array (
@@ -38,6 +37,7 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
             'Psr\\Cache\\' => 10,
             'PhpOption\\' => 10,
             'ParagonIE\\ConstantTime\\' => 23,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'N' => 
         array (
@@ -84,10 +84,6 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Stripe\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
-        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
@@ -112,6 +108,10 @@ class ComposerStaticInit43a2932787625ae98daa0e93076cb316
         'ParagonIE\\ConstantTime\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'NuWeb\\FoodwasteBackend\\' => 
         array (

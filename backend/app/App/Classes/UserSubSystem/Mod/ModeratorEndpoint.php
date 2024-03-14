@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Classes\UserSubSystem;
+namespace App\Classes\UserSubSystem\Mod;
 
 use Core\Endpoint\Endpoint;
 

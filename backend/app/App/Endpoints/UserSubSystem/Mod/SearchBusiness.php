@@ -11,24 +11,22 @@ namespace App\Endpoints\UserSubSystem\Mod;
 use App\Classes\UserSubSystem\Mod\ModeratorEndpoint;
 use App\Classes\UserSubSystem\Helpers\SearchHelper;
 
-class SearchUsers extends ModeratorEndpoint
+class SearchBusiness extends ModeratorEndpoint
 {
 
     public function __construct()
     {
-        parent::__construct('GET', 'users');
+        parent::__construct('GET', 'businesses');
         $this->setRequiresAuth(true);
-        $this->getAttributes()->addAllowedInts(['page', 'verified']);
+        $this->getAttributes()->addAllowedInts(['page']);
         $this->getAttributes()->addAllowedStrings(['search']);
     }
 
     private function handle($request) 
     {
-        $searchFields = ['users.first_name', 'users.last_name', 'users.email'];
+        $searchFields = ['business_name', 'business_description', 'business_email', 'business_phone'];
         $searchConditions = SearchHelper::searchConditionBuilder($request, $searchFields);
-        
-        $verifiedCondition = SearchHelper::addCondition($request, 'verified', 'users');
-        return SearchHelper::buildConditions($request, [$searchConditions, $verifiedCondition]);
+        return SearchHelper::buildConditions($request, [$searchConditions]);
     }
 
 
@@ -38,8 +36,8 @@ class SearchUsers extends ModeratorEndpoint
         $limit = 10;
         $offset = SearchHelper::handlePagination($request, $limit);
         $conditions = $this->handle($request);
-        $usersData = $this->getModerator()->searchUsers($offset, $conditions, $limit);
+        $usersData = $this->getModerator()->searchBusinesses($offset, $conditions, $limit);
         
-        $this->setResponse(200, "Found user data", $usersData);
+        $this->setResponse(200, "Found business data", $usersData);
     }
 }

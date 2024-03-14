@@ -42,6 +42,15 @@ class User extends CrudModel implements CrudInterface
         return self::$instance;
     }
 
+    public function getBusinesses()
+    {
+        if(!$this->exists()) {
+            return;
+        }
+        $data = $this->getDb()->createSelect()->cols("*")->from('businesses')->where(["user_id = '" . $this->getId() . "'"])->execute();
+        return $data;
+    }
+
     public function sendVerificationEmail()
     {
         $emailOTP = new EmailToken($this->getDb(), 'email_verification');

@@ -8,8 +8,9 @@
 
 namespace App\Endpoints\UserSubSystem\Mod;
 
-use App\Classes\UserSubSystem\ModeratorEndpoint;
+use App\Classes\UserSubSystem\Mod\ModeratorEndpoint;
 use App\Endpoints\UserSubSystem\Mod\SearchUsers;
+use App\Endpoints\UserSubSystem\Mod\SearchBusiness;
 
 class IsMod extends ModeratorEndpoint
 {
@@ -19,6 +20,7 @@ class IsMod extends ModeratorEndpoint
         parent::__construct('GET', 'moderator');
         $this->setRequiresAuth(true);
         $this->addSubEndpoint(new SearchUsers());
+        $this->addSubEndpoint(new SearchBusiness());
     }
 
     public function process($request)
@@ -27,7 +29,7 @@ class IsMod extends ModeratorEndpoint
         if($this->getModerator()->isModerator()) {
             $this->setResponse(200, "User is a moderator");
         } else {
-            $this->setResponse(400, "User is not a moderator");
+            $this->setResponse(401, "User is not a moderator");
         }
     }
 }

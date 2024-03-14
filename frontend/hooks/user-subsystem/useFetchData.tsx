@@ -29,7 +29,7 @@ const useFetchData = (initialEndpoint:any) => {
             const response = await api.get(endpoint, headers);
             if (response.success) {
                 console.log(response.data.data)
-                setData(response.data.data.users);
+                setData(response.data.data);
                 setLoading(false);
             } else {
                 toast.error(response.data.message);

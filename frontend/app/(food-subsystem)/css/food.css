@@ -13,8 +13,9 @@
     min-width: 200px;
 }
 
-/* nutrition form */
 
+/* nutrition form */
+/*
 .form-container {
     width: 400px;
     margin: 0 auto;
@@ -52,4 +53,30 @@
     background-color: #45a049;
     
   }
-  
+  */
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+@layer base {
+
+  h1 {
+    @apply p-2;
+  }
+
+  form {
+    @apply m-0 p-4 rounded-lg bg-slate-200 flex flex-col items-center justify-center;
+  }
+
+  form input {
+    @apply m-2 p-2 rounded-lg bg-slate-300;
+  }
+
+  .success {
+    @apply bg-green-500;
+  }
+
+  .error {
+    @apply bg-red-500;
+  }
+}

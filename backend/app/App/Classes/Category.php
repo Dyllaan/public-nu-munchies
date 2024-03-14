@@ -26,7 +26,7 @@
         {
             parent::__construct($db);
             $this->appConfigInstance = new \Appconfig();
-            $this->setTable("category");
+            $this->setTable("categories");
         }
         public static function getInstance($db)
         {
@@ -101,8 +101,9 @@
         }
         public function get()
         {
-            $data = $this->getDb()->createSelect()->cols(["*"])->from("categories")->where(["cat_id" => $this->getCatId()]);
-            
+            $data = $this->getDb()->createSelect()->cols("*")->from("categories")->where(["cat_id = ".$this->cat_id ])->execute();
+            var_dump($data);die();
+
             if(empty($data))
             {
                 $this->setResponse(400, "Category does not Exist");
@@ -119,7 +120,7 @@
             {
                 $this->setResponse(400, "Category does not Exists");
             }
-            $data = $this->getDb()->createSelect()->cols(["cat_name, cat_image"])->from($this->getTable())->where(["cat_id" => $this->getCatId()]);
+            $data = $this->getDb()->createSelect()->cols("cat_name, cat_image")->from($this->getTable())->where(["cat_id = ".$this->cat_id])->execute();
             
             if(count($data) == 0)
             {
@@ -133,7 +134,7 @@
             {
                 return['message' => "No changes"];
             }
-            $this->getDb()->createUpdate()->table('categories')->set($changed)->where(["cat_id" => $this->getCatId()]);
+            $this->getDb()->createUpdate()->table('categories')->set($changed)->where(["cat_id = ". $this->getCatId()])->execute();
             return['message' => "Category Updated"];
         }
         public function delete()
@@ -148,7 +149,6 @@
         public function toArray()
         {
             $cat['categories'] = [
-                'cat_id' => $this->getId(),
                 'cat_name' => $this->getCatName(),
                 'cat_image' => $this->getCatImage()
             ];

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import "../css/food.css";
+import { Input } from "@/components/ui/input";
 
 interface NutritionData {
   name: string;

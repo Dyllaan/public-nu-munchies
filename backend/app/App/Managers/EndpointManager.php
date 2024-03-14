@@ -7,10 +7,11 @@
 
 namespace App\Managers;
 
-use App\Endpoints\NutritionEndpoint;
-use App\Endpoints\CatEndpoint;
+//use App\Endpoints\NutritionEndpoint;
+//use App\Endpoints\CatEndpoint;
+use App\Endpoints\UFIntegration\GetNutrition;
 use App\Endpoints\UFIntegration\EditCat;
-//use App\Endpoints\UFIntegration\GetCat;
+use App\Endpoints\UFIntegration\GetCat;
 use App\Endpoints\UFIntegration\AddNutrition;
 use App\Endpoints\UserSubSystem\UserEndpoint;
 use App\Endpoints\UFIntegration\AddCat;
@@ -45,10 +46,11 @@ class EndpointManager extends Manager
 
     protected function add()
     {
-        $this->addEndpoint(new NutritionEndpoint());
-        $this->addEndpoint(new CatEndpoint());
+        //$this->addEndpoint(new NutritionEndpoint());
+        //$this->addEndpoint(new CatEndpoint());
+        $this->addEndpoint(new GetNutrition());
         $this->addEndpoint(new EditCat());
-        //$this->addEndpoint(new GetCat());
+        $this->addEndpoint(new GetCat());
         $this->addEndpoint(new AddNutrition());
         $this->addEndpoint(new AddCat());
         $this->addEndpoint(new UserEndpoint());

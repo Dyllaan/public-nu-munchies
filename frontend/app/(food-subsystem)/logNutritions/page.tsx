@@ -57,7 +57,7 @@ const NutritionForm: React.FC<NutritionFormProps> = ({ onSubmit }) => {
   return (
     <form onSubmit={handleSubmit} >
       <label htmlFor="name">Name:</label>
-      <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
+      <input type="text" placeholder="Food Name" id="name" name="name" value={formData.name} onChange={handleChange} required />
       
       <label htmlFor="weight">Weight:</label>
       <input type="number" id="weight" name="weight" value={formData.weight.toString()} onChange={handleChange} required />

@@ -14,8 +14,8 @@
     class Nutrition extends CrudModel  implements CrudInterface
     {
         //More to be added
-        private $foodId;
-        private $foodName;
+        private $food_id;
+        private $food_name;
         private $weight;
         private $calories;
         private $protein;
@@ -32,6 +32,7 @@
         {
             parent::__construct($db);
             $this->appConfigInstance = new \Appconfig();
+            $this->setTable("nutrition_details");
         }
         public static function getInstance($db)
         {
@@ -39,18 +40,19 @@
             {
                 self::$instance = new Nutrition($db);
             }
+            return self::$instance;
         }
         public function exists()
         {
-            if($this>getId() != null){
-                $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["id = '" .$request->getAttribute('food_id'). "'"])->execute();
+            if($this>getFoodId() != null){
+                $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["food_id = '" .$this->food_id . "'"])->execute();
                 if(count($data) == 0){
                     return false;
                 } else {
                     return true;
                 }
             } elseif ($this->getFoodName() != null) {
-                $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["name = '" . $request->getAttribute('food_name'). "'"])->execute();
+                $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["name = '" . $this->food_id . "'"])->execute();
                 if(count($data) == 0){
                     return false;
                 } else {
@@ -71,11 +73,11 @@
                     'salt' => $this->getSalt(),
                     'quantity' => $this->getQuantity(),
                 ];
-                $id = $this->getDb()->createInsert()->into('nutrition_details')->cols('food_name, weight, calories, protein, carbs, fat, salt, quantity')->values([$this->getFoodName(), $this->getWeight(), $this->getCalories(), $this->getProtein(), $this->getCarbs(), $this->getFat(), $this->getSalt(), $this->getQuantity()])->execute();                
+                $food_id = $this->getDb()->createInsert()->into('nutrition_details')->cols('food_name, weight, calories, protein, carbs, fat, salt, quantity')->values([$this->getFoodName(), $this->getWeight(), $this->getCalories(), $this->getProtein(), $this->getCarbs(), $this->getFat(), $this->getSalt(), $this->getQuantity()])->execute();                
                 
                 if($id != null)
                 {
-                    $this->setId($id);
+                    $this->setFoodId($food_id);
                     return $this->toArray();
                 }
             
@@ -85,7 +87,7 @@
         {
             $errors = [];
             $checkFields = [
-                'FoodName' => ['value' => $this->getFoodName(), 'min' => 3, 'max' => 30, 'message' => 'foodname'],
+                'FoodName' => ['value' => $this->getFoodName(), 'min' => 3, 'max' => 30, 'message' => 'food_name'],
                 'Weight' => ['value' => $this->getWeight(), 'min' => 0, 'max' => 100, 'message' => 'weight'],
                 'Calories' => ['value' => $this->getCalories(), 'min' => 0, 'max' => 100, 'message' => 'calories'],
                 'Protein' => ['value' => $this->getProtein(), 'min' => 0, 'max' => 100, 'message' => 'protein'],
@@ -139,8 +141,9 @@
         }
         public function get()
         {
-            $selectQuery = $this->getDb()->createSelect()->into("nutrition_details")->cols(["food_name", "weight", "calories", "protein", "carbs", "fat", "salt", "quantity"])->where(["food_id" => $this->getFoodId()]);
-            
+            $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["food_id = ".$this->food_id])->execute();
+            var_dump($data); die();
+
             if(empty($data))
             {
                 $this->setResponse(400, "Nutrition does not Exist");
@@ -210,23 +213,43 @@
                 'salt' => $this->getSalt(),
                 'quantity' => $this->getQuantity()
             ];
+            $jwt = $this->generateJWT($this->getFoodId(), 1);
+            $nutrition['jwt'] = $jwt;
+
             return $nutrition;
         }
-        public function getId()
+        public function generateJWT($id, $providerId)
         {
-            return $this->foodId;
+            $secretKey = $this->appConfigInstance->get('JWT_SECRET');
+
+                $iat = time();
+                $exp = strtotime('+5 hour', $iat);
+                $iss = $_SERVER['HTTP_HOST'];
+                $payload = [
+                    'food_id' => $id,
+                    'iat' => $iat,
+                    'exp' => $exp,
+                    'iss' => $iss,
+                    'provider_id' => $providerId
+                ];
+                $jwt = JWT::encode($payload, $secretKey, 'HS256');
+                return $jwt;
         }
-        public function setId($foodId)
+        public function getFoodId()
         {
-            $this->foodId =$foodId;
+            return $this->food_id;
+        }
+        public function setFoodId($food_id)
+        {
+            $this->food_id =$food_id;
         }
         public function getFoodName()
         {
-            return $this->foodName;
+            return $this->food_name;
         }
-        public function setFoodName($foodName)
+        public function setFoodName($food_name)
         {
-            $this->foodName = $foodName;
+            $this->food_name = $food_name;
         }
         public function getWeight()
         {

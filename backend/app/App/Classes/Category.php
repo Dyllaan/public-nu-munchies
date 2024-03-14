@@ -37,7 +37,7 @@
         public function exists()
         {
             if ($this->getId() != null) {
-                $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["cat_id = '" . $this->getId() . "'"])->execute();
+                $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["cat_id = '" . $this->getCatId() . "'"])->execute();
                 if (count($data) == 0) {
                     return false;
                 } else {
@@ -74,8 +74,8 @@
         {
             $errors = [];
             $checkFields = [
-                'CatName' => ['value' => $this->getCatName(), 'min' => 3, 'max' => 30, 'message' => 'catname'],
-                'CatImage' => ['value' => $this->getCatImage(), 'min' => 3, 'max' => 30, 'message' => 'catname']
+                'CatName' => ['value' => $this->getCatName(), 'min' => 3, 'max' => 30, 'message' => 'cat_name'],
+                'CatImage' => ['value' => $this->getCatImage(), 'min' => 3, 'max' => 30, 'message' => 'cat_image']
 
             ];
 
@@ -102,9 +102,9 @@
             }
             return true;
         }
-        public function get()
+        public function getCategory()
         {
-            $data = $this->getDb()->createSelect()->into("category")->cols(["cat_name", "cat_image"])->where(["cat_id" => $this->getId()]);
+            $data = $this->getDb()->createSelect()->cols(["*"])->from("categories")->where(["cat_id" => $this->getCatId()]);
             
             if(empty($data))
             {
@@ -122,7 +122,7 @@
             {
                 $this->setResponse(400, "Category does not Exists");
             }
-            $data = $this->getDb()->createSelect()->cols(["cat_name"])->from($this->getTable())->where(["cat_id" => $this->getId()]);
+            $data = $this->getDb()->createSelect()->cols(["cat_name, cat_image"])->from($this->getTable())->where(["cat_id" => $this->getCatId()]);
             
             if(count($data) == 0)
             {
@@ -136,14 +136,14 @@
             {
                 return['message' => "No changes"];
             }
-            $this->getDb()->createUpdate()->table('categories')->set($changed)->where(["cat_id" => $this->getId()]);
+            $this->getDb()->createUpdate()->table('categories')->set($changed)->where(["cat_id" => $this->getCatId()]);
             return['message' => "Category Updated"];
         }
         public function delete()
         {
             if($this->exists())
             {
-                $this->getDb()->createDelete()->from($this->getTable())->where(["cat_id = '" . $this->getId() . "'"])->execute();
+                $this->getDb()->createDelete()->from($this->getTable())->where(["cat_id = '" . $this->getCatId() . "'"])->execute();
                 return ['message' => "Category Deleted"];
             }
             $this->setResponse(400, "Category does not Exist");
@@ -151,6 +151,7 @@
         public function toArray()
         {
             $cat['categories'] = [
+                'cat_id' => $this->getId(),
                 'cat_name' => $this->getCatName(),
                 'cat_image' => $this->getCatImage()
             ];
@@ -175,22 +176,28 @@
                 $jwt = JWT::encode($payload, $secretKey, 'HS256');
                 return $jwt;
         }
+        public function getCatId(){
+            return $this->cat_id;
+        }
+        public function setCatId($cat_id){
+            $this->cat_id = $cat_id;
+        }
         
         public function getCatName()
         {
-            return $this->catName;
+            return $this->cat_name;
         }
-        public function setCatName($catName)
+        public function setCatName($cat_name)
         {
-            $this->catName = $catName;
+            $this->cat_name = $cat_name;
         }
         public function getCatImage()
         {
-            return $this->catImage;
+            return $this->cat_image;
         }
-        public function setCatImage($catImage)
+        public function setCatImage($cat_image)
         {
-            $this->catImage = $catImage;
+            $this->cat_image = $cat_image;
         }
     }
 ?>

@@ -20,7 +20,6 @@ import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsyst
 
 import GoogleSignIn from "../components/GoogleLogin";
 
-import requireAuth from "../components/requireAuth";
 
 // Define the login form schema using zod
 const loginFormSchema = z.object({

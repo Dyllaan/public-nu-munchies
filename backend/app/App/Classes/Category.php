@@ -14,8 +14,9 @@
 
     class Category extends CrudModel implements CrudInterface
     {
-        private $catName;
-        private $catImage;
+        private $cat_id;
+        private $cat_name;
+        private $cat_image;
 
         private static $instance = null;
 
@@ -36,35 +37,31 @@
         }
         public function exists()
         {
-            if ($this->getId() != null) {
+            if ($this->getCatId() !== null) {
                 $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["cat_id = '" . $this->getCatId() . "'"])->execute();
-                if (count($data) == 0) {
-                    return false;
-                } else {
+                if (!empty($data)) {
                     return true;
                 }
-            } elseif ($this->getCatName() != null) {
+            } elseif ($this->getCatName() !== null) {
                 $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["cat_name = '" . $this->getCatName() . "'"])->execute();
-                if (count($data) == 0) {
-                    return false;
-                } else {
+                if (!empty($data)) {
                     return true;
                 }
-            } else {
-                return false;
             }
+            return false;
         }
+
         public function save()
         {
             $catData = [
                 'cat_name' => $this->getCatName(),
                 'cat_image' => $this->getCatImage()
             ];
-            $id = $this->getDb()->createInsert()->into('categories')->cols('cat_name, cat_image')->values([$this->getCatName(), $this->getCatImage()])->execute();                
+            $cat_id = $this->getDb()->createInsert()->into('categories')->cols('cat_name, cat_image')->values([$this->getCatName(), $this->getCatImage()])->execute();                
             
-            if($id != null)
+            if($cat_id != null)
             {
-                $this->setId($id);
+                $this->setCatId($cat_id);
                 return $this->toArray();
             }
         
@@ -102,7 +99,7 @@
             }
             return true;
         }
-        public function getCategory()
+        public function get()
         {
             $data = $this->getDb()->createSelect()->cols(["*"])->from("categories")->where(["cat_id" => $this->getCatId()]);
             

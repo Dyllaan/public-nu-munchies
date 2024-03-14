@@ -3,7 +3,7 @@
 namespace App\Endpoints\UFIntegration;
 
 use Core\Endpoint\Endpoint;
-use App\Models\Category; // Assuming Category model exists and is correctly imported
+use App\Classes\Category; // Assuming Category model exists and is correctly imported
 
 class GetCat extends Endpoint
 {
@@ -11,7 +11,7 @@ class GetCat extends Endpoint
     {
         parent::__construct('GET', 'getcategory');
         $this->getAttributes()->addRequiredInts(['cat_id']);
-        $this->getAttributes()->addRequiredStrings(['cat_name','cat_image']);
+        //$this->getAttributes()->addRequiredStrings(['cat_name','cat_image']);
     }
 
     public function process($request)
@@ -23,16 +23,16 @@ class GetCat extends Endpoint
         
         // Retrieving attributes from the request
         $cat_id = $request->getAttribute('cat_id');
-        $cat_name = $request->getAttribute('cat_name');
-        $cat_image = $request->getAttribute('cat_image');
+        // $cat_name = $request->getAttribute('cat_name');
+        //$cat_image = $request->getAttribute('cat_image');
         
         // Setting attributes
         $cat->setCatId($cat_id);
-        $cat->setCatName($cat_name);
-        $cat->setCatImage($cat_image);
+        //$cat->setCatName($cat_name);
+        //$cat->setCatImage($cat_image);
         
         // Getting category data from the database
-        $categoryData = $cat->getCategory();
+        $categoryData = $cat->get($cat_id);
         
         // Converting category data to an array
         $categoryArray = $categoryData->toArray();

@@ -8,9 +8,9 @@
     namespace App\Endpoints;
 
     use App\Classes\Category;
-    use \App\Endpoints\UFIntegration\AddCat;
-    use \App\Endpoints\UFIntegration\EditCat;
-    use \App\Endpoints\UFIntegration\RemoveCat;
+    use App\Endpoints\UFIntegration\AddCat;
+    use App\Endpoints\UFIntegration\EditCat;
+    use App\Endpoints\UFIntegration\RemoveCat;
     use Core\Endpoint\Endpoint;
 
     class CatEndpoint extends Endpoint
@@ -27,6 +27,7 @@
         public function process($request)
         {
             parent::process($request);
+            var_dump($request); die();
 
             $cat = new Category($this->getDb());
             $categoryData = $cat->get();

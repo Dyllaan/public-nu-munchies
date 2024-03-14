@@ -226,7 +226,7 @@ export const useUserSubsystem = () => {
       return error.response.data.message;
     }
   }
- 
+
   function logout() {
     localStorage.removeItem("token");
     setUserState({ first_name: "", last_name: "", email: "", verified: false});
@@ -235,22 +235,10 @@ export const useUserSubsystem = () => {
     router.replace("/");
   }
 
-  const oAuthLogin = async (redirectUri:string, data: any) => {
-    setAuthStatus(true);
-    try {
-      const response = await axios.post(redirectUri, data);
-      setUserState(response.data.data.user);
-      localStorage.setItem("token", response.data.data.jwt);
-      setAuthStatus(false, true);
-      router.push("/profile");
-    } catch (error: any) {
-      console.error("Login failed:", error);
-      toast.error(error.response.data.message);
-      setAuthStatus(false, false);
-      return error.response.data.message;
-    }
-  }
-
+  const setAuthStatus = (loading: boolean, logged: boolean) => {
+    setLoading(loading);
+    setLogged(logged);
+  };
 
   function initFromLocalStorage() {
     const token = localStorage.getItem("token");

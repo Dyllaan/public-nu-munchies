@@ -32,7 +32,7 @@ class CheckoutItem extends Endpoint
         \Stripe\Stripe::setApiKey('sk_test_51MgmQnLvWNjHki0mRKISRuV2qxLQVHxfR1qZGt3cb3cexCsW94zVvM0csTpTCeuRO7QjzrVIYpZXaH17x3csd4d8000Ytk3840');
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'http://localhost:4242';
+        $YOUR_DOMAIN = 'http://localhost:3000';
 
         $checkout_session = \Stripe\Checkout\Session::create([
           'line_items' => [[

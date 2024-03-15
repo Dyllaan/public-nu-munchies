@@ -49,7 +49,7 @@ class EndpointManager extends Manager
     {
             
  
-        $this->addEndpoint(new UserEndpoint());
+        //$this->addEndpoint(new UserEndpoint());
             /*
         $this->addEndpoint(new ItemUpload());
         $this->addEndpoint(new ItemReserve());

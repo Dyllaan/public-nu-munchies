@@ -22,7 +22,7 @@ class GetItems extends Endpoint
         parent::process($request);
         $id = $this->getDb()->createSelect()
     ->from('items')
-    ->cols('id, item_name, item_price, item_expiry, collect_time')
+    ->cols('id, business_id, item_name, item_price, item_expiry, collect_time')
     ->where([
         "item_status = 'open'",
         "collect_time >= NOW() AND collect_time <= NOW() + INTERVAL '24 hours'"

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export const SuccessfulRegister = ({ name }: { name: string }) => {
   return (
-    <div className="text-center flex flex-col justify-center items-center min-h-[400px] px-5 md:px-10">
+    <div className="text-center flex flex-col justify-center items-center min-h-[400px] px-5 md:px-10 py-10">
       <CheckCircleIcon className="w-16 h-16 text-success mb-6 text-green-600" />
       <h1 className="text-2xl font-semibold mb-2">
         Nice to have you on board, {name}!

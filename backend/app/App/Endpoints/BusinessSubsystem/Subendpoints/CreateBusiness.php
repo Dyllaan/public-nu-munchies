@@ -15,11 +15,18 @@ class CreateBusiness extends SubEndpoint
         parent::__construct('POST', 'create');
         $this->getAttributes()->addRequiredStrings(['name', 'description', 'address', 'city', 'postcode', 'country']);
         $this->getAttributes()->addAllowedStrings(['email', 'phone']);
+        $this->setRequiresAuth(true);
     }
 
     public function process($request)
     {
         parent::process($request);
+
+        $user = $this->getUser();
+
+        if (!isset($user)) {
+            return $this->setResponse(401, "User is not logged in!");
+        }
 
         $fields = $request->getAttributes();
 
@@ -53,6 +60,8 @@ class CreateBusiness extends SubEndpoint
 
         // save the business
         $res = $business->save();
+
+        $ub_connect = $this->getDb()->createInsert()->into("users_businesses")->cols('user_id, business_id')->values([$user->getId(), $res["id"]])->execute();
 
         $this->setResponse(200, $res);
     }

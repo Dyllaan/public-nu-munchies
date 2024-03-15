@@ -19,9 +19,6 @@ interface CreateBusinessRequest {
 type UserInput = z.infer<typeof registerFormSchema>;
 
 export const useBusinessApi = () => {
-  // insert user state
-  const [user, setUser] = useAtom(userAtom);
-
   const createBusiness = async (data: UserInput) => {
     const requestBody: CreateBusinessRequest = {
       name: data.businessName,
@@ -43,7 +40,21 @@ export const useBusinessApi = () => {
     return res;
   };
 
+  const getBusinesses = async () => {
+    const res = await sendRequest<{}>(Endpoints.business, "GET", {});
+    return res;
+  };
+
+  const getBusiness = async (id: string) => {
+    const res = await sendRequest<{}>(Endpoints.business, "GET", {
+      id,
+    });
+    return res;
+  };
+
   return {
     createBusiness,
+    getBusinesses,
+    getBusiness,
   };
 };

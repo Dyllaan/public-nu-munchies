@@ -15,6 +15,15 @@ export const sendRequest = async <T>(
     }
   }
 
+  // get query
+  if (method === "GET") {
+    let query = "?";
+    for (const key in data) {
+      query += `${key}=${data[key]}&`;
+    }
+    (endpoint as string) += query;
+  }
+
   // send request
   const response = await fetch(mainConfig.origin + "/" + endpoint, {
     method,

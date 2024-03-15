@@ -31,13 +31,27 @@ export default function BusinessSubsystem() {
             </Link>
           </li>
           <li>
-            <Link href="/business/1" className="text-blue-500 hover:underline">
-              Example Business Page (ID 1)
+            <Link
+              href="/businesses/dashboard"
+              className="text-blue-500 hover:underline"
+            >
+              View My Businesses
             </Link>
           </li>
           <li>
+            <Link href="/business/my" className="text-blue-500 hover:underline">
+              Manage Business Items
+            </Link>
+          </li>
+          <li>
+            <Link href="/business/my" className="text-blue-500 hover:underline">
+              Manage Business Orders
+            </Link>
+          </li>
+
+          <li>
             <Link
-              href="/business-dashboard"
+              href="/businesses/dashboard"
               className="text-blue-500 hover:underline"
             >
               Business Dashboard (requires authentication)

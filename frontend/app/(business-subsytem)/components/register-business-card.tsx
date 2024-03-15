@@ -35,16 +35,27 @@ import { useBusinessApi } from "@/hooks/business-subsystem/use-business-api";
 import { SuccessfulRegister } from "./successful-register";
 import { Dispatch, useState } from "react";
 import { ErrorRegister } from "./error-register";
+import { AuthRequiredCard } from "./auth-required-card";
+import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 
 // we are inferring the type of the formSchema object from zod to type called UserInput
 type UserInput = z.infer<typeof registerFormSchema>;
 
 export const RegisterBusinessCard = () => {
+  const { user } = useUserSubsystem();
+  return (
+    <Card className="py-4 md:max-w-[550px]">
+      {user.verified ? <LoggedInCards /> : <AuthRequiredCard />}
+    </Card>
+  );
+};
+
+const LoggedInCards = () => {
   const [businessName, setBusinessName] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
 
   return (
-    <Card className="py-4 md:max-w-[550px]">
+    <>
       {(businessName as string)?.length > 0 ? (
         <SuccessfulRegister name={businessName ?? ""} />
       ) : error ? (
@@ -55,7 +66,7 @@ export const RegisterBusinessCard = () => {
           setError={setError}
         />
       )}
-    </Card>
+    </>
   );
 };
 

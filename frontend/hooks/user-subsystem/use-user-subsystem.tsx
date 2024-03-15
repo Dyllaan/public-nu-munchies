@@ -123,7 +123,7 @@ export const useUserSubsystem = () => {
 
   const editUser = async(data: any) => {
     try {
-      const response = await api.put("user", data, localStorage.getItem("token"));
+      const response = await api.put("user/edit", data, localStorage.getItem("token"));
       if (response.success) {
         setUserState(response.data.data.user);
         setLoading(false);

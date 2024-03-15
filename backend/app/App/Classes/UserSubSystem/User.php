@@ -87,8 +87,11 @@ class User extends CrudModel implements CrudInterface
         }
         $emailOTP = new PasswordResetJWT($this->getDb());
         $emailOTP->setUser($this);
-        $emailOTP->get();
-        $emailOTP->create();
+        try {
+            $emailOTP->sendEmail();
+        } catch (\Exception $e) {
+            $this->setResponse(400, 'Error sending email', ['error' => $e->getMessage()]);
+        }
         $this->setResponse(200, 'New OTP sent');
     }
     
@@ -353,7 +356,8 @@ class User extends CrudModel implements CrudInterface
             if ($changed != []) {
                 $this->getDb()->beginTransaction();
                 try {
-                    $this->getDb()->createUpdate()->table($this->getTable())->set($changed)->where(["user_id = '" . $this->getId() . "'"])->execute();
+                    $this->getDb()->createUpdate()->table($this->getTable())->set($changed)->where(["
+                    id = '" . $this->getId() . "'"])->execute();
                     $this->getDb()->commit();
                     return ['message' => "User updated"];
                 } catch (\Exception $e) {

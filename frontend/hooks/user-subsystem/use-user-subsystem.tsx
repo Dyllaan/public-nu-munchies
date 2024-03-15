@@ -45,6 +45,8 @@ export const useUserSubsystem = () => {
         setLogged(true);
       } else {
         console.error("Failed to get user:", response.data.message);
+        toast.error(`Please relogin: ${response.data.message}`);
+        localStorage.removeItem('token');
         setLoading(false);
       }
     } else {

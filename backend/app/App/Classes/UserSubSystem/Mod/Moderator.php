@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Classes\UserSubSystem;
+namespace App\Classes\UserSubSystem\Mod;
 
 use App\Classes\UserSubSystem\User;
 use Core\Database\CrudModel;
@@ -23,15 +23,20 @@ class Moderator extends CrudModel
         return count($data) > 0;
     }
 
-    public function getAllUsers($page = 1, $conditions = []) {
-        $limit = 10;
-        $offset = ($page - 1) * $limit;
+    public function searchUsers($offset, $conditions = [], $limit = 10) {
         $data = $this->getDb()->createSelect()->cols("*")
         ->from($this->getUser()->getTable())
         ->where($conditions)->limit($limit)->
         offset($offset)->execute();
         return $data;
-    
+    }
+
+    public function searchBusinesses($offset, $conditions = [], $limit = 10) {
+        $data = $this->getDb()->createSelect()->cols("*")
+        ->from("businesses")
+        ->where($conditions)->limit($limit)->
+        offset($offset)->execute();
+        return $data;
     }
 
     public function setUser($user)

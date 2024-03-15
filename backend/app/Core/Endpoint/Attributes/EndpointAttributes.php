@@ -12,6 +12,7 @@ namespace Core\Endpoint\Attributes;
 use Core\HTTP\Classes\GivesResponse;
 use Core\Endpoint\Attributes\IntAttribute;
 use Core\Endpoint\Attributes\StringAttribute;
+use Core\Endpoint\Attributes\BoolAttribute;
 
 class EndpointAttributes extends GivesResponse
 {
@@ -197,6 +198,42 @@ class EndpointAttributes extends GivesResponse
         }
     }
 
+    public function addAllowedBool($name)
+    {
+        $this->allowed[$name] = $this->createBool();
+    }
+
+    public function addAllowedBools($names)
+    {
+        foreach ($names as $name) {
+            $this->allowed[$name] = $this->createBool();
+        }
+    }
+
+    public function addExclusiveBool($name)
+    {
+        $this->exclusiveAttributes[$name] = $this->createBool();
+    }
+
+    public function addExclusiveBools($names)
+    {
+        foreach ($names as $name) {
+            $this->exclusiveAttributes[$name] = $this->createBool();
+        }
+    }
+
+    public function addRequiredBool($name)
+    {
+        $this->requiredAttributes[$name] = $this->createBool();
+    }
+
+    public function addRequiredBools($names)
+    {
+        foreach ($names as $name) {
+            $this->requiredAttributes[$name] = $this->createBool();
+        }
+    }
+
     protected function createString()
     {
         return new StringAttribute();
@@ -205,6 +242,11 @@ class EndpointAttributes extends GivesResponse
     protected function createInt()
     {
         return new IntAttribute();
+    }
+    
+    protected function createBool()
+    {
+        return new BoolAttribute();
     }
 
     protected function createInts($names)
@@ -221,6 +263,15 @@ class EndpointAttributes extends GivesResponse
         $attributes = [];
         foreach ($names as $name) {
             $attributes[$name] = $this->createString();
+        }
+        return $attributes;
+    }
+
+    protected function CreateBools($names)
+    {
+        $attributes = [];
+        foreach ($names as $name) {
+            $attributes[$name] = $this->createBool();
         }
         return $attributes;
     }

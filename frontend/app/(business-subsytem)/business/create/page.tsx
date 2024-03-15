@@ -1,4 +1,4 @@
-import { RegisterBusinessCard } from "../components/register-business-card";
+import { RegisterBusinessCard } from "../../components/register-business-card";
 
 export default function Page() {
   return (

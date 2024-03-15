@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { CheckCircleIcon } from "lucide-react";
 
 import Link from "next/link";
@@ -16,10 +17,13 @@ export const SuccessfulRegister = ({ name }: { name: string }) => {
       </p>
       <Link
         href="/"
-        className="mt-10 bg-black text-white p-4 rounded-md w-full"
+        className="mt-10 h-14 bg-black text-white p-4 rounded-md w-full"
       >
         Go back to home
       </Link>
+      <Button className="w-full h-14 bg-transparent border-2 border-black text-black mt-2 hover:bg-gray-200 text-base">
+        Force Verify Business (test purposes)
+      </Button>
     </div>
   );
 };

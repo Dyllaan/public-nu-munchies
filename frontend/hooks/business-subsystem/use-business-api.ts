@@ -1,6 +1,8 @@
-import { registerFormSchema } from "@/app/(business-subsytem)/business/utils/register-formschema";
+import { registerFormSchema } from "@/app/(business-subsytem)/utils/register-formschema";
 import { Endpoints } from "@/config/endpoints";
-import { mainConfig } from "@/config/main";
+import { sendRequest } from "@/lib/send-request";
+import { userAtom } from "@/stores/auth";
+import { useAtom } from "jotai";
 import { z } from "zod";
 
 interface CreateBusinessRequest {
@@ -14,11 +16,13 @@ interface CreateBusinessRequest {
   email?: string;
 }
 
+type UserInput = z.infer<typeof registerFormSchema>;
+
 export const useBusinessApi = () => {
-  type UserInput = z.infer<typeof registerFormSchema>;
+  // insert user state
+  const [user, setUser] = useAtom(userAtom);
 
   const createBusiness = async (data: UserInput) => {
-    console.log(data);
     const requestBody: CreateBusinessRequest = {
       name: data.businessName,
       description: data.businessDescription,
@@ -37,28 +41,6 @@ export const useBusinessApi = () => {
     );
 
     return res;
-  };
-
-  // internal function to send request
-  const sendRequest = async <T>(
-    endpoint: Endpoints,
-    method: "GET" | "POST" | "PUT" | "DELETE",
-    data: T
-  ) => {
-    // convert data to form data
-    const formData = new FormData();
-    for (const key in data) {
-      const value = data[key];
-      if (typeof value === "string" || value instanceof Blob) {
-        formData.append(key, value);
-      }
-    }
-    // send request
-    const response = await fetch(mainConfig.origin + "/" + endpoint, {
-      method,
-      body: formData,
-    });
-    return response.json();
   };
 
   return {

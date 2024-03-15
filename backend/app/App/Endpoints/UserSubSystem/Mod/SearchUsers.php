@@ -18,8 +18,9 @@ class SearchUsers extends ModeratorEndpoint
     {
         parent::__construct('GET', 'users');
         $this->setRequiresAuth(true);
-        $this->getAttributes()->addAllowedInts(['page', 'verified']);
+        $this->getAttributes()->addAllowedInts(['page']);
         $this->getAttributes()->addAllowedStrings(['search']);
+        $this->getAttributes()->addAllowedBools(['verified']);
     }
 
     private function handle($request) 
@@ -27,7 +28,7 @@ class SearchUsers extends ModeratorEndpoint
         $searchFields = ['users.first_name', 'users.last_name', 'users.email'];
         $searchConditions = SearchHelper::searchConditionBuilder($request, $searchFields);
         
-        $verifiedCondition = SearchHelper::addCondition($request, 'verified', 'users');
+        $verifiedCondition = SearchHelper::addBoolAndConvertToIntCondition($request, 'verified', 'users');
         return SearchHelper::buildConditions($request, [$searchConditions, $verifiedCondition]);
     }
 

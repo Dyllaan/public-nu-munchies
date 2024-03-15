@@ -29,6 +29,11 @@ export default function SearchBusiness()  {
   const [verified, setVerified] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [search, setSearch] = useState("");
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    setCount(data.length);
+  }, [data]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -102,7 +107,7 @@ export default function SearchBusiness()  {
           <LoadingInPage />
         </div>}
             <Table className="w-fit">
-            <TableCaption>Found users.</TableCaption>
+            <TableCaption>Found {count} users.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="">Email</TableHead>

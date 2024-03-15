@@ -42,6 +42,16 @@ class SearchHelper {
             return $table .".". $fieldName . " = ". $request->getAttribute($fieldName);
         }
     }
+    
+    /**
+     * This is not my proudest function as it is a result of user verified being an integer
+     * TODO: CHANGE DB TO BOOLEAN
+     */
+    public static function addBoolAndConvertToIntCondition($request, $fieldName, $table) {
+        if($request->hasAttribute($fieldName)) {
+            return $table .".". $fieldName . " = ". ($request->getAttribute($fieldName) ? 1 : 0);
+        }
+    }
 
     public static function buildConditions($request, $arrOfConditions) {
         $conditions = [];

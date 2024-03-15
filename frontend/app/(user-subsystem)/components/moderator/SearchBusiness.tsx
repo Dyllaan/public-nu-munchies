@@ -29,6 +29,11 @@ export default function SearchBusiness()  {
   const endpoint = `moderator/businesses`;
   const { data, setEndpoint, reloadData, loading } = useFetchData(endpoint);
   const [verified, setVerified] = useState(false);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    setCount(data.length);
+  }, [data]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -104,7 +109,7 @@ export default function SearchBusiness()  {
           <LoadingInPage />
         </div>}
             <Table className="w-fit">
-            <TableCaption>Found users.</TableCaption>
+            <TableCaption>Found {count} businesses.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="">Name</TableHead>

@@ -33,4 +33,13 @@ class Validator
         }
         return true;
     }
+
+    public static function validateBool($name, $value)
+    {
+        $value = boolval($value);
+        if (!is_bool($value)) {
+            throw new \Core\ClientErrorException(400, ['message' => $name . ' must be a boolean']);
+        }
+        return true;
+    }
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
+    <main className="flex min-h-screen flex-col items-center">
       {/* Component imported via shadcn-ui */}
       <Alert className="max-w-[400px] mx-auto mb-10">
         <RocketIcon className="h-4 w-4" />

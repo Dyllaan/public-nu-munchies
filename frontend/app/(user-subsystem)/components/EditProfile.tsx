@@ -13,14 +13,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { PersonIcon } from "@radix-ui/react-icons"
 import InlineEditableField from "./EditableField";
 import React, { useState, useEffect } from 'react';
-import { FormProvider } from 'react-hook-form';
 // Modify the form schema for profile editing (make all fields optional and remove passwordConfirmation)
 const profileEditSchema = z.object({
     firstName: z.string().min(1, { message: "First name is required" }).optional(),
     lastName: z.string().min(1, { message: "Last name is required" }).optional(),
     email: z.string().email({ message: "Invalid email address" }).optional(),
-    password: z.string().min(6, { message: "Password must be at least 6 characters" }).optional(),
-    passwordConfirmation: z.string().min(6, { message: "Password confirmation must be at least 6 characters" }).optional(),
 });
 
 
@@ -28,9 +25,7 @@ type ProfileEditFormInput = z.infer<typeof profileEditSchema>;
 
 export default function EditProfile() {
     const { editUser, user } = useUserSubsystem();
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [changes, setChanges] = useState([]);
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
     const form = useForm<ProfileEditFormInput>({
         resolver: zodResolver(profileEditSchema),
@@ -38,63 +33,56 @@ export default function EditProfile() {
             firstName: "",
             lastName: "",
             email: "",
-            password: "",
-            passwordConfirmation: "",
         },
     });
 
-    const handleProfileUpdate = async (data: ProfileEditFormInput) => {
-        // You may want to filter out empty strings or null values before sending
+    const handleSave = (name:any, newValue:any) => {
+        form.setValue(name, newValue);
+        setHasUnsavedChanges(true); // Indicate that there are unsaved changes
+    };
+
+    const handleEdit = async (data: any) => {
+
+        console.log("here");
         const response = await editUser(data);
         if (response) {
             toast.error(response);
+        } else {
+            // Reset unsaved changes indicator on successful update
+            setHasUnsavedChanges(false);
         }
     };
 
     return (
         <>
-        <div className="m-2">
-            <h2>
-                Want to change your password or email?
-                <Link href="/settings" className="underline m-1">
-                    Go to Settings
-                </Link>
-            </h2>
-        </div>
-        <FormProvider {...form}>
-                <form onSubmit={form.handleSubmit(handleProfileUpdate)}>
+            <div>
+                <h2>
+                    Want to change your password or email?
+                    <Link href="/settings" className="underline m-1">
+                        Go to Settings
+                    </Link>
+                </h2>
+            </div>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(handleEdit)}>
                     <InlineEditableField
                         name="firstName"
                         label={user.firstName || "First Name"}
-                        onSave={(newValue) => console.log('Save new value:', newValue)}
+                        onSave={(newValue) => handleSave('firstName', newValue)}
                     />
                     <InlineEditableField
                         name="lastName"
                         label={user.lastName || "Last Name"}
-                        onSave={(newValue) => console.log('Save new value:', newValue)}
+                        onSave={(newValue) => handleSave('lastName', newValue)}
                     />
                     <InlineEditableField
                         name="email"
                         label={user.email || "Email"}
-                        onSave={(newValue) => console.log('Save new value:', newValue)}
-                    />
-                    <InlineEditableField
-                        name="password"
-                        label="Password"
-                        onSave={(newValue) => console.log('Save new value:', newValue)}
-                    />
+                        onSave={(newValue) => handleSave('email', newValue)}
+                    />            
+                    <Button onClick={handleEdit} className="mt-4" disabled={!hasUnsavedChanges}>Update Profile</Button>
                 </form>
-            </FormProvider>
-        {isModalOpen && (
-            <Alert>
-            <PersonIcon className="h-4 w-4" />
-            <AlertTitle>Heads up!</AlertTitle>
-            <AlertDescription>
-              You can add components to your app using the cli.
-            </AlertDescription>
-          </Alert>
-          
-        )}
+            </Form>
         </>
     );
 }

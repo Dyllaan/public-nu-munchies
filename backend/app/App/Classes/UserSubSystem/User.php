@@ -42,9 +42,18 @@ class User extends CrudModel implements CrudInterface
         return self::$instance;
     }
 
+    public function getBusinesses()
+    {
+        if(!$this->exists()) {
+            return;
+        }
+        $data = $this->getDb()->createSelect()->cols("*")->from('businesses')->where(["user_id = '" . $this->getId() . "'"])->execute();
+        return $data;
+    }
+
     public function sendVerificationEmail()
     {
-        $emailOTP = new EmailToken('email_verification');
+        $emailOTP = new EmailToken($this->getDb(), 'email_verification');
         $emailOTP->setUser($this);
         try {
             $emailOTP->sendEmail();
@@ -56,7 +65,11 @@ class User extends CrudModel implements CrudInterface
 
     public function sendPasswordResetEmail()
     {
-        $emailOTP = new PasswordResetJWT();
+        if(!$this->exists()) {
+           return;
+        }
+        
+        $emailOTP = new PasswordResetJWT($this->getDb());
         $emailOTP->setUser($this);
         try {
             $emailOTP->sendEmail();
@@ -72,7 +85,7 @@ class User extends CrudModel implements CrudInterface
             $this->setResponse(400, 'User is already verified');
             return;
         }
-        $emailOTP = new PasswordResetJWT();
+        $emailOTP = new PasswordResetJWT($this->getDb());
         $emailOTP->setUser($this);
         $emailOTP->get();
         $emailOTP->create();
@@ -80,7 +93,7 @@ class User extends CrudModel implements CrudInterface
     }
     
     public function verifyEmailOTP($otp, $type) {
-        $emailOTP = new EmailToken();
+        $emailOTP = new EmailToken($this->getDb());
         $emailOTP->setUser($this);
         $emailOTP->setType($type);
         if($emailOTP->validate($otp)) { 
@@ -94,7 +107,7 @@ class User extends CrudModel implements CrudInterface
     }
 
     public function verifyPasswordResetOTP($otp, $type) {
-        $emailOTP = new PasswordResetJWT();
+        $emailOTP = new PasswordResetJWT($this->getDb());
         $emailOTP->setUser($this);
         $emailOTP->setType($type);
         if($emailOTP->validate($otp)) {
@@ -132,18 +145,10 @@ class User extends CrudModel implements CrudInterface
     {
         if ($this->getId() != null) {
             $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["id = '" . $this->getId() . "'"])->execute();
-            if (count($data) == 0) {
-                return false;
-            } else {
-                return true;
-            }
+            return count($data) > 0;
         } elseif ($this->getEmail() != null) {
             $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["email = '" . $this->getEmail() . "'"])->execute();
-            if (count($data) == 0) {
-                return false;
-            } else {
-                return true;
-            }
+            return count($data) > 0;
         } else {
             return false;
         }
@@ -152,11 +157,7 @@ class User extends CrudModel implements CrudInterface
     public function doesUserExistAtEmail($email)
     {
         $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["email = '" . $email . "'"])->execute();
-        if (count($data) == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return count($data) > 0;
     }
 
     public function login()

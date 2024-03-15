@@ -17,13 +17,16 @@ class PasswordResetJWT extends EmailToken
 {
   private $userId;
   
-  public function __construct()
+  public function __construct($db)
   {
-    parent::__construct('password_reset');
+    parent::__construct($db, 'password_reset');
   }
   
   public function validate($jwt)
   {
+    if($this->isAlreadyUsed($jwt)) {
+      $this->setResponse(401, 'Email token already used');
+    }
     $key = $this->appConfigInstance->get('EMAIL_JWT_SECRET');
     try {
       $decodedJWT = JWT::decode($jwt, new \Firebase\JWT\Key($key, 'HS256'));
@@ -31,6 +34,7 @@ class PasswordResetJWT extends EmailToken
         $this->setResponse(401, 'Email token invalid type');
       } else {
         $this->setUserId($decodedJWT->id);
+        $this->storeAsUsed($jwt, $decodedJWT->id);
         return true;
       }
     } catch (\Firebase\JWT\ExpiredException $e) {

@@ -73,4 +73,26 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .primary {
+    @apply bg-red-200;
+  }
+
+  .secondary {
+    @apply bg-blue-200;
+  }
+    /* W3 SCHOOLS https://www.w3schools.com/howto/howto_css_primary_scrollbar.asp
+    * converted to tailwind and styled
+    */
+    ::-webkit-scrollbar {
+        @apply w-2.5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-slate-500 rounded-lg;
+    }
+  
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-400; 
+    }
 }

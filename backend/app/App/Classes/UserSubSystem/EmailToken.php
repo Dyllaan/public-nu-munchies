@@ -13,17 +13,20 @@ use Core\HTTP\Classes\GivesResponse;
 use App\Factories\EmailFactory;
 use Core\ClientErrorException;
 use Firebase\JWT\JWT;
+use Core\Database\CrudModel;
 
-class EmailToken extends GivesResponse
+class EmailToken extends CrudModel
 {
     protected \AppConfig $appConfigInstance;
     private $user;
     private $type;
 
-    public function __construct($type = 'email_verification')
+    public function __construct($db, $type = 'email_verification')
     {
+        parent::__construct($db);
         $this->appConfigInstance = new \AppConfig();
         $this->setType($type);
+        $this->setTable('used_email_tokens');
     }
   
     public function sendEmail()
@@ -32,12 +35,11 @@ class EmailToken extends GivesResponse
 
         if($this->getType() === 'password_reset'){
             $subject = "NU Munchies Password Reset";
-            $link = "http://localhost:3000/verify-email?token=" . $jwt;
-            $content = "Please click the link to reset your password: ". $link;
+            $link = "http://localhost:3000/change?token=" . $jwt;
+            $content = "Please click the link to reset your pasword: ". $link . " This link will expire in 10 minutes";
         } else {
             $subject = "NU Munchies Email Verification";
-            $link = "http://localhost:3000/verify-email?token=" . $jwt;
-            $content = "Please click the link to verify your email: ". $link;
+            $content = "Enter this code on the verification page: ". $jwt . " This code will expire in 10 minutes";
         }
 
         $email = EmailFactory::createEmail(
@@ -51,6 +53,9 @@ class EmailToken extends GivesResponse
     
     public function validate($jwt)
     {
+        if($this->isAlreadyUsed($jwt)) {
+            $this->setResponse(401, 'Email token already used');
+        }
         $key = $this->appConfigInstance->get('EMAIL_JWT_SECRET');
         try {
             $decodedJWT = JWT::decode($jwt, new \Firebase\JWT\Key($key, 'HS256'));
@@ -59,12 +64,30 @@ class EmailToken extends GivesResponse
             } else if($decodedJWT->id !== $this->getUser()->getId()) {
                 $this->setResponse(401, 'Email token invalid user');
             } else {
+                $this->storeAsUsed($jwt, $decodedJWT->id);
                 return true;
             }
         } catch (\Firebase\JWT\ExpiredException $e) {
             $this->setResponse(401, 'Email token expired');
         } catch (\Exception $e) {
             $this->setResponse(401, 'Email token invalid');
+        }
+    }
+
+    protected function isAlreadyUsed($jwt)
+    {
+        $result = $this->getDb()->createSelect()->from($this->getTable())->cols("token")->where(["token = '".$jwt."'"])->execute();
+        return count($result) > 0;
+    }
+
+    protected function storeAsUsed($jwt, $userId)
+    {
+        try {
+            $this->getDb()->createInsert()->into($this->getTable())->cols('token, user_id')->values([$jwt, $userId])->execute();
+            return true;
+        } catch (\Exception $e) {
+            $this->setResponse(500, 'Error storing token as used');
+            return false;
         }
     }
 

@@ -23,6 +23,7 @@ class User extends CrudModel implements CrudInterface
     private $password;
     private $token;
     private $verified;
+    private $exists;
     protected static $instance = null;
 
     private \AppConfig $appConfigInstance;
@@ -87,6 +88,7 @@ class User extends CrudModel implements CrudInterface
         }
         $emailOTP = new PasswordResetJWT($this->getDb());
         $emailOTP->setUser($this);
+        $emailOTP->setType("email_verification");
         try {
             $emailOTP->sendEmail();
         } catch (\Exception $e) {
@@ -146,15 +148,22 @@ class User extends CrudModel implements CrudInterface
 
     public function exists()
     {
-        if ($this->getId() != null) {
-            $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["id = '" . $this->getId() . "'"])->execute();
-            return count($data) > 0;
-        } elseif ($this->getEmail() != null) {
-            $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["email = '" . $this->getEmail() . "'"])->execute();
-            return count($data) > 0;
-        } else {
-            return false;
+        if($this->exists) {
+            return $this->exists;
         }
+        if ($this->getEmail() != null) {
+            $data = $this->getFromEmail();
+            if($data != null) {
+                $this->setId($data[0]['id']);
+                return true;
+            }
+        } elseif ($this->getId() != null) {
+            $data = $this->getFromUserId();
+            if($data != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function doesUserExistAtEmail($email)
@@ -176,6 +185,7 @@ class User extends CrudModel implements CrudInterface
                 $this->setUserFields($data[0]);
                 if ($data[0]['verified'] == 0) {
                     $this->sendVerificationEmail();
+                    return $this->toArray();
                 } else {
                     return $this->toArray();
                 }
@@ -253,6 +263,7 @@ class User extends CrudModel implements CrudInterface
                 if ($id != null) {
                     $this->getDb()->createInsert()->into('passwords')->cols('user_id, password')->values([$id, $this->getPassword()])->execute();
                     $this->getDb()->commit();
+                    $id = intval($id);
                     $this->setId($id);
                     return $this->sendVerificationEmail();
                 } else {
@@ -279,22 +290,24 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
-    private function getFromId()
+    protected function getFromId()
     {
         $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["id = '" . $this->getId() . "'"])->execute();
         if (count($data) == 0) {
             return null;
         } else {
             $this->setUserFields($data[0]);
+            return $data;
         }
     }
 
-    private function getFromEmail() {
-        $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["email = '" . $this->getEmail() . "'"])->execute();
+    protected function getFromEmail() {
+        $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["email = '" . $this->getEmail() . "'"])->execute();
         if (count($data) == 0) {
             return null;
         } else {
             $this->setUserFields($data[0]);
+            return $data;
         }
     }
 
@@ -367,6 +380,13 @@ class User extends CrudModel implements CrudInterface
             } else {
                 return ['message' => "No changes"];
             }
+        }
+    }
+
+    public function getFromUserId() {
+        if ($this->getId() != null) {
+            $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["id = '" . $this->getId() . "'"])->execute();
+            return $data;
         }
     }
 
@@ -493,5 +513,13 @@ class User extends CrudModel implements CrudInterface
 
     public function getName() {
         return $this->getFirstName() . " " . $this->getLastName();
+    }
+
+    public function doesExist() {
+        return $this->exists;
+    }
+
+    public function setExists($exists) {
+        $this->exists = $exists;
     }
 }

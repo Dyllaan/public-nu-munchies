@@ -62,7 +62,7 @@ class EmailToken extends CrudModel
             if($decodedJWT->type !== $this->getType()) {
                 $this->setResponse(401, 'Email token invalid type');
             } else if($decodedJWT->id !== $this->getUser()->getId()) {
-                $this->setResponse(401, 'Email token invalid user');
+                $this->setResponse(401, 'Email token invalid user', ['id' => $decodedJWT->id, 'user_id' => $this->getUser()->getId()]);
             } else {
                 $this->storeAsUsed($jwt, $decodedJWT->id);
                 return true;

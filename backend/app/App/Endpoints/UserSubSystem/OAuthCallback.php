@@ -33,7 +33,7 @@ class OAuthCallback extends Endpoint
         $payload = $client->verifyIdToken($id_token);
         if ($payload) {
             $user = OAuthUser::getInstance($this->getDb());
-            $user->setId($payload['sub']);
+            $user->setOAuthId($payload['sub']);
             $user->setFirstName($payload['given_name']);
             // Google allows users without last names
             if(isset($payload['family_name'])) {

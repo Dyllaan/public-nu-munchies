@@ -19,7 +19,6 @@ class ResendEmail extends SubEndpoint
     public function process($request)
     {
         parent::process($request);
-        $this->getUser()->get();
         $this->getUser()->sendNewEmailOTP();
         
     }

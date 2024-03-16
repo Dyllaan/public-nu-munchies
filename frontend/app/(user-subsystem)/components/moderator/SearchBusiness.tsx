@@ -23,12 +23,12 @@ import { PersonIcon } from '@radix-ui/react-icons'
  */
 
 export default function SearchBusiness()  {
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
-  const endpoint = `moderator/users`;
+  const endpoint = `moderator/businesses`;
   const { data, setEndpoint, reloadData, loading } = useFetchData(endpoint);
   const [verified, setVerified] = useState(false);
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [search, setSearch] = useState("");
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function SearchBusiness()  {
     }
     setEndpoint(newEndpoint);
     reloadData();
-  }, [page, debouncedSearch, verified]);
+  }, [endpoint, page, debouncedSearch, verified]);
 
   const endOfData = (!loading && data.length === 0);
 
@@ -83,12 +83,14 @@ export default function SearchBusiness()  {
   }
 
   function renderItems(data:any) {
-    return data.map((user:any, index:any) => (
-        <TableRow key={index}>
-        <TableCell>{user.email}</TableCell>
-        <TableCell>{user.first_name}</TableCell>
-        <TableCell>{user.last_name}</TableCell>
-        <TableCell className="text-right">{user.verified}</TableCell>
+    return data.map((business:any, index:any) => (
+      <TableRow key={index}>
+        <TableCell>{business.business_name}</TableCell>
+        <TableCell>{business.business_description}</TableCell>
+        <TableCell>{business.business_email}</TableCell>
+        <TableCell>{business.business_phone}</TableCell>
+        <TableCell>{business.business_verification ? "Verified" : "Not Verified"}</TableCell>
+        <TableCell className="text-right">{business.created_at}</TableCell>
       </TableRow>
     ));
   }
@@ -107,13 +109,15 @@ export default function SearchBusiness()  {
           <LoadingInPage />
         </div>}
             <Table className="w-fit">
-            <TableCaption>Found {count} users.</TableCaption>
+            <TableCaption>Found {count} businesses.</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="">Email</TableHead>
-          <TableHead>First Name</TableHead>
-          <TableHead>Last Name</TableHead>
-          <TableHead className="text-right">Verified</TableHead>
+          <TableHead className="">Name</TableHead>
+          <TableHead>Description</TableHead>
+          <TableHead>Email</TableHead>
+          <TableHead>Phone</TableHead>
+          <TableHead>Verification</TableHead>
+          <TableHead className="text-right">Created</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

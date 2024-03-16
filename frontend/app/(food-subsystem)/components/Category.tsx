@@ -3,6 +3,8 @@
 import {useState, useEffect} from 'react';
 import {atom, useAtom} from "jotai";
 import {useRouter} from 'next/navigation';
+import useFetchData from '@/hooks/user-subsystem/useFetchData';
+import LoadingInPage from '@/app/(user-subsystem)/components/LoadingInPage';
 
 interface Category{
     cat_id?: number
@@ -16,28 +18,30 @@ function Categories(){
     });
     const [selectedCategory, setSelectedCategory] = useAtom(selectedCategoryAtom);
 
+    /*
     const fetchData = async() => {
         const res = await fetch("http://localhost:8080/getcategory")
         return res.json()
     }
+    */
 
-    useEffect(() => {
-        if(categories.data.length > 0) return;
-        fetchData().then(res => {
-            setCategories(res);
-            console.log(res);
-        });
-    }, []);
+    const {data, loading} = useFetchData("getcategory");
+
 
     const handleClick = (category: Category) => {
         console.log(category);
         setSelectedCategory(category);
     }
+
+    if(loading){
+        return <LoadingInPage />
+    }
+
     return (
         <>
             <div className="grid-cols-{4}">
                 <div className="bg-[#eaeaea] my-2 rounded">
-                    {categories.data?.map((value, key) =>(
+                    {data.map((value: any, key) =>(
                         <div key={key} className="mb-2" onClick={() => handleClick(value)}>
                             <p className="font-bold">{value.cat_name}</p>
                         </div>

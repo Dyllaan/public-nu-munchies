@@ -18,67 +18,76 @@
         {
             parent::__construct('PUT', 'editnutrition');
             $this->getAttributes()->addAllowedStrings(['food_name']);
-            $this->getAttributes()->addAllowedInts(['weight', 'calories', 'protein', 'carbs', 'fat', 'salt', 'quantity']);
+            $this->getAttributes()->addAllowedInts(['food_id','weight', 'calories', 'protein', 'carbs', 'fat', 'salt', 'quantity']);
         }
         public function process($request)
         {
             parent::process($request);
             $changeFlag = false;
 
+            $nutrition = new Nutrition($this->getDb());
+            $food_id = $request->getAttribute('food_id');
+            $nutrition->setFoodId($food_id);
+
+
+            if (!is_array($request) && !method_exists($request, 'getAttributes')) {
+                $this->setResponse(400, ['message' => 'Invalid request format']);
+                return;
+            }
+
             $attributes = $request->getAttributes();
             if($attributes == null || empty($attributes))
             {
                 $this->setResponse(400, ['message' => 'No Attributes to edit']);
             }
-            if($request->hadAttribute('food_name'))
+            if($request->hasAttribute('food_name'))
             {
                 $changeFlag = true;
-                $this->getNutrition()->setFoodName($request->getAttribute('food_name'));
+                $nutrition->setFoodName($request->getAttribute('food_name'));
             }
-            if($request->hadAttribute('weight'))
+            if($request->hasAttribute('weight'))
             {
                 $changeFlag = true;
-                $this->getNutrition()->setWeight($request->getAttribute('weight'));
+                $nutrition->setWeight($request->getAttribute('weight'));
             }
-            if($request->hadAttribute('calories'))
+            if($request->hasAttribute('calories'))
             {
                 $changeFlag = true;
-                $this->getNutrition()->setCalories($request->getAttribute('calories'));
+                $nutrition->setCalories($request->getAttribute('calories'));
             }
-            if($request->hadAttribute('protein'))
+            if($request->hasAttribute('protein'))
             {
                 $changeFlag = true;
-                $this->getNutrition()->setProtein($request->getAttribute('protein'));
+                $nutrition->setProtein($request->getAttribute('protein'));
             }
-            if($request->hadAttribute('carbs'))
+            if($request->hasAttribute('carbs'))
             {
                 $changeFlag = true;
-                $this->getNutrition()->setCarbs($request->getAttribute('carbs'));
+                $nutrition->setCarbs($request->getAttribute('carbs'));
             }
-            if($request->hadAttribute('fat'))
+            if($request->hasAttribute('fat'))
             {
                 $changeFlag = true;
-                $this->getNutrition()->setFat($request->getAttribute('fat'));
+                $nutrition->setFat($request->getAttribute('fat'));
             }
-            if($request->hadAttribute('salt'))
+            if($request->hasAttribute('salt'))
             {
                 $changeFlag = true;
-                $this->getNutrition()->setSaly($request->getAttribute('salt'));
+                $nutrition->setSalt($request->getAttribute('salt'));
             }
-            if($request->hadAttribute('quantity'))
+            if($request->hasAttribute('quantity'))
             {
                 $changeFlag = true;
-                $this->getNutrition()->setQuantity($request->getAttribute('quantity'));
+                $nutrition->setQuantity($request->getAttribute('quantity'));
             }
 
             if($changeFlag)
             {
-                $this->getNutrition()->update();
+                $nutrition->update();
+                $this->setResponse(201, "Nutrition Updated", $nutrition->toArray());
             } else {
                 $this->setResponse(400, ['message' => 'No Attributes to edit']);
             }
-
-            $this->setResponse(201, "Category Updated", $this->getCategory()->toArray());
         }
      }
 ?>

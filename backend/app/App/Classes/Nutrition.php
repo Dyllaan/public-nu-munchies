@@ -190,8 +190,8 @@
         {
             if($this->exists())
             {
-                $delectQuery = $this->getDb()->createDelete()->from('nutrition_details')->where(["food_id" => $this->getId()]);
-                $delectQuery->execute();
+                $this->getDb()->createDelete()->from($this->getTable())->where(["food_id = '" . $this->food_id . "'"])->execute();
+                
                 return ['message' => "Nutrition Deleted"];
             }
             $this->setResponse(400, "Nutrition does not Exist");

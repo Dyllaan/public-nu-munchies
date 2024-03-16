@@ -44,21 +44,18 @@
         }
         public function exists()
         {
-            if($this>getFoodId() != null){
+            if($this->getFoodId() !== null){
                 $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["food_id = '" .$this->food_id . "'"])->execute();
-                if(count($data) == 0){
-                    return false;
-                } else {
+                if(!empty($data)){
                     return true;
                 }
             } elseif ($this->getFoodName() != null) {
                 $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["name = '" . $this->food_id . "'"])->execute();
                 if(count($data) == 0){
-                    return false;
-                } else {
                     return true;
                 }
             }
+            return false;
         }
         public function save()
         {
@@ -165,14 +162,12 @@
             if(!$this->exists())
             {
                 $this->setResponse(400, "Nutrition does not Exists");
-                return;
             }
-            $data = $this->getDb()->createSelect()->into("nutrition_details")->cols(["food_name", "weight", "calories", "protein", "carbs", "fat", "salt", "quantity"])->where(["food_id" => $this->getId()]);
+            $data = $this->getDb()->createSelect()->cols("food_name", "weight", "calories", "protein", "carbs", "fat", "salt", "quantity")->from($this->getTable())->where(["food_id = " .$this->food_id])->execute();
             
-            if(empty($data))
+            if(count($data) == 0)
             {
                 $this->setResponse(400, "Nutrition does not Exist");
-                return;
             }
             $changed = array_filter([
                 'food_name' => $this->getFoodName() !== $data[0]['food_name'] ? $this->getFoodName() : null,
@@ -188,7 +183,7 @@
             {
                 return['message' => "No changes"];
             }
-            $this->getDb()->createUpdate()->table('nutrition_details')->set($changed)->where(["food_id" => $this->getId()]);
+            $this->getDb()->createUpdate()->table('nutrition_details')->set($changed)->where(["food_id = " .$this->food_id])->execute();
             return['message' => "Nutrition Updated"];
         }
         public function delete()

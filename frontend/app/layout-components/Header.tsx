@@ -13,9 +13,10 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem"
+import NavLink from "./NavLink"
 
 export default function Header() {
-  const { user, logout } = useUserSubsystem()
+  const { user, logout, logged } = useUserSubsystem()
 
 
   function loggedInMenu() {
@@ -29,15 +30,14 @@ export default function Header() {
                 <ListItem
                   title="Profile"
                   href="/profile"
-                  onClick={logout}
                 >
                   View and edit your profile
                 </ListItem>
                 <ListItem
-                  title="Settings"
-                  href="/settings"
+                  title="Logout"
+                  onClick={() => logout()}
                 >
-                  Change your password and email
+                  Log out of your account
                 </ListItem>
               </ul>
             </NavigationMenuContent>
@@ -54,59 +54,38 @@ export default function Header() {
     )
   }
 
-  function guestMenu() {
+  function loggedMenu() {
     return (
-      <NavigationMenu>
-        <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Guest</NavigationMenuTrigger>
+            <NavigationMenuTrigger>{user.firstName}</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                <NavigationMenuLink asChild>
-                  <a
-                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-2 no-underline outline-none focus:shadow-md"
-                    href="/login"
-                  >
-                    <div className="text-lg font-medium">
-                      <p>Login</p>
-                    </div>
-                    <p className="text-sm leading-tight text-muted-foreground">
-                      Are you already registered?
-                    </p>
-                  </a>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <a
-                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-2 no-underline outline-none focus:shadow-md"
-                    href="/register"
-                  >
-                    <div className="text-lg font-medium">
-                      <p>Register</p>
-                    </div>
-                    <p className="text-sm leading-tight text-muted-foreground">
-                      Are you already registered?
-                    </p>
-                  </a>
-                </NavigationMenuLink>
+                <NavLink title="Profile" href="/profile" description="View and edit your profile" />
+                <NavLink title="Logout" description="View and edit your profile" onClick={logout} />
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
+    )
+  }
+
+  function guestMenu() {
+    return (
           <NavigationMenuItem>
-            <Link href="/about" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                About
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
+        <NavigationMenuTrigger>Guest</NavigationMenuTrigger>
+        <NavigationMenuContent>
+          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+            <NavLink title="Login" href="/login" description="Log in to your account" />
+<NavLink title="Register" href="/register" description="Create a new account" />
+          </ul>
+        </NavigationMenuContent>
+      </NavigationMenuItem>
     )
   }
 
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        {user ? loggedInMenu() : guestMenu()}
+        {logged ? loggedMenu() : guestMenu()}
         <NavigationMenuItem>
           <Link href="/about" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>

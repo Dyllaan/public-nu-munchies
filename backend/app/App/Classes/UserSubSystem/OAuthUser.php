@@ -109,6 +109,7 @@ class OAuthUser extends User
         $this->setLastName($data['last_name']);
         $this->setEmail($data['email']);
         $this->setVerified($data['verified']);
+        $this->setCreatedAt($data['created_at']);
         $this->setExists(true);
     }
 
@@ -157,7 +158,9 @@ class OAuthUser extends User
             'first_name' => $this->getFirstName(),
             'last_name' => $this->getLastName(),
             'email' => $this->getEmail(),
-            'verified' => $this->isVerified()
+            'verified' => $this->isVerified(),
+            'created_at' => $this->getCreatedAt(),
+            'oauth' => true
         ];
         //hardcoded provider id not good
         if($useJwt) {

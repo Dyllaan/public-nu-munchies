@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -20,6 +20,7 @@ import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsyst
 
 import GoogleSignIn from "../components/GoogleLogin";
 
+import AgreementFooter from "../components/AgreementFooter";
 
 // Define the login form schema using zod
 const loginFormSchema = z.object({
@@ -50,14 +51,14 @@ function LoginPage() {
     };
 
     return (
-        <>
+        <div className="h-[90vh]">
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleLogin)}>
-                <Card className="py-4 md:max-w-[550px]">
+            <form className="loginPageBackground h-full items-center flex" onSubmit={form.handleSubmit(handleLogin)}>
+                <Card className="py-4 md:max-w-[550px] mx-auto my-auto">
                     <CardHeader>
                         <CardTitle className="text-center">Login</CardTitle>
                     </CardHeader>
-                    <CardContent className="flex flex-col gap-y-4">
+                    <CardContent className="flex flex-col gap-y-4 items-center mx-auto">
                         <FormField
                             control={form.control}
                             name="email"
@@ -85,20 +86,23 @@ function LoginPage() {
                         <Button className="py-2 text-md" type="submit">
                             Login
                         </Button>
-                        <h2>
+                        <p>
                             Not registered? 
                             <Link href="/register" className="underline m-1">
                                 Register here
                             </Link>
-                        </h2>
+                        </p>
                         <Link href="/forgot" className="underline m-1 mx-auto">Forgot password?</Link>
                     </CardContent>
+                    <CardFooter className="flex justify-center">
+                        <GoogleSignIn />
+                    </CardFooter>
                 </Card>
             </form>
-
         </Form>
-        <GoogleSignIn />
-        </>
+        <AgreementFooter referrer="login" />
+
+        </div>
     );      
 }
 export default requireAuth(LoginPage, false);

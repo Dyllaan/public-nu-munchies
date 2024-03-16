@@ -2,12 +2,13 @@ import axios from "axios";
 import { useAtom } from "jotai";
 import { userAtom } from "@/stores/auth";
 import { atom } from "jotai";
-import { useState } from "react";
+import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as api from './api'; 
 import { toast } from "sonner";
 import { set } from "react-hook-form";
 import RedirectTo from "@/app/(user-subsystem)/components/RedirectTo";
+import { json } from "stream/consumers";
 
 
 /**
@@ -15,16 +16,19 @@ import RedirectTo from "@/app/(user-subsystem)/components/RedirectTo";
  */
 export const loadingAtom = atom(false);
 export const loggedAtom = atom(false);
+export const oAuthAtom = atom(false);
 
 export const useUserSubsystem = () => {
   const [user, setUser] = useAtom(userAtom);
   const [loading, setLoadingState] = useAtom(loadingAtom);
   const [logged, setLoggedState] = useAtom(loggedAtom);
   const [requestLoading, setRequestLoading ] = useState(false);
+  const [isOAuth, setIsOAuth] = useAtom(oAuthAtom);
   const router = useRouter();
+  
 
-  const setUserState = ({ first_name, last_name, email, verified}: { first_name: string; last_name: string; email: string; verified: boolean}) => {
-    setUser({ firstName: first_name, lastName: last_name, email, verified});
+  const setUserState = ({ first_name, last_name, email, verified, created_at}: { first_name: string; last_name: string; email: string; verified: boolean; created_at: string}) => {
+    setUser({ firstName: first_name, lastName: last_name, email, verified, created_at});
   };
 
   const setLoading = (state:boolean) => {
@@ -34,7 +38,18 @@ export const useUserSubsystem = () => {
     setLoggedState((logged) => state);
   }
 
+  const setOAuth = (state:boolean) => {
+    setIsOAuth((isOAuth) => state);
+  }
+
+  function checkForOAuth(response:any) {
+    if(response.data.data.user.oauth) {
+      setOAuth(true);
+    }
+  }
+
   async function checkToken() {
+    if (loading || logged) return;
     if(localStorage.getItem('token') === null){
       return;
     }
@@ -45,6 +60,7 @@ export const useUserSubsystem = () => {
         setUserState(response.data.data.user);
         setLoading(false);
         setLogged(true);
+        checkForOAuth(response);
       } else {
         console.error("Failed to get user:", response.data.message);
         toast.error(`Please relogin: ${response.data.message}`);
@@ -55,17 +71,6 @@ export const useUserSubsystem = () => {
       setLoading(false);
     }
   }
-
-  const currentUser = async () => {
-    const response = await api.get("user", localStorage.getItem("token"));
-    if (response.success) {
-      setUserState(response.data.data.user);
-      setLoading(false);
-    } else {
-      console.error("Failed to get user:", response.data.message);
-      setLoading(false);
-    }
-  };
 
   const login = async (email: string, password: string) => {
     setAuthStatus(true);
@@ -123,7 +128,7 @@ export const useUserSubsystem = () => {
   };
   
 
-  const editUser = async(data: any) => {
+  const editUser = async(data:any) => {
     try {
       const response = await api.put("user/edit", data, localStorage.getItem("token"));
       if (response.success) {
@@ -224,6 +229,7 @@ export const useUserSubsystem = () => {
       setUserState(response.data.data.user);
       localStorage.setItem("token", response.data.data.jwt);
       setLoading(false);
+      setOAuth(true);
       router.push("/profile");
     } catch (error: any) {
       console.error("Login failed:", error);
@@ -235,9 +241,10 @@ export const useUserSubsystem = () => {
 
   function logout() {
     localStorage.removeItem("token");
-    setUserState({ first_name: "", last_name: "", email: "", verified: false});
+    setUserState({ first_name: "", last_name: "", email: "", verified: false, created_at: ""});
     setLogged(false);
     setLoading(false);
+    setOAuth(false);
     router.replace("/");
   }
 
@@ -278,6 +285,7 @@ export const useUserSubsystem = () => {
     logged,
     loading,
     user,
+    isOAuth,
   };
 };
 

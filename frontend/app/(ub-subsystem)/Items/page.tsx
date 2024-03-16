@@ -1,6 +1,8 @@
+'use client'
 import Items from '../components/Items'
+
 /**
- * Main
+ * page
  * 
  * @author Cameron Bramley
  */
@@ -9,7 +11,6 @@ function Main() {
     return (
         <>
         <Items />
-        <p>jdfkjfmfgfk</p>
         </>
     )
 }

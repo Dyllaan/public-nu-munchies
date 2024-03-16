@@ -103,7 +103,7 @@ class Database
 
     public function executeQuery($sql, $params = [])
     {
-        echo $sql;
+        //echo $sql;
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);

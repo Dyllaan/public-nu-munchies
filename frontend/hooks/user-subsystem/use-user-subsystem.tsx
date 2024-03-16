@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import * as api from './api'; 
 import { toast } from "sonner";
 import { set } from "react-hook-form";
+import RedirectTo from "@/app/(user-subsystem)/components/RedirectTo";
 
 /**
  * @author Louis Figes
@@ -123,7 +124,7 @@ export const useUserSubsystem = () => {
 
   const editUser = async(data: any) => {
     try {
-      const response = await api.put("user", data, localStorage.getItem("token"));
+      const response = await api.put("user/edit", data, localStorage.getItem("token"));
       if (response.success) {
         setUserState(response.data.data.user);
         setLoading(false);
@@ -204,12 +205,14 @@ export const useUserSubsystem = () => {
       const response = await api.post("reset-password", data);
       if (response.success) {
         toast.success(response.data.message);
+        return <RedirectTo to={"/login"} message={"Password Changed"} />
       } else {
         toast.error(response.data.message);
+        return <RedirectTo to={"/login"} message={response.data.message} />
       }
     } catch (error: any) {
       toast.error(error.response.data.message);
-      return error.response.data.message;
+      return <RedirectTo to={"/login"} message={error.response.data.message} />
     }
     setRequestLoading(false);
   }

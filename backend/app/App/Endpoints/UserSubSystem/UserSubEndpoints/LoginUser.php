@@ -23,7 +23,7 @@ class LoginUser extends SubEndpoint
         $user = new User($this->getDb());
         $user->setEmail($request->getAttribute('email'));
         $user->setPassword($request->getAttribute('password'));
-        $user->login($this->getDb());
-        $this->setResponse(201, 'Logged in', $user->toArray());
+        $userArr = $user->login($this->getDb());
+        $this->setResponse(201, 'Logged in', $userArr);
     }
 }

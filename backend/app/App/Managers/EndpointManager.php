@@ -9,6 +9,7 @@ namespace App\Managers;
 
 //use App\Endpoints\NutritionEndpoint;
 //use App\Endpoints\CatEndpoint;
+use App\Endpoints\UFIntegration\RemoveNutrition;
 use App\Endpoints\UFIntegration\RemoveCat;
 use App\Endpoints\UFIntegration\GetNutrition;
 use App\Endpoints\UFIntegration\EditNutrition;
@@ -50,6 +51,7 @@ class EndpointManager extends Manager
     {
         //$this->addEndpoint(new NutritionEndpoint());
         //$this->addEndpoint(new CatEndpoint());
+        $this->addEndpoint(new RemoveNutrition());
         $this->addEndpoint(new RemoveCat());
         $this->addEndpoint(new EditNutrition());
         $this->addEndpoint(new GetNutrition());

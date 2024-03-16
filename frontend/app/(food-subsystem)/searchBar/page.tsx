@@ -10,7 +10,6 @@ function App()
         <div className="App">
             <div className="search-bar-container">
                 <SearchBar />
-                <div>SearchResults</div>
             </div>
         </div>
     );

@@ -6,7 +6,7 @@ namespace App\Endpoints\UserSubSystem\UserSubEndpoints;
 
 use Core\Endpoint\SubEndpoint\SubEndpoint;
 
-class VerifyEmailOTP extends SubEndpoint
+class VerifyUser extends SubEndpoint
 {
     public function __construct() 
     {
@@ -19,6 +19,8 @@ class VerifyEmailOTP extends SubEndpoint
     {
         parent::process($request);
         $this->getUser()->get();
-        $this->getUser()->verifyEmailOTP($request->getAttribute('token'), "email_verification");
+        if($this->getUser()->getEmailHandler()->verifyEmailToken($request->getAttribute('token'), 'email_verification')) {
+            $this->setResponse(200, 'User verified');
+        }
     }
 }

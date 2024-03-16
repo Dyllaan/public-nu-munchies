@@ -12,8 +12,7 @@ namespace App\Classes\UserSubSystem;
 use Firebase\JWT\JWT;
 use Core\Database\CrudModel;
 use Core\Database\CrudInterface;
-use App\Classes\UserSubSystem\EmailToken;
-use App\Classes\UserSubSystem\PasswordResetJWT;
+use App\Classes\UserSubSystem\EmailHandler;
 
 class User extends CrudModel implements CrudInterface
 {
@@ -24,6 +23,10 @@ class User extends CrudModel implements CrudInterface
     private $token;
     private $verified;
     private $exists;
+    private $createdAt;
+
+    private $emailHandler;
+
     protected static $instance = null;
 
     private \AppConfig $appConfigInstance;
@@ -32,6 +35,7 @@ class User extends CrudModel implements CrudInterface
     {
         parent::__construct($db);
         $this->appConfigInstance = new \AppConfig();
+        $this->emailHandler = new EmailHandler($this->getDb(), $this);
         $this->setTable("users");
     }
 
@@ -43,6 +47,30 @@ class User extends CrudModel implements CrudInterface
         return self::$instance;
     }
 
+    public function searchBusinesses($offset, $conditions = [], $limit = 10) {
+            $data = $this->getDb()->createSelect()->cols("*")
+        ->from("businesses")
+        ->where($conditions)->limit($limit)->
+        offset($offset)->execute();
+        return $data;
+    }
+
+    public function searchItems($offset, $conditions = [], $limit = 10, $catId = null) {
+        if($catId != null) {
+            $conditions[] = "cat_id = '" . $catId . "'";
+            $data = $this->getDb()->createSelect()->cols("*")
+            ->from("items")->join("categories", "items.item_category = cat_id")
+            ->where($conditions)->limit($limit)->
+            offset($offset)->execute();
+        return $data;
+        } else {
+            $data = $this->getDb()->createSelect()->cols("*")
+            ->from("items")->where($conditions)->limit($limit)->
+            offset($offset)->execute();
+        return $data;
+        }
+    }
+
     public function getBusinesses()
     {
         if(!$this->exists()) {
@@ -52,82 +80,9 @@ class User extends CrudModel implements CrudInterface
         return $data;
     }
 
-    public function sendVerificationEmail()
-    {
-        $emailOTP = new EmailToken($this->getDb(), 'email_verification');
-        $emailOTP->setUser($this);
-        try {
-            $emailOTP->sendEmail();
-            return true;
-        } catch (\Exception $e) {
-            $this->setResponse(400, 'Error sending email', ['error' => $e->getMessage()]);
-        }
-    }
-
-    public function sendPasswordResetEmail()
-    {
-        if(!$this->exists()) {
-           return;
-        }
-        
-        $emailOTP = new PasswordResetJWT($this->getDb());
-        $emailOTP->setUser($this);
-        try {
-            $emailOTP->sendEmail();
-            return true;
-        } catch (\Exception $e) {
-            $this->setResponse(400, 'Error sending email', ['error' => $e->getMessage()]);
-        }
-    }
-
-    public function sendNewEmailOTP() {
-        $this->get();
-        if($this->isVerified()) {
-            $this->setResponse(400, 'User is already verified');
-            return;
-        }
-        $emailOTP = new PasswordResetJWT($this->getDb());
-        $emailOTP->setUser($this);
-        $emailOTP->setType("email_verification");
-        try {
-            $emailOTP->sendEmail();
-        } catch (\Exception $e) {
-            $this->setResponse(400, 'Error sending email', ['error' => $e->getMessage()]);
-        }
-        $this->setResponse(200, 'New OTP sent');
-    }
-    
-    public function verifyEmailOTP($otp, $type) {
-        $emailOTP = new EmailToken($this->getDb());
-        $emailOTP->setUser($this);
-        $emailOTP->setType($type);
-        if($emailOTP->validate($otp)) { 
-            $this->verifyUser();
-            $this->setResponse(200, 'Email token verified', $this->toArray());
-            return;
-        } else {
-            $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');
-            return;
-        }
-    }
-
-    public function verifyPasswordResetOTP($otp, $type) {
-        $emailOTP = new PasswordResetJWT($this->getDb());
-        $emailOTP->setUser($this);
-        $emailOTP->setType($type);
-        if($emailOTP->validate($otp)) {
-            $this->setId($emailOTP->getUserId());
-            return true;
-            return;
-        } else {
-            $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');
-            return false;
-        }
-    }
-
     public function changePassword($newPassword, $jwt) {
         //validate email token
-        if($this->verifyPasswordResetOTP($jwt, "password_reset")) {
+        if($this->getEmailHandler()->verifyEmailToken($jwt, 'password_reset')){
             //hash password
             $password = password_hash($newPassword, PASSWORD_BCRYPT);
             try {
@@ -152,21 +107,35 @@ class User extends CrudModel implements CrudInterface
             return $this->exists;
         }
         if ($this->getEmail() != null) {
-            $data = $this->getFromEmail();
-            if($data != null) {
-                $this->setId($data[0]['id']);
+            if($this->doesUserExistAtEmail($this->getEmail())) {
                 return true;
             }
         } elseif ($this->getId() != null) {
-            $data = $this->getFromUserId();
-            if($data != null) {
+            if($this->doesUserExistAtId($this->getId())) {
                 return true;
             }
         }
         return false;
     }
 
+    public function get()
+    {
+        if ($this->getId() != null) {
+            $this->getFromId();
+        } elseif ($this->getEmail() != null) {
+            $this->getFromEmail();
+        } else {
+            $this->setResponse(500, "User object improperly initialised");
+        }
+    }
+
     public function doesUserExistAtEmail($email)
+    {
+        $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["email = '" . $email . "'"])->execute();
+        return count($data) > 0;
+    }
+
+    public function doesUserExistAtId($email)
     {
         $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["email = '" . $email . "'"])->execute();
         return count($data) > 0;
@@ -184,7 +153,7 @@ class User extends CrudModel implements CrudInterface
             } else {
                 $this->setUserFields($data[0]);
                 if ($data[0]['verified'] == 0) {
-                    $this->sendVerificationEmail();
+                    $this->getEmailHandler()->sendEmailToken('email_verification');
                     return $this->toArray();
                 } else {
                     return $this->toArray();
@@ -279,17 +248,6 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
-    public function get()
-    {
-        if ($this->getId() != null) {
-            $this->getFromId();
-        } elseif ($this->getEmail() != null) {
-            $this->getFromEmail();
-        } else {
-            $this->setResponse(500, "User object improperly initialised");
-        }
-    }
-
     protected function getFromId()
     {
         $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["id = '" . $this->getId() . "'"])->execute();
@@ -326,6 +284,9 @@ class User extends CrudModel implements CrudInterface
         }
         if(isset($data['verified'])) {
             $this->setVerified($data['verified']);
+        }
+        if(isset($data['created_at'])) {
+            $this->setCreatedAt($data['created_at']);
         }
     }
     
@@ -407,7 +368,8 @@ class User extends CrudModel implements CrudInterface
             'first_name' => $this->getFirstName(),
             'last_name' => $this->getLastName(),
             'email' => $this->getEmail(),
-            'verified' => $this->isVerified()
+            'verified' => $this->isVerified(),
+            'created_at' => $this->getCreatedAt()
         ];
         //hardcoded provider id not good
         if($useJwt) {
@@ -454,6 +416,11 @@ class User extends CrudModel implements CrudInterface
         } else {
             $this->setResponse(400, "Invalid token");
         }
+    }
+
+    public function getEmailHandler()
+    {
+        return $this->emailHandler;
     }
 
     public function setVerified($verified)
@@ -521,5 +488,13 @@ class User extends CrudModel implements CrudInterface
 
     public function setExists($exists) {
         $this->exists = $exists;
+    }
+
+    public function getCreatedAt() {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt($createdAt) {
+        $this->createdAt = $createdAt;
     }
 }

@@ -13,6 +13,7 @@ use App\Endpoints\UserSubSystem\OAuthCallback;
 use App\Endpoints\UserSubSystem\ForgotPassword;
 use App\Endpoints\UserSubSystem\ResetPassword;
 use App\Endpoints\UserSubSystem\Mod\IsMod;
+use App\Endpoints\Search;
 use Core\Manager;
 use Core\HTTP\Classes\Request;
 use Core\ClientErrorException;
@@ -46,6 +47,7 @@ class EndpointManager extends Manager
         $this->addEndpoint(new ResetPassword());
         $this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new IsMod());
+        $this->addEndpoint(new Search());
     }
 
     public function addEndpoint($endpoint)

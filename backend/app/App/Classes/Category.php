@@ -35,6 +35,12 @@
             }
             return self::$instance;
         }
+        public function getAll()
+        {
+            $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->execute();
+            
+            return $data;
+        }
         public function exists()
         {
             if ($this->getCatId() !== null) {

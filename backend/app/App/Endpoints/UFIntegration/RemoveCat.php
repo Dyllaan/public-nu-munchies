@@ -20,10 +20,20 @@
         }
         public function process($request)
         {
+            parent::process($request);
+            $cat = new Category($this->getDb());
+            $cat_id = $request->getAttribute('cat_id');
+            $cat->setCatId($cat_id);
+            $categoryData = $cat->delete($cat_id);
+            $this->setResponse(200, 'Category Deleted', $categoryData);
+
+
+            /*
             $category = ['category' => 'removed'];
-            $id = $this->getDb()->createDelete()->table("categories")->set($category)->where(["id - '" . $request->getAttribute('cat_id'). "'"])->execute();
+            $id = $this->getDb()->createDelete()->from("categories")->where(["cat_id = '" . $this->cat_id . "'"])->execute();
 
             $this->setResponse(200, 'Category Removed', ['id' => $id]);
+            */
         }
     }
 ?>

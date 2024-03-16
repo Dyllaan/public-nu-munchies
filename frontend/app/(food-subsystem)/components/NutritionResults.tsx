@@ -1,10 +1,16 @@
+"use client"
+
 import React from 'react';
+import {useState, useEffect} from 'react';
 import { useLocation } from 'react-router-dom';
 import "../css/food.css";
 import { Input } from "@/components/ui/input";
+import {useRouter} from 'next/navigation';
+import useFetchData from '@/hooks/user-subsystem/useFetchData';
 
+/*
 interface NutritionData {
-  name: string;
+  food_name: string;
   weight: number;
   calories: number;
   protein: number;
@@ -13,34 +19,45 @@ interface NutritionData {
   salt: number;
   quantity: number;
 }
+function NutritionTable(){
+  const router = useRouter();
+  const [nutrition, setNutrition] = useState<{data: Nutrition[]} ({
+    data: []
+  });
+  const {data, loading} = useFetchData ("addnutrition");
 
-const ResultsPage: React.FC = () => {
+  const ResultsPage: React.FC = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const formData: NutritionData = {
-    name: queryParams.get('name') || '',
-    weight: parseFloat(queryParams.get('weight') || '0'),
-    calories: parseFloat(queryParams.get('calories') || '0'),
-    protein: parseFloat(queryParams.get('protein') || '0'),
-    carbs: parseFloat(queryParams.get('carbs') || '0'),
-    fat: parseFloat(queryParams.get('fat') || '0'),
-    salt: parseFloat(queryParams.get('salt') || '0'),
-    quantity: parseFloat(queryParams.get('quantity') || '0')
-  };
+
+  const handleClick = (nutrition: Nutrition) => {
+    console.log(category);
+    setSelectedCategory(category);
+}
 
   return (
-    <div>
-      <h2>Submitted Data</h2>
-      <p>Name: {formData.name}</p>
-      <p>Weight: {formData.weight}</p>
-      <p>Calories: {formData.calories}</p>
-      <p>Protein: {formData.protein}</p>
-      <p>Carbohydrates: {formData.carbs}</p>
-      <p>Fat: {formData.fat}</p>
-      <p>Salt: {formData.salt}</p>
-      <p>Quantity: {formData.quantity}</p>
-    </div>
-  );
+    <><div>
+      {data.map((value, key) => (
+        <div key={key} >
+          <h2>Submitted Data</h2>
+          <p>Name: {value.food_name}</p>
+          <p>Weight: {value.weight}</p>
+          <p>Calories: {value.calories}</p>
+          <p>Protein: {value.protein}</p>
+          <p>Carbohydrates: {value.carbs}</p>
+          <p>Fat: {value.fat}</p>
+          <p>Salt: {value.salt}</p>
+          <p>Quantity: {value.quantity}</p>
+        </div>
+      ))}
+      
+    </div></>
+    
+  )
 };
+}
 
-export default ResultsPage;
+
+
+export default NutritionTable;
+*/

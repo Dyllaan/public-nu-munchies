@@ -12,57 +12,69 @@ import LoadingInPage from '@/app/(user-subsystem)/components/LoadingInPage';
 import useFetchData from '@/hooks/user-subsystem/useFetchData';
 import "../css/food.css";
 
-interface Nutrition{
-  food_id?: number
-  food_name?: string
-  weight?: number
-  calories?: number
-  protein?: number
-  carbs?: number
-  fat?: number
-  salt?: number
-  quantity?: number
-}
-
-function Nutritions(){
-  const router = useRouter();
-  const [nutritions, setNutritions] = useState<{data: Nutrition[]}> ({
-    data: []
-  });
-  const [selectedNutrition, setSelectedNutrition] = useAtom(selectedNutritionAtom);
+function NutritionForm(props: any){
+  const [showForm, setShowForm] = useState(false);
   
-  const {data, loading} = useFetchData("addnutrition");
+  const [formData, setFormData] = useState({
+    food_id: localStorage.getnutrition('token'),
+    food_name: '',
+    weight: 0,
+    calories: 0,
+    protein: 0,
+    carbs: 0,
+    fat: 0,
+    salt: 0,
+    quantity: 0
+  })
+  const handleClick = () => {
+    setShowForm(!showForm);
+  }
+  const handleSubmit = async (event) => {
+    event?.preventDefault();
+    console.log("Submitted");
+    console.log(formData);
+  }
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.food_name]: e.target.value
+    });
+  };
+  const nutrtionForm = () => {
+    return (
+      <form onSubmit={handleSubmit}>
+          <label htmlFor="food_name">Food Name</label>
+          <input type="text" id="food_name" className="block mb-2 bg-red-200 border-gray-900" name="food_name" value={formData.food_name} onChange={handleChange}/>
 
-  const handleClick = (nutrition: Nutrition) => {
-    console.log(nutrition);
-    setSelectedNutrition(nutrition);
+          <label htmlFor="weight">Weight:</label>
+          <input type="number" id="weight" name="weight" value={formData.weight.toString()} onChange={handleChange} required />
+
+          <label htmlFor="calories">Calories:</label>
+          <input type="number" id="calories" name="calories" value={formData.calories.toString()} onChange={handleChange} required />
+          
+          <label htmlFor="protein">Protein (g):</label>
+          <input type="number" id="protein" name="protein" value={formData.protein.toString()} onChange={handleChange} required />
+          
+          <label htmlFor="carbohydrates">Carbohydrates (g):</label>
+          <input type="number" id="carbohydrates" name="carbohydrates" value={formData.carbs.toString()} onChange={handleChange} required />
+          
+          <label htmlFor="fat">Fat (g):</label>
+          <input type="number" id="fat" name="fat" value={formData.fat.toString()} onChange={handleChange} required />
+
+          <label htmlFor="salt">Salt:</label>
+          <input type="number" id="salt" name="salt" value={formData.salt.toString()} onChange={handleChange} required />
+
+          <label htmlFor="quantity">Quantity:</label>
+          <input type="number" id="quantity" name="quantity" value={formData.quantity.toString()} onChange={handleChange} required />
+          
+          <button type="submit">Submit</button>
+      </form>
+    )
   }
-  if(loading){
-    return <LoadingInPage />
-  }
-  return (
-    <>
-      <div>
-      {data.map((value: any, key) => (
-        <div key={key} >
-          <h2>Submitted Data</h2>
-          <p>Name: {value.food_name}</p>
-          <p>Weight: {value.weight}</p>
-          <p>Calories: {value.calories}</p>
-          <p>Protein: {value.protein}</p>
-          <p>Carbohydrates: {value.carbs}</p>
-          <p>Fat: {value.fat}</p>
-          <p>Salt: {value.salt}</p>
-          <p>Quantity: {value.quantity}</p>
-        </div>
-      ))}
-      
-    </div>
-    </>
-  )
+
 }
-export const selectedNutritionAtom = atom<Nutrition>({food_id: undefined, food_name: undefined, weight: undefined, calories:undefined, protein: undefined, carbs: undefined, fat: undefined, salt:undefined, quantity: undefined});
-export default Nutritions;
+
+export default NutritionForm;
 
 
 /*

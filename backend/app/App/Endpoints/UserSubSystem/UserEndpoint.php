@@ -16,6 +16,7 @@ use \App\Endpoints\UserSubSystem\UserSubEndpoints\VerifyEmailToken;
 use \App\Endpoints\UserSubSystem\UserSubEndpoints\ResendEmail;
 use \App\Endpoints\UserSubSystem\UserSubEndpoints\ForgotPassword;
 use \App\Endpoints\UserSubSystem\UserSubEndpoints\DeleteUser;
+use \App\Endpoints\UserSubSystem\UserSubEndpoints\OrderHistory;
 use Core\Endpoint\Endpoint;
 
 class UserEndpoint extends Endpoint
@@ -30,6 +31,7 @@ class UserEndpoint extends Endpoint
         $this->addSubEndpoint(new VerifyEmailToken());
         $this->addSubEndpoint(new ResendEmail());
         $this->addSubEndpoint(new DeleteUser());
+        $this->addSubEndpoint(new OrderHistory());
         $this->setRequiresAuth(true);
     }
 

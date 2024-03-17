@@ -9,12 +9,12 @@ import { Input } from "@/components/ui/input"
 import LoadingInPage from "./LoadingInPage";
 
 function VerifyEmail() {
-  const { user, requestNewOTP, requestLoading, checkOTP} = useUserSubsystem();
+  const { user, requestNewCode, requestLoading, checkCode} = useUserSubsystem();
   const [token, setToken] = useState("");
 
   const requestEmail = async () => {
     console.log("resending my g");
-    await requestNewOTP();
+    await requestNewCode("ip_verification");
   }
 
   const showLoadingSpinner = () => {
@@ -24,7 +24,9 @@ function VerifyEmail() {
   };
 
   const handleTokenSubmission = async () => {
-    await checkOTP(token, "email_verification");
+    console.log("checking my g");
+    // Pass the `token` state as an argument to `checkOTP`
+    await checkCode(token, "ip_verification");
   };
 
   // Correctly set the `token` state based on the input's value
@@ -35,7 +37,7 @@ function VerifyEmail() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
       <h1 className="text-4xl font-bold">
-        Welcome, {user.firstName}! Lets verify your email.
+        Halt there! We need to verify your IP.
       </h1>
         <div className="flex flex-col gap-2 items-center justify-center">
           <p className="mb-4">We have emailed you at: <b>{user.email}</b></p>

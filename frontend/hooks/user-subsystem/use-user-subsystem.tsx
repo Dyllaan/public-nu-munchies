@@ -159,11 +159,12 @@ export const useUserSubsystem = () => {
         setUserState(response.data.data.user);
         toast.success("Email verified!");
       } else {
-        toast.error(response.data.message);
+        toast.error(response.data.data.message);
       }
     } catch (error: any) {
-      toast.error(error.response.data.message);
-      return error.response.data.message;
+      const responseString = "Failed to verify your email, please retry."
+      toast.error(responseString);
+      return responseString;
     }
     setRequestLoading(false);
   }
@@ -212,7 +213,7 @@ export const useUserSubsystem = () => {
       const response = await api.post("reset-password", data);
       if (response.success) {
         toast.success(response.data.message);
-        return <RedirectTo to={"/login"} message={"Password Changed"} />
+        router.replace("/login");
       } else {
         toast.error(response.data.message);
         return <RedirectTo to={"/login"} message={response.data.message} />

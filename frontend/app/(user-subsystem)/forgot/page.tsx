@@ -47,7 +47,8 @@ function ForgotPasswordPage() {
     };
 
     return (
-        <>
+        <div className="w-full">
+            <div className="items-center mx-auto text-center justify-center">
         <div className="m-2">
             <h2>
                 Remembered it?
@@ -83,7 +84,8 @@ function ForgotPasswordPage() {
             </form>
         </Form>
         <GoogleSignIn />
-        </>
+        </div>
+        </div>
     );      
 }
 export default requireAuth(ForgotPasswordPage, false);

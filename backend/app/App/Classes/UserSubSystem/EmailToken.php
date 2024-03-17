@@ -99,9 +99,10 @@ public function sendEmail()
                 $this->setIP($decodedJWT->ip);
             }
 
-            if($decodedJWT->id !== $this->getUser()->getId()) {
+            if($decodedJWT->id !== $this->getUser()->getId() && $this->getType() !== "password_reset") {
                 $this->setResponse(401, 'Email token invalid user', ['id' => $decodedJWT->id, 'user_id' => $this->getUser()->getId()]);
             }
+            $this->getUser()->setId($decodedJWT->id);
             $this->storeAsUsed($jwt, $decodedJWT->id);
             return true;
         } catch (\Firebase\JWT\ExpiredException $e) {
@@ -142,7 +143,6 @@ public function sendEmail()
             'iss' => $iss,
             'type' => $this->getType()
         ];
-
         if($this->getType() === 'ip_verification') {
             $payload['ip'] = $_SERVER['REMOTE_ADDR'];
         }

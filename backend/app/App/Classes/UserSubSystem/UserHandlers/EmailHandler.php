@@ -22,6 +22,8 @@ class EmailHandler extends UserHelper
             return;
         }
 
+        $this->getUser()->get();
+
         if($type === 'email_verification' && $this->isVerified()) {
             $this->setResponse(400, 'User is already verified');
             return;
@@ -52,7 +54,6 @@ class EmailHandler extends UserHelper
                 break;
             case 'password_reset':
                 if($emailToken->validate($token)) {
-                    $this->setId($emailToken->getUserId());
                     return true;
                 } else {
                     $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');

@@ -34,7 +34,7 @@ class VerifyEmailToken extends SubEndpoint
 
         $this->getUser()->get();
         if($this->getUser()->getEmailHandler()->verifyEmailToken($request->getAttribute('token'), $request->getAttribute('type'))) {
-            $this->setResponse(200, 'This token has been verified');
+            $this->setResponse(200, 'This token has been verified', $this->getUser()->toArray());
         } else {
             $this->setResponse(400, 'Unable to verify user');
         }

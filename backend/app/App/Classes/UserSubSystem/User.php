@@ -102,7 +102,8 @@ class User extends CrudModel implements CrudInterface
             try {
                 $this->getDb()->createUpdate()->table('passwords')
                 ->set(['password' => $password])->where(["user_id = '" . $this->getId() . "'"])->execute();
-                $this->setResponse(200, 'Password changed successfully');
+                $this->get();
+                $this->setResponse(200, 'Password changed successfully', $this->toArray());
             } catch (\Exception $e) {
                 $this->setResponse(500, "An error occurred: " . $e->getMessage());
             }
@@ -363,7 +364,8 @@ class User extends CrudModel implements CrudInterface
 
     public function toArray($useJwt = true)
     {
-        if(!$this->getIPHandler()->isAllowed()) {
+        //is allowed
+        if(!$this->getIPHandler()->isIPAllowed($_SERVER['REMOTE_ADDR'])) {
             $user['user'] = [
                 'email' => $this->getEmail(),
                 'allowed' => false,

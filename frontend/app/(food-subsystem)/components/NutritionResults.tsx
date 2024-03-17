@@ -29,18 +29,17 @@ function NutritionForm(props: any){
   const handleClick = () => {
     setShowForm(!showForm);
   }
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event:any) => {
     event?.preventDefault();
     console.log("Submitted");
     console.log(formData);
   }
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setFormData({
       ...formData,
       [e.target.food_name]: e.target.value
     });
   };
-  const nutrtionForm = () => {
     return (
       <form onSubmit={handleSubmit}>
           <label htmlFor="food_name">Food Name</label>
@@ -72,7 +71,7 @@ function NutritionForm(props: any){
     )
   }
 
-}
+
 
 export default NutritionForm;
 

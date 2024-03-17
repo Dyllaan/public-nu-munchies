@@ -7,6 +7,20 @@ import "../css/food.css";
 import { Input } from "@/components/ui/input";
 import {useRouter} from 'next/navigation';
 import useFetchData from '@/hooks/user-subsystem/useFetchData';
+import {z} from "zod"; 
+
+const nutritionFormSchema = z.object ({
+  food_name: z.string().min(1, {message: "Food Name must be atleast 1 character"}),
+  weight: z.number().min(1, {message: "Weight must be added"}),
+  calories:z.number().min(1, {message: "Calories must be added"}),
+  protein:z.number().min(1, {message: "Protein must be added"}),
+  carbs:z.number().min(1, {message: "Carbs must be added"}),
+  fat:z.number().min(1, {message: "Fat must be added"}),
+  salt:z.number().min(1, {message: "Salt must be added"}),
+  quantity:z.number().min(1, {message: "Quantity must be added"}),
+});
+
+
 
 /*
 interface NutritionData {

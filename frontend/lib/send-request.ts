@@ -1,10 +1,10 @@
 import { Endpoints } from "@/config/endpoints";
 import { mainConfig } from "@/config/main";
 
-export const sendRequest = async <T>(
+export const sendRequest = async (
   endpoint: Endpoints,
   method: "GET" | "POST" | "PUT" | "DELETE",
-  data: T
+  data: any
 ) => {
   // convert data to form data
   const formData = new FormData();
@@ -20,13 +20,19 @@ export const sendRequest = async <T>(
   }
 
   // get query
-  if (method === "GET") {
+  if (method === "GET" && Object.keys(data).length > 0) {
     let query = "?";
     for (const key in data) {
       query += `${key}=${data[key]}&`;
     }
     (endpoint as string) += query;
   }
+
+  console.log({
+    endpoint: mainConfig.origin + "/" + endpoint,
+    method,
+    data,
+  });
 
   // send request
   const response = await fetch(mainConfig.origin + "/" + endpoint, {

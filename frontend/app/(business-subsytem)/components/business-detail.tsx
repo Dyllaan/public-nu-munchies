@@ -34,10 +34,12 @@ export const BusinessDetail: FC<{ id: string }> = async ({ id }) => {
             Info
           </h2>
           <div className="flex gap-10 flex-wrap">
-            <div>
-              <p>{business.email}</p>
-              <p>{business.phone}</p>
-            </div>
+            {business.email && business.phone && (
+              <div>
+                <p>{business.email}</p>
+                <p>{business.phone}</p>
+              </div>
+            )}
             <div>
               <p>{business.address?.address}</p>
               <p>{business.address?.city}</p>

@@ -29,7 +29,7 @@ export const useBusinessApi = () => {
       email: data.businessEmail,
     };
 
-    const res = await sendRequest<CreateBusinessRequest>(
+    const res = await sendRequest(
       Endpoints.businessCreate,
       "POST",
       requestBody
@@ -39,24 +39,25 @@ export const useBusinessApi = () => {
   };
 
   const getMyBusinesses = async () => {
-    const res = await sendRequest<{}>(Endpoints.myBusinesses, "GET", {});
+    const res = await sendRequest(Endpoints.myBusinesses, "GET", {});
     return res;
   };
 
   const getBusinesses = async () => {
-    const res = await sendRequest<{}>(Endpoints.business, "GET", {});
+    const res = await sendRequest(Endpoints.business, "GET", {});
+    console.log(res);
     return res;
   };
 
   const getBusiness = async (id: string) => {
-    const res = await sendRequest<{}>(Endpoints.business, "GET", {
+    const res = await sendRequest(Endpoints.business, "GET", {
       id,
     });
     return res;
   };
 
   const getItems = async (id: string) => {
-    const res = await sendRequest<{}>(Endpoints.items, "GET", {
+    const res = await sendRequest(Endpoints.items, "GET", {
       id,
     });
     return res;

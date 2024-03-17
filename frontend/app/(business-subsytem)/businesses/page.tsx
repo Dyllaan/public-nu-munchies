@@ -2,6 +2,7 @@ import { useBusinessApi } from "@/hooks/business-subsystem/use-business-api";
 import { Suspense } from "react";
 
 import Link from "next/link";
+import { mainConfig } from "@/config/main";
 
 export interface BusinessResponse {
   id: string;
@@ -40,8 +41,9 @@ export default async function BusinessesPage() {
 }
 
 const BusinessesList = async () => {
-  const { getBusinesses } = useBusinessApi();
-  const businesses = await getBusinesses();
+  const businesses = await fetch(mainConfig.origin + "/business").then((res) =>
+    res.json()
+  );
   const { message } = businesses;
 
   return (

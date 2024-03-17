@@ -33,15 +33,14 @@ class BusinessEndpoint extends Endpoint
 
         $business = new Business($this->getDb());
 
-        $data = [];
 
-        if ($id) {
+        if (isset($id)) {
             $business->id = $id;
-            $data = $business->getById();
+            $this->setResponse(200, $business->getById());
         } else {
-            $data = $business->get();
+            $this->setResponse(200, $business->get());
         }
 
-        $this->setResponse(200, $data);
+        $this->setResponse(0, $business->get());
     }
 }

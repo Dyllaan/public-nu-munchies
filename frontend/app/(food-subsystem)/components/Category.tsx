@@ -1,48 +1,50 @@
-"use client"
-
-import {useState, useEffect} from 'react';
-import {atom, useAtom} from "jotai";
-import {useRouter} from 'next/navigation';
+import { useState } from 'react';
+import { atom, useAtom } from "jotai";
+import { useRouter } from 'next/navigation';
 import useFetchData from '@/hooks/user-subsystem/useFetchData';
 import LoadingInPage from '@/app/(user-subsystem)/components/LoadingInPage';
 
-interface Category{
-    cat_id?: number
-    cat_name?: string
+import "../css/Category.css";
+
+interface Category {
+    cat_id?: number;
+    cat_name?: string;
 }
 
-function Categories(){
+function Categories() {
     const router = useRouter();
-    const [categories, setCategories] = useState<{ data: Category[]}> ({
-        data: []
-    });
     const [selectedCategory, setSelectedCategory] = useAtom(selectedCategoryAtom);
+    const [showCategories, setShowCategories] = useState(false);
 
-    const {data, loading} = useFetchData("getcategory");
-
+    const { data, loading } = useFetchData("getcategory");
 
     const handleClick = (category: Category) => {
-        console.log(category);
         setSelectedCategory(category);
     }
+    const handleTitleClick = () => {
+        setShowCategories(!showCategories);
+    }
 
-    if(loading){
+    if (loading) {
         return <LoadingInPage />
     }
 
     return (
-        <>
-            <div className="grid-cols-{4}">
-                <div className="bg-[#eaeaea] my-2 rounded">
-                    {data.map((value: any, key) =>(
-                        <div key={key} className="mb-2" onClick={() => handleClick(value)}>
-                            <p className="font-bold">{value.cat_name}</p>
-                        </div>
-                    ))}
+        <section className="hero">
+            <h1 className="title" onClick={handleTitleClick}>Categories</h1>
+            {showCategories && (
+                <div className="grid grid-cols-3 gap-20">
+                {data.map((value: any, key) => (
+                    <div key={key} className="bg-gray-200 p-4 rounded cursor-pointer" onClick={() => handleClick(value)}>
+                        <p className="font-bold">{value.cat_name}</p>
+                    </div>
+                ))}
                 </div>
-            </div>
-        </>
+            )}
+            
+        </section>
     )
 }
-export const selectedCategoryAtom = atom<Category>({cat_id: undefined, cat_name: undefined});
+
+export const selectedCategoryAtom = atom<Category>({ cat_id: undefined, cat_name: undefined });
 export default Categories;

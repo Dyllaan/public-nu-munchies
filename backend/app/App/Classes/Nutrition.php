@@ -201,7 +201,7 @@
         public function toArray()
         {
             $nutrition['nutrition_details'] = [
-                'item_' => $this->getFoodName(),
+                'item_name' => $this->getFoodName(),
                 'weight' => $this->getWeight(),
                 'calories' => $this->getCalories(),
                 'protein' => $this->getProtein(),

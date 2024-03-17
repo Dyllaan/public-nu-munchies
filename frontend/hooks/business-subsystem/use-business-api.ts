@@ -1,8 +1,6 @@
 import { registerFormSchema } from "@/app/(business-subsytem)/utils/register-formschema";
 import { Endpoints } from "@/config/endpoints";
 import { sendRequest } from "@/lib/send-request";
-import { userAtom } from "@/stores/auth";
-import { useAtom } from "jotai";
 import { z } from "zod";
 
 interface CreateBusinessRequest {
@@ -40,6 +38,11 @@ export const useBusinessApi = () => {
     return res;
   };
 
+  const getMyBusinesses = async () => {
+    const res = await sendRequest<{}>(Endpoints.myBusinesses, "GET", {});
+    return res;
+  };
+
   const getBusinesses = async () => {
     const res = await sendRequest<{}>(Endpoints.business, "GET", {});
     return res;
@@ -52,9 +55,18 @@ export const useBusinessApi = () => {
     return res;
   };
 
+  const getItems = async (id: string) => {
+    const res = await sendRequest<{}>(Endpoints.items, "GET", {
+      id,
+    });
+    return res;
+  };
+
   return {
     createBusiness,
     getBusinesses,
     getBusiness,
+    getMyBusinesses,
+    getItems,
   };
 };

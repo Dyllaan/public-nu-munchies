@@ -41,7 +41,7 @@ export const BusinessDetailSkeleton: FC = () => {
                 <Skeleton className="md:w-40 md:h-40 rounded-lg w-full h-full" />
                 <div className="flex flex-col justify-between min-h-40 ">
                   <div>
-                    <Skeleton className="w-[150px] h-[20px] mb-2 bg-green-100 " />
+                    <Skeleton className="w-[150px] h-[20px] mb-2 " />
                     <Skeleton className="w-[170px] h-[30px] mt-2" />
                   </div>
                   <div>

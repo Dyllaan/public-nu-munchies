@@ -1,6 +1,7 @@
 import { useBusinessApi } from "@/hooks/business-subsystem/use-business-api";
-import Link from "next/link";
 import { Suspense } from "react";
+
+import Link from "next/link";
 
 export interface BusinessResponse {
   id: string;
@@ -25,12 +26,11 @@ export default async function BusinessesPage() {
       <p>List of businesses</p>
 
       <div className="px-[10%] mt-10">
-        <h1 className="text-3xl mb-3 font-bold">List of Businesses </h1>
+        <h1 className="text-3xl mb-3 font-bold">List of Businesses</h1>
         <p className="text-muted-foreground">
           Here you can find a list of businesses registered with NU Munchies
         </p>
         <hr className="my-5" />
-
         <Suspense fallback={LoadingUi()}>
           <BusinessesList />
         </Suspense>

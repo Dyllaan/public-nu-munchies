@@ -1,15 +1,12 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
@@ -24,7 +21,7 @@ export default function Header() {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink
-              className={navigationMenuTriggerStyle()}
+              className={cn(navigationMenuTriggerStyle(), "md:block hidden")}
               href="/business"
             >
               NU Munchies - Business Subsystem
@@ -75,29 +72,10 @@ const LoggedInMenu = (user: UserState) => {
             "hover:text-blue-600",
             "focus:bg-transparent focus:text-blue-600"
           )}
-          href="/business/orders"
+          href="/businesses"
         >
-          Manage Orders
+          View Businesses
         </NavigationMenuLink>
-        <div className="absolute top-0 bg-blue-500 right-0 -mt-2 -mr-2 text-white rounded-full w-4 p-[11px] h-4 flex items-center justify-center text-xs font-semibold">
-          1
-        </div>
-      </NavigationMenuItem>
-      <NavigationMenuItem className="relative">
-        <NavigationMenuLink
-          className={cn(
-            navigationMenuTriggerStyle(),
-            "bg-transparent hover:bg-transparent",
-            "hover:text-blue-600",
-            "focus:bg-transparent focus:text-blue-600"
-          )}
-          href="/business/items"
-        >
-          Manage Items
-        </NavigationMenuLink>
-        <div className="absolute top-0 bg-blue-500 right-0 -mt-2 -mr-2 text-white rounded-full w-4 p-[11px] h-4 flex items-center justify-center text-xs font-semibold">
-          1
-        </div>
       </NavigationMenuItem>
       <NavigationMenuItem className="relative">
         <NavigationMenuLink
@@ -109,11 +87,21 @@ const LoggedInMenu = (user: UserState) => {
           )}
           href="/businesses/dashboard"
         >
-          My Businesses
+          Manage My Businesses
         </NavigationMenuLink>
-        <div className="absolute top-0 bg-blue-500 right-0 -mt-2 -mr-2 text-white rounded-full w-4 p-[11px] h-4 flex items-center justify-center text-xs font-semibold">
-          1
-        </div>
+      </NavigationMenuItem>
+      <NavigationMenuItem className="relative">
+        <NavigationMenuLink
+          className={cn(
+            navigationMenuTriggerStyle(),
+            "bg-transparent hover:bg-transparent",
+            "hover:text-blue-600",
+            "focus:bg-transparent focus:text-blue-600"
+          )}
+          href="/business/create"
+        >
+          Create Business
+        </NavigationMenuLink>
       </NavigationMenuItem>
     </>
   );

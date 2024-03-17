@@ -15,14 +15,20 @@ class UpdateBusiness extends SubEndpoint
         parent::__construct('POST', 'update');
         $this->getAttributes()->addRequiredInts(['id']);
         $this->getAttributes()->addAllowedStrings(['email', 'phone',  'name', 'description', 'address', 'city', 'postcode', 'country']);
+        $this->setRequiresAuth(true);
     }
 
     public function process($request)
     {
         parent::process($request);
 
-        $fields = $request->getAttributes();
+        $user = $this->getUser();
 
+        if (!isset($user)) {
+            return $this->setResponse(401, "User is not logged in!");
+        }
+
+        $fields = $request->getAttributes();
 
         $addressId = null;
 
@@ -40,9 +46,16 @@ class UpdateBusiness extends SubEndpoint
 
         $business = new Business($this->getDb());
 
+        $userBusinesses = $business->getBusinessesByUser($user);
+
+        if (!in_array($fields['id'], array_column($userBusinesses, 'id'))) {
+            $this->setResponse(401, "You are not allowed to update this business");
+            return;
+        }
+
         // fetch the business data from db
         $business->id = $fields['id'];
-        $business->getById();
+        $business->getById(false);
 
 
         if ($addressId) {
@@ -65,9 +78,14 @@ class UpdateBusiness extends SubEndpoint
             $business->email_optional = $fields['email'];
         }
 
+        if (!isset($business->verified_optional_hidden)) {
+            $business->verified_optional_hidden = false;
+        }
 
         $res = $business->update();
 
-        $this->setResponse(200, $res);
+        $newBusiness = $business->getById(false);
+
+        $this->setResponse(200, $newBusiness);
     }
 }

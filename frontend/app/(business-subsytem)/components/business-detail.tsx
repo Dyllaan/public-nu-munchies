@@ -2,6 +2,7 @@ import { useBusinessApi } from "@/hooks/business-subsystem/use-business-api";
 import { FC } from "react";
 import { BusinessResponse } from "../businesses/page";
 import { BusinessDetailSkeleton } from "./business-detail-skeleton";
+import { BusinessMenu } from "./business-menu";
 
 export const BusinessDetail: FC<{ id: string }> = async ({ id }) => {
   const { getBusiness } = useBusinessApi();
@@ -52,32 +53,7 @@ export const BusinessDetail: FC<{ id: string }> = async ({ id }) => {
           <h2 className="text-lg uppercase font-bold text-muted-foreground mb-4">
             Menu
           </h2>
-          <div>
-            <div className="flex-col gap-4 flex">
-              <div className="flex gap-x-4 items-center flex-wrap">
-                <img
-                  src="/business-subsystem/menu-item.jpg"
-                  alt="Menu Item"
-                  className="w-full h-full md:w-40 md:h-40 rounded-lg bg-gray-200"
-                />
-                <div className="flex flex-col justify-between min-h-40 ">
-                  <div>
-                    <span className="bg-green-300 rounded-md px-2 py-1 font-semibold text-green-800 text-xs ">
-                      Expiry: 01/01/2023
-                    </span>
-                    <h4 className="text-2xl font-bold mt-2">Menu Item 1</h4>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Reduced Price</span>
-                    <div>
-                      <span className="text-lg font-bold">£</span>
-                      <span className="text-3xl font-bold">10</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <BusinessMenu businessId={id}></BusinessMenu>
         </div>
       </div>
     </>

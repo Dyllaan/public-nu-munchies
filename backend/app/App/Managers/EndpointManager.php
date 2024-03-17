@@ -8,6 +8,7 @@
 namespace App\Managers;
 
 use App\Endpoints\UserSubSystem\UserEndpoint;
+use App\Endpoints\BusinessSubsystem\BItemEndpoint;
 use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
 use App\Endpoints\UserSubSystem\OAuthCallback;
 use App\Endpoints\UserSubSystem\ForgotPassword;
@@ -41,6 +42,7 @@ class EndpointManager extends Manager
     {
         $this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new BusinessEndpoint());
+        $this->addEndpoint(new BItemEndpoint());
         $this->addEndpoint(new OAuthCallback());
         $this->addEndpoint(new ForgotPassword());
         $this->addEndpoint(new ResetPassword());

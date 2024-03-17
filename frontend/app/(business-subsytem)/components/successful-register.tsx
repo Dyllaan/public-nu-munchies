@@ -16,10 +16,10 @@ export const SuccessfulRegister = ({ name }: { name: string }) => {
         business is verified.
       </p>
       <Link
-        href="/"
+        href="/businesses/dashboard"
         className="mt-10 h-14 bg-black text-white p-4 rounded-md w-full"
       >
-        Go back to home
+        Go to Business Dashboard
       </Link>
       <Button className="w-full h-14 bg-transparent border-2 border-black text-black mt-2 hover:bg-gray-200 text-base">
         Force Verify Business (test purposes)

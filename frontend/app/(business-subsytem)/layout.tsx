@@ -1,3 +1,4 @@
+import { WithBusinessLoader } from "./components/business-loader";
 import Header from "./components/header";
 
 export default function RootLayout({
@@ -6,9 +7,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <Header />
-      <div>{children}</div>
-    </>
+    <WithBusinessLoader>
+      <>
+        <Header />
+        <div>{children}</div>
+      </>
+    </WithBusinessLoader>
   );
 }

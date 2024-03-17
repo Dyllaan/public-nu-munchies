@@ -10,8 +10,12 @@ export const sendRequest = async <T>(
   const formData = new FormData();
   for (const key in data) {
     const value = data[key];
-    if (typeof value === "string" || value instanceof Blob) {
-      formData.append(key, value);
+    if (
+      typeof value === "string" ||
+      typeof value === "number" ||
+      typeof value === "boolean"
+    ) {
+      formData.append(key, value as string);
     }
   }
 

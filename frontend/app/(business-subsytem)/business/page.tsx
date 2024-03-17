@@ -19,7 +19,7 @@ export default function BusinessSubsystem() {
         <ul className="flex flex-col gap-y-2">
           <li>
             <Link href="/businesses" className="text-blue-500 hover:underline">
-              View Businesses
+              View Businesses - (business detail, business menu)
             </Link>
           </li>
           <li>
@@ -27,7 +27,7 @@ export default function BusinessSubsystem() {
               href="/business/create"
               className="text-blue-500 hover:underline"
             >
-              Register Business
+              Register Business - Create a business and verify it
             </Link>
           </li>
           <li>
@@ -35,26 +35,7 @@ export default function BusinessSubsystem() {
               href="/businesses/dashboard"
               className="text-blue-500 hover:underline"
             >
-              View My Businesses
-            </Link>
-          </li>
-          <li>
-            <Link href="/business/my" className="text-blue-500 hover:underline">
-              Manage Business Items
-            </Link>
-          </li>
-          <li>
-            <Link href="/business/my" className="text-blue-500 hover:underline">
-              Manage Business Orders
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              href="/businesses/dashboard"
-              className="text-blue-500 hover:underline"
-            >
-              Business Dashboard (requires authentication)
+              Business Dashboard (my businesses, manage orders, manage menu)
             </Link>
           </li>
         </ul>

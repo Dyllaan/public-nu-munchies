@@ -135,12 +135,13 @@ abstract class Entity extends CrudModel implements CrudInterface
         }
     }
 
-    private function _getPropertyMap(): array
+    protected function _getPropertyMap(): array
     {
         $mappedProperties = [];
         foreach ($this->propertyColumnMap as $property => $column) {
             if (property_exists($this, $property)) {
-                $mappedProperties[$column] = $this->{$property};
+                if (!str_contains($property, "_hidden"))
+                    $mappedProperties[$column] = $this->{$property};
             } else {
                 $this->setResponse(400, "Property " . $property . " does not exist in " . static::getEntityName());
             }
@@ -189,7 +190,7 @@ abstract class Entity extends CrudModel implements CrudInterface
     }
 
 
-    private function _checkIfIdExists()
+    protected function _checkIfIdExists()
     {
         if (!$this->exists()) {
             $this->setResponse(404, "No " . static::getEntityName() . " found with ID " . $this->id);

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import "../css/food.css";
 
 
-/*
+
 interface NutritionFormProps {
   onSubmit: (data: NutritionData) => void;
 }
@@ -87,4 +87,3 @@ const NutritionForm: React.FC<NutritionFormProps> = ({ onSubmit }) => {
 };
 
 export default NutritionForm;
-*/

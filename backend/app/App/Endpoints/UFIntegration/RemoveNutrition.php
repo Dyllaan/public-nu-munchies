@@ -19,12 +19,15 @@
         }
         public function process($request)
         {
+            
             parent::process($request);
             $nutrition = new Nutrition($this->getDb());
             $food_id = $request->getAttribute('food_id');
             $nutrition->setFoodId($food_id);
             $nutritionData = $nutrition->delete($food_id);
             $this->setResponse(200, 'Nutrition Deleted', $nutritionData);
+            
+
         }
      }
 ?>

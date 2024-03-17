@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(food-subsystem)/logNutritions/page2.temp", "app/(food-subsystem)/logNutritions/page.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(food-subsystem)/logNutritions/page2.temp", "app/(food-subsystem)/logNutritions/page2.temp", "app/(food-subsystem)/logNutritions/page3.temp"],
   "exclude": ["node_modules"]
 }

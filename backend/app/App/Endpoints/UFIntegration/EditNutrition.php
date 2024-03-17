@@ -17,8 +17,7 @@
         public function __construct()
         {
             parent::__construct('PUT', 'editnutrition');
-            $this->getAttributes()->addAllowedStrings(['food_name']);
-            $this->getAttributes()->addAllowedInts(['food_id','weight', 'calories', 'protein', 'carbs', 'fat', 'salt', 'quantity']);
+            $this->getAttributes()->addAllowedInts(['food_id', 'weight', 'calories', 'protein', 'carbs', 'fat', 'salt', 'quantity']);
         }
         public function process($request)
         {
@@ -39,11 +38,6 @@
             if($attributes == null || empty($attributes))
             {
                 $this->setResponse(400, ['message' => 'No Attributes to edit']);
-            }
-            if($request->hasAttribute('food_name'))
-            {
-                $changeFlag = true;
-                $nutrition->setFoodName($request->getAttribute('food_name'));
             }
             if($request->hasAttribute('weight'))
             {

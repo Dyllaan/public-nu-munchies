@@ -23,10 +23,13 @@ class VerifyEmailToken extends SubEndpoint
         /** 
          * Only allow supported verification types
         */
-        $allowed = ['email_verification', 'password_reset', 'ip_verification'];
-        if(!in_array($request->getAttribute('type'), $allowed)) {
-            $this->setResponse(400, 'Invalid type');
-            return;
+        switch($request->getAttribute('type')){
+            case 'ip_verification':
+            case 'email_verification':
+                break;
+            default:
+                $this->setResponse(400, 'Invalid type');
+                return;
         }
 
         $this->getUser()->get();

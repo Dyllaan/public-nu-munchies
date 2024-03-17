@@ -9,12 +9,12 @@ import { Input } from "@/components/ui/input"
 import LoadingInPage from "./LoadingInPage";
 
 function VerifyEmail() {
-  const { user, requestNewOTP, requestLoading, checkOTP} = useUserSubsystem();
+  const { user, requestNewCode, requestLoading, checkCode} = useUserSubsystem();
   const [token, setToken] = useState("");
 
   const requestEmail = async () => {
     console.log("resending my g");
-    await requestNewOTP("ip_verification");
+    await requestNewCode("ip_verification");
   }
 
   const showLoadingSpinner = () => {
@@ -26,7 +26,7 @@ function VerifyEmail() {
   const handleTokenSubmission = async () => {
     console.log("checking my g");
     // Pass the `token` state as an argument to `checkOTP`
-    await checkOTP(token, "ip_verification");
+    await checkCode(token, "ip_verification");
   };
 
   // Correctly set the `token` state based on the input's value

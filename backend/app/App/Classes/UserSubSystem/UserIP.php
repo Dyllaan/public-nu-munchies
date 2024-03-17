@@ -33,13 +33,10 @@ class UserIP extends CrudModel
 
     public function checkForIp($ip)
     {
-        echo $this->getUser()->getId();
         $ip = strval($_SERVER['REMOTE_ADDR']);
-        echo $ip;
         $data = $this->getDb()->createSelect()->
         cols("*")->from($this->getTable())->
         where(["user_id = '" . $this->getUser()->getId() . "'", "ip_address = '" . $ip . "'"])->execute();
-        var_dump($data);
         if (count($data) == 0) {
             return false;
         } else {

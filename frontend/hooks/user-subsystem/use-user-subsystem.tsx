@@ -148,10 +148,10 @@ export const useUserSubsystem = () => {
     }
   }
 
-  const checkOTP = async (otp: string, type:string) => {
+  const checkCode = async (code: string, type:string) => {
     setRequestLoading(true);
     const otpData = new FormData();
-    otpData.append("token", otp);
+    otpData.append("token", code);
     otpData.append("type", type);
     try {
       const response = await api.post("user/verify-email-token", otpData, localStorage.getItem("token"));
@@ -168,11 +168,11 @@ export const useUserSubsystem = () => {
     setRequestLoading(false);
   }
 
-  const requestNewOTP = async (type: string) => {
+  const requestNewCode = async (type: string) => {
     setRequestLoading(true);
     try {
-      let endpoint = "user/resend-otp?type=" + type;
-      const response = await api.get("user/resend-otp", localStorage.getItem("token"));
+      let endpoint = "user/resend-email?type=" + type;
+      const response = await api.get(endpoint, localStorage.getItem("token"));
       if (response.success) {
         toast.success("Email sent!");
       } else {
@@ -242,7 +242,7 @@ export const useUserSubsystem = () => {
  
   function logout() {
     localStorage.removeItem("token");
-    setUserState({ first_name: "", last_name: "", email: "", verified: false, created_at: ""});
+    setUserState({ first_name: "", last_name: "", email: "", verified: false, created_at: "", allowed: false});
     setLogged(false);
     setLoading(false);
     setOAuth(false);
@@ -255,8 +255,8 @@ export const useUserSubsystem = () => {
     oAuthLogin,
     editUser,
     logout,
-    checkOTP,
-    requestNewOTP,
+    checkCode,
+    requestNewCode,
     requestPasswordReset,
     changePassword,
     checkToken,

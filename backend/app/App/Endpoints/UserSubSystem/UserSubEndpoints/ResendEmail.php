@@ -8,27 +8,30 @@ namespace App\Endpoints\UserSubSystem\UserSubEndpoints;
 
 use Core\Endpoint\SubEndpoint\SubEndpoint;
 
-class ResendIPVerifyEmail extends SubEndpoint
+class ResendEmail extends SubEndpoint
 {
     public function __construct() 
     {
-        parent::__construct('GET', 'resend-verification-ip');
-        $this->setRequiresAuth(true);
+        parent::__construct('GET', 'resend-email');
         $this->getAttributes()->addRequiredStrings(['type']);
+        $this->setRequiresAuth(true);
     }
 
     public function process($request)
     {
         parent::process($request);
-        switch ($request->getAttribute('type')) {
+        $type = $request->getAttribute('type');
+        switch($type){
             case 'ip_verification':
-                if($this->getUser()->getEmailHandler()->sendEmailToken('ip_verification')){
-                    $this->setResponse(200, 'Email sent');
-                }
+            case 'email_verification':
                 break;
             default:
                 $this->setResponse(400, 'Invalid type');
-                break;
+                return;
         }
+        if($this->getUser()->getEmailHandler()->sendEmailToken($type)){
+            $this->setResponse(200, 'Email sent');
+        }
+        
     }
 }

@@ -69,6 +69,8 @@ public function sendEmail()
                             </body>
                         </html>";
                         break;
+        default:
+            $this->setResponse(400, 'Invalid type');
     }
 
 

@@ -1,0 +1,54 @@
+.container {
+  width: 500px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.hero {
+  display: flex;
+  height: 100vh;
+  background-image: url('../image/3699530229.png'); /* Replace 'path/to/your/image.jpg' with the actual path to your image */
+  background-size: cover;
+}
+
+h2 {
+  text-align: center;
+  font-weight: bold;
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.field-holder {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="number"] {
+  width: 50%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}

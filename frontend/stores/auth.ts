@@ -1,8 +1,14 @@
 import { atom } from "jotai";
 // Define the atom type
-interface UserState {
-  name: string | undefined;
+export interface UserState {
+  firstName: string | undefined;
+  lastName: string | undefined;
+  email: string | undefined;
+  verified: boolean;
 }
 export const userAtom = atom<UserState>({
-  name: undefined,
+  firstName: undefined,
+  lastName: undefined,
+  email: undefined,
+  verified: false,
 });

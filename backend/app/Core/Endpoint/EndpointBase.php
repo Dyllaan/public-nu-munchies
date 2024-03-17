@@ -5,8 +5,8 @@ namespace Core\Endpoint;
 use Core\Database\Database;
 use Core\HTTP\Classes\GivesResponse;
 use Core\Endpoint\Attributes\EndpointAttributes;
-use \App\Classes\Token;
-use \App\Classes\User;
+use \App\Classes\UserSubSystem\Token;
+use \App\Classes\UserSubSystem\User;
 
 abstract class EndpointBase extends GivesResponse
 {
@@ -23,12 +23,17 @@ abstract class EndpointBase extends GivesResponse
         $this->attributes = new EndpointAttributes();
     }
 
-    public function getUser() {
-        //singleton
-        if ($this->user == null) {
-            $this->user = User::getInstance($this->getDb());
-        }
-        return $this->user;
+    /**
+     * Performance enhancement: store the instance in a static variable.
+     */
+    public function setupDatabase()
+    {
+        $this->db = Database::getInstance();
+    }
+
+    public function getDb()
+    {
+        return $this->db;
     }
 
     public function process($request)
@@ -36,35 +41,33 @@ abstract class EndpointBase extends GivesResponse
         $this->getAttributes()->validate($request->getAttributes());
 
         if ($this->requiresAuth()) {
-            $this->getUser()->verifyToken();
+            $this->assignUser();
         }
     }
 
-    public function verifyToken()
+    public function assignUser()
     {
         $token = new Token();
-        if ($token->isValid()) {
-            $this->setId($token->getUserId());
-            $this->get();
-            return true;
-        } else {
-            $this->setResponse(400, "Invalid token");
+        if (!$token->isValid()) {
+            $this->setResponse(401, 'Token is invalid');
+        }
+        switch ($token->getProviderId()) {
+            case 1:
+                $this->user = User::getInstance($this->getDb());
+                $this->user->setId($token->getUserId());
+                $this->user->get();
+                break;
+            case 2:
+                $this->user = new OAuthUser($this->getDb());
+                $this->user->setId($token->getUserId());
+                $this->user->get();
+                break;
         }
     }
 
-    protected function setDB($dbName) 
+    public function getUser()
     {
-        $this->db = new Database($dbName);
-    }
-
-    protected function setupDatabase() 
-    {
-        $this->setDB('nu-munchies.db');
-    }
-
-    public function getDb() 
-    {
-        return $this->db;
+        return $this->user;
     }
 
     public function getAttributes()

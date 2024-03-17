@@ -7,8 +7,12 @@
 
 namespace App\Managers;
 
-use App\Endpoints\UserEndpoint;
 use App\Endpoints\AnalyticsEndpoint;
+use App\Endpoints\Users\UserEndpoint;
+use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
+use App\Endpoints\Users\OAuthCallback;
+use App\Endpoints\Users\ForgotPassword;
+use App\Endpoints\Users\ResetPassword;
 use Core\Manager;
 use Core\HTTP\Classes\Request;
 use Core\ClientErrorException;
@@ -37,6 +41,10 @@ class EndpointManager extends Manager
     {
         $this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new AnalyticsEndpoint());
+        $this->addEndpoint(new BusinessEndpoint());
+        $this->addEndpoint(new OAuthCallback());
+        $this->addEndpoint(new ForgotPassword());
+        $this->addEndpoint(new ResetPassword());
     }
 
     public function addEndpoint($endpoint)
@@ -64,47 +72,49 @@ class EndpointManager extends Manager
         }
     }*/
 
-    public function allocate() {
-        if($this->hasKey($this->getRequest()->getMainEndpoint())) {
+    public function allocate()
+    {
+        if ($this->hasKey($this->getRequest()->getMainEndpoint())) {
             $mainEndpoint = $this->getItem($this->getRequest()->getMainEndpoint());
             $endpointToRun = null;
-            if($this->wasSubEndpointRequested()) {
+            if ($this->wasSubEndpointRequested()) {
                 $handler = $mainEndpoint->getSubEndpointHandler();
                 if ($handler->hasSubEndpoint($this->getRequest()->getSubEndpoint())) {
                     $endpointToRun = $handler->getSubEndpoint($this->getRequest()->getSubEndpoint());
                 } else {
                     throw new ClientErrorException(404, ['sub-endpoint' => $this->getRequest()->getSubEndpoint()]);
                 }
-           } else {
+            } else {
                 $endpointToRun = $this->getItem($this->getRequest()->getMainEndpoint());
-           }
+            }
 
-           if($endpointToRun != null) {
-               $this->checkEndpointMethod($endpointToRun);
-               $this->runEndpoint($endpointToRun);
-           } else {
-               throw new ClientErrorException(404, ['endpoint' => $this->getRequest()->getMainEndpoint()]);
-           }
-
+            if ($endpointToRun != null) {
+                $this->checkEndpointMethod($endpointToRun);
+                $this->runEndpoint($endpointToRun);
+            } else {
+                throw new ClientErrorException(404, ['endpoint' => $this->getRequest()->getMainEndpoint()]);
+            }
         } else {
             throw new ClientErrorException(404, ['endpoint' => $this->getRequest()->getMainEndpoint()]);
         }
     }
 
-    public function wasSubEndpointRequested() {
+    public function wasSubEndpointRequested()
+    {
         return $this->getRequest()->getSubEndpoint() != null;
     }
 
-    public function runEndpoint($endpoint) {
+    public function runEndpoint($endpoint)
+    {
         $endpoint->process($this->getRequest());
     }
 
-    private function checkEndpointMethod($endpoint) 
+    private function checkEndpointMethod($endpoint)
     {
         if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
             $this->setResponse(200, 'Pre-flight ok');
-        } 
-        if($endpoint->getMethod() != $this->getRequest()->getRequestMethod()) {
+        }
+        if ($endpoint->getMethod() != $this->getRequest()->getRequestMethod()) {
             throw new ClientErrorException(405, ['allowed' => $endpoint->getMethod(), 'requested' => $this->getRequest()->getRequestMethod()]);
         }
     }

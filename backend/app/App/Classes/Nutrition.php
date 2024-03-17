@@ -138,6 +138,12 @@
             }
             return true;
         }
+        public function getAll()
+        {
+            $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->execute();
+            
+            return $data;
+        }
         public function get()
         {
             $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->join("items", "items.id = nutrition_details.item_id")->where(["item_id = ".$this->getItemId()])->execute();
@@ -165,14 +171,13 @@
             {
                 $this->setResponse(400, "Nutrition does not Exists");
             }
-            $data = $this->getDb()->createSelect()->cols("food_name", "weight", "calories", "protein", "carbs", "fat", "salt", "quantity")->from($this->getTable())->where(["food_id = " .$this->food_id])->execute();
+            $data = $this->getDb()->createSelect()->cols("weight", "calories", "protein", "carbs", "fat", "salt", "quantity")->from($this->getTable())->where(["food_id = " .$this->food_id])->execute();
             
             if(count($data) == 0)
             {
                 $this->setResponse(400, "Nutrition does not Exist");
             }
             $changed = array_filter([
-                'food_name' => $this->getFoodName() !== $data[0]['food_name'] ? $this->getFoodName() : null,
                 'weight' => $this->getWeight() !== $data[0]['weight'] ? $this->getWeight() : null,
                 'calories' => $this->getCalories() !== $data[0]['calories'] ? $this->getCalories() : null,
                 'protein' => $this->getProtein() !== $data[0]['protein'] ? $this->getProtein() : null,
@@ -213,7 +218,12 @@
 
             return $nutrition;
         }
-
+        public function getFoodId() {
+            return $this->food_id;
+        }
+        public function setFoodId($food_id) {
+            $this->food_id = $food_id;
+        }
         public function getItemId() {
             return $this->item_id;
         }

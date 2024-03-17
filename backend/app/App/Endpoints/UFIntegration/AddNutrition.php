@@ -19,8 +19,7 @@
         public function __construct()
         {
             parent::__construct('POST', 'addnutrition');
-            $this->getAttributes()->addRequiredStrings(['food_name']);
-            $this->getAttributes()->addRequiredInts(['weight', 'calories', 'protein', 'carbs', 'fat', 'salt', 'quantity']);
+            $this->getAttributes()->addRequiredInts(['item_id', 'weight', 'calories', 'protein', 'carbs', 'fat', 'salt', 'quantity']);
         }
 
         public function process($request)
@@ -30,7 +29,7 @@
             //$nutrition = Nutrition::getInstance($this->getDb());
             $nutrition = new Nutrition($this->getDb());
 
-            $nutrition->setFoodName($request->getAttribute('food_name'));
+            $nutrition->setItemId($request->getAttribute('item_id'));
             $nutrition->setWeight($request->getAttribute('weight'));
             $nutrition->setCalories($request->getAttribute('calories'));
             $nutrition->setProtein($request->getAttribute('protein'));
@@ -39,6 +38,7 @@
             $nutrition->setSalt($request->getAttribute('salt'));
             $nutrition->setQuantity($request->getAttribute('quantity'));
             $nutrition->save();
+            $nutrition->get();
             $this->setResponse(200, 'Food Nutrients Created', $nutrition->toArray());
         }
     }

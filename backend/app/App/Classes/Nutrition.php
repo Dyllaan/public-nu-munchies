@@ -11,10 +11,9 @@
     use Core\Database\CrudModel;
     use Core\Database\CrudInterface;
 
-    class Nutrition extends CrudModel  implements CrudInterface
+    class Nutrition extends CrudModel implements CrudInterface
     {
-        //More to be added
-        private $food_id;
+        private $item_id;
         private $food_name;
         private $weight;
         private $calories;
@@ -42,26 +41,28 @@
             }
             return self::$instance;
         }
+
         public function exists()
         {
-            if($this->getFoodId() !== null){
-                $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["food_id = '" .$this->food_id . "'"])->execute();
+            if($this->getItemId() !== null){
+                $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["item_id = ". $this->item_id . "'"])->execute();
                 if(!empty($data)){
                     return true;
                 }
-            } elseif ($this->getFoodName() != null) {
-                $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["name = '" . $this->food_id . "'"])->execute();
+            } elseif ($this->getId() != null) {
+                $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["food_id ". $this->getId() . "'"])->execute();
                 if(count($data) == 0){
                     return true;
                 }
             }
             return false;
         }
+
         public function save()
         {
             
                 $foodData = [
-                    'food_name' => $this->getFoodName(),
+                    'item_id' => $this->getItemId(),
                     'weight' => $this->getWeight(),
                     'calories' => $this->getCalories(),
                     'protein' => $this->getProtein(),
@@ -70,16 +71,17 @@
                     'salt' => $this->getSalt(),
                     'quantity' => $this->getQuantity(),
                 ];
-                $food_id = $this->getDb()->createInsert()->into('nutrition_details')->cols('food_name, weight, calories, protein, carbs, fat, salt, quantity')->values([$this->getFoodName(), $this->getWeight(), $this->getCalories(), $this->getProtein(), $this->getCarbs(), $this->getFat(), $this->getSalt(), $this->getQuantity()])->execute();                
+                $food_id = $this->getDb()->createInsert()->into('nutrition_details')->cols('weight, calories, protein, carbs, fat, salt, quantity, item_id')->values([$this->getWeight(), $this->getCalories(), $this->getProtein(), $this->getCarbs(), $this->getFat(), $this->getSalt(), $this->getQuantity(), $this->getItemId()])->execute();                
                 
                 if($food_id != null)
                 {
-                    $this->setFoodId($food_id);
+                    $this->setId($food_id);
                     return $this->toArray();
                 }
             
             $this->setResponse(400, "Nutrition could not be saved");
         }
+
         private function checkSavable()
         {
             $errors = [];
@@ -138,16 +140,16 @@
         }
         public function get()
         {
-            $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->where(["food_id = ".$this->food_id])->execute();
-            var_dump($data); die();
-
+            $data = $this->getDb()->createSelect()->cols("*")->from("nutrition_details")->join("items", "items.id = nutrition_details.item_id")->where(["item_id = ".$this->getItemId()])->execute();
+ 
             if(empty($data))
             {
                 $this->setResponse(400, "Nutrition does not Exist");
             } else 
             {
                 $foodData = $data[0];
-                $this->setFoodName($foodData['food_name']);
+                $this->setId($foodData['food_id']);
+                $this->setFoodName($foodData['item_name']);
                 $this->setWeight($foodData['weight']);
                 $this->setCalories($foodData['calories']);
                 $this->setProtein($foodData['protein']);
@@ -199,6 +201,7 @@
         public function toArray()
         {
             $nutrition['nutrition_details'] = [
+                'food_id' => $this->getId(),
                 'food_name' => $this->getFoodName(),
                 'weight' => $this->getWeight(),
                 'calories' => $this->getCalories(),
@@ -211,31 +214,15 @@
 
             return $nutrition;
         }
-        public function generateJWT($id, $providerId)
-        {
-            $secretKey = $this->appConfigInstance->get('JWT_SECRET');
 
-                $iat = time();
-                $exp = strtotime('+5 hour', $iat);
-                $iss = $_SERVER['HTTP_HOST'];
-                $payload = [
-                    'food_id' => $id,
-                    'iat' => $iat,
-                    'exp' => $exp,
-                    'iss' => $iss,
-                    'provider_id' => $providerId
-                ];
-                $jwt = JWT::encode($payload, $secretKey, 'HS256');
-                return $jwt;
+        public function getItemId() {
+            return $this->item_id;
         }
-        public function getFoodId()
-        {
-            return $this->food_id;
+
+        public function setItemId($item_id) {
+            $this->item_id = $item_id;
         }
-        public function setFoodId($food_id)
-        {
-            $this->food_id =$food_id;
-        }
+
         public function getFoodName()
         {
             return $this->food_name;

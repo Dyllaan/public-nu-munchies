@@ -18,13 +18,6 @@ function Categories(){
     });
     const [selectedCategory, setSelectedCategory] = useAtom(selectedCategoryAtom);
 
-    /*
-    const fetchData = async() => {
-        const res = await fetch("http://localhost:8080/getcategory")
-        return res.json()
-    }
-    */
-
     const {data, loading} = useFetchData("getcategory");
 
 

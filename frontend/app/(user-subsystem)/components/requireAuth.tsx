@@ -4,6 +4,7 @@ import Loading from './Loading';
 import VerifyEmail from './VerifyEmail';
 import RedirectTo from "./RedirectTo";
 import { useEffect } from "react";
+import VerifyIP from "./VerifyIP";
 
 export default function requireAuth(ChildComponents: any, pageNeedsAuth: boolean = true) {
     const RequireAuthComponent = (props: any) => {
@@ -20,6 +21,8 @@ export default function requireAuth(ChildComponents: any, pageNeedsAuth: boolean
                 return <RedirectTo to="/profile" message="Redirecting to profile..."/>
             } else if(pageNeedsAuth && !logged) {
                 return <RedirectTo to="/login" message="Redirecting to login..." />
+            } else if (!user.allowed && logged) {
+                return <VerifyIP />;
             } else if (!user.verified && logged) {
                 return <VerifyEmail />;
             } else {

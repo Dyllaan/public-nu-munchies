@@ -108,7 +108,7 @@ class OAuthUser extends User
         $this->setFirstName($data['first_name']);
         $this->setLastName($data['last_name']);
         $this->setEmail($data['email']);
-        $this->setVerified($data['verified']);
+        $this->getActionHandler()->setVerified($data['verified']);
         $this->setCreatedAt($data['created_at']);
         $this->setExists(true);
     }
@@ -153,15 +153,23 @@ class OAuthUser extends User
 
     public function toArray($useJwt = true)
     {
-        $user['user'] = [
+        if(!$this->getIPHandler()->isAllowed()) {
+            $user['user'] = [
+                'email' => $this->getEmail(),
+                'allowed' => false
+            ];
+        } else {
+            $user['user'] = [
             'id' => $this->getId(),
             'first_name' => $this->getFirstName(),
             'last_name' => $this->getLastName(),
             'email' => $this->getEmail(),
-            'verified' => $this->isVerified(),
+            'verified' => $this->getActionHandler()->isVerified(),
             'created_at' => $this->getCreatedAt(),
+            'allowed' => true,
             'oauth' => true
-        ];
+            ];
+        }
         //hardcoded provider id not good
         if($useJwt) {
             $jwt = $this->generateJWT($this->getId(), 2);

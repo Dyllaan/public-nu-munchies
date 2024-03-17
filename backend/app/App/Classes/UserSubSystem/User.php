@@ -12,7 +12,9 @@ namespace App\Classes\UserSubSystem;
 use Firebase\JWT\JWT;
 use Core\Database\CrudModel;
 use Core\Database\CrudInterface;
-use App\Classes\UserSubSystem\EmailHandler;
+use App\Classes\UserSubSystem\UserHandlers\EmailHandler;
+use App\Classes\UserSubSystem\UserHandlers\VerifiedHandler;
+use App\Classes\UserSubSystem\UserHandlers\IPHandler;
 
 class User extends CrudModel implements CrudInterface
 {
@@ -21,11 +23,12 @@ class User extends CrudModel implements CrudInterface
     private $email;
     private $password;
     private $token;
-    private $verified;
     private $exists;
     private $createdAt;
 
     private $emailHandler;
+    private $verifiedHandler;
+    private $ipHandler;
 
     protected static $instance = null;
 
@@ -36,7 +39,18 @@ class User extends CrudModel implements CrudInterface
         parent::__construct($db);
         $this->appConfigInstance = new \AppConfig();
         $this->emailHandler = new EmailHandler($this->getDb(), $this);
+        $this->verifiedHandler = new VerifiedHandler($this->getDb(), $this);
+        $this->ipHandler = new IPHandler($this->getDb(), $this);
         $this->setTable("users");
+    }
+
+    /**
+     * Short term MFA solution
+     * user is prompted to enter a token sent to their email
+     * when their token expires
+     */
+    public function tokenExpired() {
+        $this->verifyUser(0);
     }
 
     public static function getInstance($db)
@@ -96,11 +110,6 @@ class User extends CrudModel implements CrudInterface
         $this->setResponse(400, "Password reset failed");
     }
 
-    public function isVerified()
-    {
-        return $this->verified;
-    }
-
     public function exists()
     {
         if($this->exists) {
@@ -144,7 +153,7 @@ class User extends CrudModel implements CrudInterface
     public function login()
     {
         $cons[] = "email = '$this->email'";
-        $data = $this->getDb()->createSelect()->cols("users.first_name, users.last_name, users.id, passwords.password, users.verified")->from($this->getTable())->join("passwords", "users.id = passwords.user_id")->where($cons)->execute();
+        $data = $this->getDb()->createSelect()->cols("users.first_name, users.last_name, users.id, passwords.password, users.verified, users.created_at")->from($this->getTable())->join("passwords", "users.id = passwords.user_id")->where($cons)->execute();
         if (count($data) == 0) {
             $this->setResponse(401, "Account not found!");
         } else {
@@ -152,6 +161,9 @@ class User extends CrudModel implements CrudInterface
                 $this->setResponse(401, "Invalid password");
             } else {
                 $this->setUserFields($data[0]);
+                if(!$this->getIPHandler()->isIPAllowed($_SERVER['REMOTE_ADDR'])) {
+                    $this->getEmailHandler()->sendEmailToken('ip_verification');
+                }
                 if ($data[0]['verified'] == 0) {
                     $this->getEmailHandler()->sendEmailToken('email_verification');
                     return $this->toArray();
@@ -234,6 +246,7 @@ class User extends CrudModel implements CrudInterface
                     $this->getDb()->commit();
                     $id = intval($id);
                     $this->setId($id);
+                    $this->getIPHandler()->checkForIP(true);
                     return $this->sendVerificationEmail();
                 } else {
                     $this->getDb()->rollBack();
@@ -283,24 +296,11 @@ class User extends CrudModel implements CrudInterface
             $this->setEmail($data['email']);
         }
         if(isset($data['verified'])) {
-            $this->setVerified($data['verified']);
+            $this->getVerifiedHandler()->setVerified($data['verified']);
         }
         if(isset($data['created_at'])) {
             $this->setCreatedAt($data['created_at']);
         }
-    }
-    
-    public function verifyUser() {
-        if(!$this->exists()) {
-            $this->setResponse(400, "User does not exist");
-        }
-        if($this->isVerified()) {
-            $this->setResponse(400, "User is already verified");
-        }
-        $this->get();
-        $this->getDb()->createUpdate()->table($this->getTable())->set(['verified' => 1])->where(["id = '" . $this->getId() . "'"])->execute();
-        $this->setVerified(1);
-        $this->setResponse(200, "Verified User", $this->toArray());
     }
     
     public function update()
@@ -363,14 +363,22 @@ class User extends CrudModel implements CrudInterface
 
     public function toArray($useJwt = true)
     {
-        $user['user'] = [
-            'id' => $this->getId(),
-            'first_name' => $this->getFirstName(),
-            'last_name' => $this->getLastName(),
-            'email' => $this->getEmail(),
-            'verified' => $this->isVerified(),
-            'created_at' => $this->getCreatedAt()
-        ];
+        if(!$this->getIPHandler()->isAllowed()) {
+            $user['user'] = [
+                'email' => $this->getEmail(),
+                'allowed' => false,
+            ];
+        } else {
+            $user['user'] = [
+                'id' => $this->getId(),
+                'first_name' => $this->getFirstName(),
+                'last_name' => $this->getLastName(),
+                'email' => $this->getEmail(),
+                'verified' => $this->getVerifiedHandler()->isVerified(),
+                'created_at' => $this->getCreatedAt(),
+                'allowed' => true,
+            ];
+        }
         //hardcoded provider id not good
         if($useJwt) {
             $jwt = $this->generateJWT($this->getId(), 1);
@@ -406,26 +414,9 @@ class User extends CrudModel implements CrudInterface
         return $jwt;
     }
 
-    public function verifyToken()
-    {
-        $token = new Token();
-        if ($token->isValid()) {
-            $this->setId($token->getUserId());
-            $this->get();
-            return true;
-        } else {
-            $this->setResponse(400, "Invalid token");
-        }
-    }
-
     public function getEmailHandler()
     {
         return $this->emailHandler;
-    }
-
-    public function setVerified($verified)
-    {
-        $this->verified = $verified;
     }
 
     public function getToken()
@@ -496,5 +487,13 @@ class User extends CrudModel implements CrudInterface
 
     public function setCreatedAt($createdAt) {
         $this->createdAt = $createdAt;
+    }
+
+    public function getVerifiedHandler() {
+        return $this->verifiedHandler;
+    }
+
+    public function getIPHandler() {
+        return $this->ipHandler;
     }
 }

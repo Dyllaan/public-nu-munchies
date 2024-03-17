@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Classes\UserSubSystem;
+namespace App\Classes\UserSubSystem\UserHandlers;
 
 use App\Classes\UserSubSystem\EmailToken;
-use Core\HTTP\Classes\GivesResponse;
+use App\Classes\UserSubSystem\UserHelper;
 
-class EmailHandler extends GivesResponse
+class EmailHandler extends UserHelper
 {
 
     private $db;
-    private $user;
 
     public function __construct($db, $user)
     {
@@ -45,7 +44,7 @@ class EmailHandler extends GivesResponse
         switch($type) {
             case 'email_verification':
                 if($emailToken->validate($token)) {
-                    $this->getUser()->verifyUser();
+                    $this->getUser()->getVerificationHandler()->verifyUser();
                     return true;
                 } else {
                     $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');
@@ -54,6 +53,14 @@ class EmailHandler extends GivesResponse
             case 'password_reset':
                 if($emailToken->validate($token)) {
                     $this->setId($emailToken->getUserId());
+                    return true;
+                } else {
+                    $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');
+                }
+                break;
+            case 'ip_verification':
+                if($emailToken->validate($token)) {
+                    $this->getUser()->getIPHandler()->verifyIP($emailToken->getIP());
                     return true;
                 } else {
                     $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');

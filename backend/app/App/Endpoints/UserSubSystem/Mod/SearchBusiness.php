@@ -36,7 +36,7 @@ class SearchBusiness extends ModeratorEndpoint
         $limit = 10;
         $offset = SearchHelper::handlePagination($request, $limit);
         $conditions = $this->handle($request);
-        $usersData = $this->getModerator()->searchBusinesses($offset, $conditions, $limit);
+        $usersData = $this->getUser()->searchBusinesses($offset, $conditions, $limit);
         
         $this->setResponse(200, "Found business data", $usersData);
     }

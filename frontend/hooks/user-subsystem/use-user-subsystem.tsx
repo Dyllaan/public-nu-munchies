@@ -26,8 +26,8 @@ export const useUserSubsystem = () => {
   const router = useRouter();
   
 
-  const setUserState = ({ first_name, last_name, email, verified, created_at}: { first_name: string; last_name: string; email: string; verified: boolean; created_at: string}) => {
-    setUser({ firstName: first_name, lastName: last_name, email, verified, created_at});
+  const setUserState = ({ first_name, last_name, email, verified, created_at, allowed}: { first_name: string; last_name: string; email: string; verified: boolean; created_at: string, allowed: boolean}) => {
+    setUser({ firstName: first_name, lastName: last_name, email, verified, created_at, allowed});
   };
 
   const setLoading = (state:boolean) => {
@@ -148,12 +148,13 @@ export const useUserSubsystem = () => {
     }
   }
 
-  const checkOTP = async (otp: string) => {
+  const checkOTP = async (otp: string, type:string) => {
     setRequestLoading(true);
     const otpData = new FormData();
     otpData.append("token", otp);
+    otpData.append("type", type);
     try {
-      const response = await api.post("user/verify-user", otpData, localStorage.getItem("token"));
+      const response = await api.post("user/verify-email-token", otpData, localStorage.getItem("token"));
       if (response.success) {
         setUserState(response.data.data.user);
         toast.success("Email verified!");
@@ -167,9 +168,10 @@ export const useUserSubsystem = () => {
     setRequestLoading(false);
   }
 
-  const requestNewOTP = async () => {
+  const requestNewOTP = async (type: string) => {
     setRequestLoading(true);
     try {
+      let endpoint = "user/resend-otp?type=" + type;
       const response = await api.get("user/resend-otp", localStorage.getItem("token"));
       if (response.success) {
         toast.success("Email sent!");

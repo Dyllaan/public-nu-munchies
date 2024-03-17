@@ -72,7 +72,7 @@
                 ];
                 $food_id = $this->getDb()->createInsert()->into('nutrition_details')->cols('food_name, weight, calories, protein, carbs, fat, salt, quantity')->values([$this->getFoodName(), $this->getWeight(), $this->getCalories(), $this->getProtein(), $this->getCarbs(), $this->getFat(), $this->getSalt(), $this->getQuantity()])->execute();                
                 
-                if($id != null)
+                if($food_id != null)
                 {
                     $this->setFoodId($food_id);
                     return $this->toArray();
@@ -208,8 +208,6 @@
                 'salt' => $this->getSalt(),
                 'quantity' => $this->getQuantity()
             ];
-            $jwt = $this->generateJWT($this->getFoodId(), 1);
-            $nutrition['jwt'] = $jwt;
 
             return $nutrition;
         }

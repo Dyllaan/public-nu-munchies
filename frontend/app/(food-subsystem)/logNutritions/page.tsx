@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import "../css/food.css";
 
+
+/*
 interface NutritionFormProps {
   onSubmit: (data: NutritionData) => void;
 }
@@ -40,7 +42,6 @@ const NutritionForm: React.FC<NutritionFormProps> = ({ onSubmit }) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onSubmit(formData);
     // Reset form after submission
     setFormData({
       name: '',
@@ -86,3 +87,4 @@ const NutritionForm: React.FC<NutritionFormProps> = ({ onSubmit }) => {
 };
 
 export default NutritionForm;
+*/

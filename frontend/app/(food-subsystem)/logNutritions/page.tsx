@@ -43,7 +43,7 @@ function NutritionForm(props: any){
     return (
       <form onSubmit={handleSubmit}>
           <label htmlFor="food_name">Food Name</label>
-          <input type="text" id="food_name"  name="food_name" value={formData.food_name} onChange={handleChange}/>
+          <input type="text" id="food_name" name="food_name" value={formData.food_name} onChange={handleChange}/>
 
           <label htmlFor="weight">Weight:</label>
           <input type="number" id="weight" name="weight" value={formData.weight.toString()} onChange={handleChange} required />

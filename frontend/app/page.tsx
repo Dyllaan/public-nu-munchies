@@ -23,6 +23,9 @@ export default function Home() {
       <Link href="/register" className="mt-6 text-lg underline">
         Go to Register page
       </Link>
+      <Link href="/test" className="mt-6 text-lg underline">
+        Go to test Page
+      </Link>
     </main>
   );
 }

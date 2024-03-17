@@ -8,44 +8,52 @@
 
 namespace App\Classes;
 
-
 use Core\Database\CrudModel;
 
 class Analytics extends CrudModel {
+
+    private $user;
 
     private static $instance = null;
 
     private \AppConfig $appConfigInstance;
 
-    public function __construct($db)
+    public function __construct($db, $user)
     {
         parent::__construct($db);
         $this->appConfigInstance = new \Appconfig();
-
+        $this->user = $user;
     }
 
-    public static function getInstance($db)
-        {
+    public static function getInstance($db, $user){
             if(self::$instance === null)
             {
-                self::$instance = new Analytics($db);
+                self::$instance = new Analytics($db, $user);
             }
-        }
+    }
+
+    public function getUser(){
+        return $this->user;
+    }
+    
+    public function setUser($user){
+        $this->user = $user;
+    }
 
     public function getBusinessId(){
 
         $db = $this->getDb();
     
-        return $db->createSelect()->cols("businesses.id", "users_businesses.business_id", "users_businesses.user_id")->from("businesses")->join("users_businesses", "businesses.id = users_businesses.business_id")->where(["users_businesses.user_id = '" . $this->getId() . "'"])->execute();
+        return $db->createSelect()->cols("businesses.id", "users_businesses.business_id", "users_businesses.user_id")->from("businesses")->join("users_businesses", "businesses.id = users_businesses.business_id")->where(["users_businesses.user_id = " . $this->getUser()->getId() ])->execute();
     }
 
     public function getFirstUserName() {
 
         $db = $this->getDb();
 
-        $firstName = $db->createSelect()->cols("first_name")->from("users")->where(["id = '" . $this->getId() . "'"])->execute();
+        $query = $db->createSelect()->cols("first_name")->from("users")->where(["id = " . $this->getUser()->getId() ])->execute();
 
-        return $firstName;
+        return $query[0]['first_name'];
     }
 
     public function getBusinessName() {
@@ -70,7 +78,7 @@ class Analytics extends CrudModel {
 
         $userPoints = $foodWastePrevented * 12;
 
-        $foodWastePrevented = $db->createInsert()->into("user_analytics")->cols("food_waste_prevented, points, user_id, order_id")->values([$foodWastePrevented, $userPoints,$this->getId(),$orderId])->execute;
+        $foodWastePrevented = $db->createInsert()->into("user_analytics")->cols("food_waste_prevented, points, user_id, order_id")->values([$foodWastePrevented, $userPoints,$this->getId(),$orderId])->execute();
 
     }
 
@@ -87,7 +95,7 @@ class Analytics extends CrudModel {
 
         $businessPoints = $foodWastePrevented * 122;
 
-        $foodWastePrevented = $db->createInsert()->into("business_analytics")->cols("food_waste_prevented, points, business_id, order_id")->values([$foodWastePrevented, $businessPoints, $this->getBusinessId(), $orderId])->execute;
+        $foodWastePrevented = $db->createInsert()->into("business_analytics")->cols("food_waste_prevented, points, business_id, order_id")->values([$foodWastePrevented, $businessPoints, $this->getBusinessId(), $orderId])->execute();
 
     }
 
@@ -96,9 +104,9 @@ class Analytics extends CrudModel {
 
         $db = $this->getDb();
 
-        $totalFoodWastePrevented = $db->createSelect()->cols(['SUM(food_waste_prevented) AS total_food_waste_prevented'])->from("user_analytics")->where(["user_id = '" . $this->getId() . "'"])->execute();
+        $query = $db->createSelect()->cols("SUM(food_waste_prevented) AS total_food_waste_prevented")->from("user_analytics")->where(["user_id = " . $this->getUser()->getId() ])->execute();
 
-        return $totalFoodWastePrevented;
+        return $query[0]['total_food_waste_prevented'];
 
     }
 
@@ -107,7 +115,7 @@ class Analytics extends CrudModel {
 
         $db = $this->getDb();
 
-        $totalFoodWastePrevented = $db->createSelect()->cols(['SUM(food_waste_prevented) AS total_food_waste_prevented'])->from("user_analytics")->where(["user_id = '" . $this->getId() . "'"])->execute();
+        $totalFoodWastePrevented = $db->createSelect()->cols(['SUM(food_waste_prevented) AS total_food_waste_prevented'])->from("user_analytics")->where(["user_id = " . $this->getUser()->getId() ])->execute();
 
         return $totalFoodWastePrevented;
 
@@ -119,15 +127,17 @@ class Analytics extends CrudModel {
         
         $db = $this->getDb();
 
-        $ordersPlaced = $db->createSelect()->cols(['COUNT(*) AS total_orders_placed'])->from("orders")->where(["user_id = '" . $this->getId() . "'"])->execute();
+        $query = $db->createSelect()->cols("COUNT(*) AS total_orders_placed")->from("orders")->where(["user_id = " . $this->getUser()->getId() ])->execute();
 
-        return $ordersPlaced;
+        return $query[0]['total_orders_placed'];
     }
 
 
     public function getOrdersReceived() {
         // This is where the total orders received calculation will be
         //For businesses
+
+        
     }
 
     public function getBusinessesHelped() {
@@ -135,13 +145,21 @@ class Analytics extends CrudModel {
 
         $db = $this->getDb();
 
-        $businessesHelped = $db->createSelect()->cols(['COUNT(DISTINCT business_id) AS total_businesses_helped'])->from("orders")->where(["user_id = '" . $this->getId() . "'"])->execute();
+        $query = $db->createSelect()->cols("COUNT(DISTINCT business_id) AS total_businesses_helped")->from("orders")->where(["user_id = " . $this->getUser()->getId() ])->execute();
 
-        return $businessesHelped;
+        return $query[0]['total_businesses_helped'];
     }
 
     public function getMoneyMade() {
         // This is where the total money made calculation will be for businesses
+
+        $db = $this->getDb();
+
+        //need price of every item sold (total of item price column where order_id is related to that business' business_id):
+        // need to link order_id and item_id so i know which items have been sold by that business
+        // then add total of price column to calculate total profit
+
+        //$moneyMade = $db->createSelect()->cols(["","SUM(items.price) AS total_money_made"])->from(
     }
 
     public function getBusinessPoints()
@@ -159,9 +177,9 @@ class Analytics extends CrudModel {
     {
         $db = $this->getDb();
 
-        $userPoints = $db->createSelect()->cols(["SUM(points) AS total_points"])->from("user_analytics")->where(["user_id = '". $this->getId() . "'"])->execute();
+        $query = $db->createSelect()->cols("SUM(points) AS total_points")->from("user_analytics")->where(["user_id = " . $this->getUser()->getId() ])->execute();
 
-        return $userPoints;
+        return $query[0]['total_points'];
     }
 
     public function getTopUserRankings()
@@ -169,16 +187,75 @@ class Analytics extends CrudModel {
         // Rankings calculation based on total number of points - higher the points, higher the ranking
         $db = $this->getDb();
 
-        $topUserRankings = $db->createSelect()->cols(["users.id", "users.first_name", "users.last_name", "SUM(user_analytics.points) AS total_points"])->from("users")->join("user_analytics", "users.id = user_analytics.user_id")->groupBy(["users.id", "users.first_name", "users.last_name"])->orderBy(["total_points DESC"])->limit(3)->execute();
+        $topUserRankings = $db->createSelect()->cols("users.first_name, users.last_name, SUM(user_analytics.points) AS total_points")->from("users")->join("user_analytics", "users.id = user_analytics.user_id")
+        ->groupBy("users.id")
+        ->havingIsNotNull("SUM(user_analytics.points)")
+        ->orderBy("total_points DESC")->limit(3)->execute();
 
-        return $topUserRankings;
+        $rankArray = [];
+
+        foreach ($topUserRankings as $index => $topUserRanking) {
+
+            // Create an associative array with key-value pairs using the array() function
+            $userData = array(
+                'rank' => $index + 1,
+                'first_name' => $topUserRanking['first_name'],
+                'last_name' => $topUserRanking['last_name'],
+                'total_points' => $topUserRanking['total_points'],
+            );
+            array_push($rankArray, $userData);
+        }
+
+        return $rankArray;
     }
 
     public function getUsersRank(){
         $db = $this->getDb();
 
-        $userRank = $db->createSelect()->cols(["users.first_name", "users.last_name", "user_analytics.points"])->from("users")->join("user_analytics", "users.id = user_analytics.user_id")
-        ->orderBy(["user_analytics.points DESC"])->execute();
+        $userPoints = $db->createSelect()->cols("users.first_name, users.last_name, SUM(user_analytics.points) AS total_points")->from("users")->join("user_analytics", "users.id = user_analytics.user_id")
+        ->where(["user_id = " . $this->getUser()->getId() ])
+        ->groupBy("users.id")
+        ->execute();
+
+
+        // userRank query here
+
+        // $userRank = $db->createSelect()
+        //     ->cols("COUNT(*) + 1 AS rank, SUM(user_analytics.points) AS total_points")
+        //     ->from("users")
+        //     ->join("user_analytics", "users.id = user_analytics.user_id")
+        //     ->groupBy("users.id")
+        //     ->havingSum("SUM(user_analytics.points) > " . $userPoints[0]['total_points'] )
+        //     ->orderBy("total_points DESC")
+        //     ->execute();
+
+        
+        $allRanks = $db->createSelect()->cols("SUM(points) AS total_points")->from("user_analytics")->groupBy("user_id")->orderBy("total_points DESC")->execute();
+
+        //var_dump(array_search($userPoints[0]['total_points'], $allRanks));
+
+        $yourRank = 0;
+ 
+        foreach($allRanks as $index => $rank) {
+            if(intval($userPoints[0]['total_points']) == $rank['total_points']) {
+                $yourRank = $index + 1;
+                break;
+            }
+        }
+
+        // $user = $db->createSelect()->cols("users.first_name", "users.last_name", "user_analytics.points")->from("users")->join("user_analytics", "users.id = user_analytics.user_id")
+        // ->where(["user_id = " . $this->getUser()->getId() ])->orderBy("user_analytics.points DESC")->limit(1)->execute();
+
+
+        // Create an associative array with key-value pairs using the array() function
+        $userData = array(
+            'rank' => $yourRank,
+            'first_name' => $userPoints[0]['first_name'],
+            'last_name' => $userPoints[0]['last_name'],
+            'total_points' => $userPoints[0]['total_points'],
+        );
+
+        return $userData;
     }
 
     public function getUserRewards()
@@ -198,6 +275,21 @@ class Analytics extends CrudModel {
 
     }
 
+    public function getUserOrderNumber() {
+        $db = $this->getDb();
+
+        $orderNumber = $db->createSelect()->cols(["id"])->from("orders")->where(["user_id = " . $this->getUser()->getId() ])->execute();
+
+        return $orderNumber;
+    }
+
+    public function orderedBusinesses(){
+        $db = $this->getDb();
+
+        $businesses = $db->createSelect()->cols(["orders.id", "DISTINCT businesses.business_name", "orders.created_at"])->from("orders")->join("businesses","orders.business_id = businesses.id")->where(["user_id = " . $this->getUser()->getId() ])->execute();
+        return $businesses;
+    }
+
     public function getBusinessRankings()
     {
         // Rankings calculation based on total number of points - higher the points, higher the ranking
@@ -215,6 +307,18 @@ class Analytics extends CrudModel {
     {
         //Using order date + time from supabase items table, can do a "week,month,year,total" selector at top of page
         //Using IF statements - E.G: if timeframe is from this date to this date, return in month, else if timeframe is from this date to this date, return in week 
+    }
+
+    public function userStats(){
+        return [
+            'userFirstName' => $this->getFirstUserName(),
+            'preventedWaste' => $this->totalUserFoodWastePrevented(),
+            'ordersPlaced' => $this->getOrdersPlaced(),
+            'businessesHelped' => $this->getBusinessesHelped(),
+            'userRank' => $this->getUsersRank(),
+            'topRanks' => $this->getTopUserRankings(),
+            'userPoints' => $this->getTotalUserPoints()
+        ];
     }
 
 }

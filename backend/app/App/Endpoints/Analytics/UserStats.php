@@ -26,14 +26,18 @@ class UserStats extends SubEndpoint
     public function __construct()
     {
         parent::__construct('GET', 'user-stats');
+        $this->setRequiresAuth(true);
 
     }
 
     public function process($request)
     {
         parent::process($request);
-        $user = new User($this->getDb());
-        $this->setResponse(200, 'User Stats retrieved');
+        // Create an instance of the Analytics class
+        $analytics = new Analytics($this->getDb(), $this->getUser());
+
+        // Assuming there is a respondJson method available
+        $this->setResponse(200, "user stats", $analytics->userStats());
         
     }
 }

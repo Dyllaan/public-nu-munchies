@@ -123,4 +123,12 @@
     .hover-scale {
         @apply transition-transform transform-gpu hover:scale-105;
     }
+
+    .valid {
+        @apply text-green-500;
+    }
+
+    .invalid {
+        @apply text-red-500;
+    }
 }

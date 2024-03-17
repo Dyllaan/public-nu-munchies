@@ -47,12 +47,12 @@ export const useUserSubsystem = () => {
     }
   }
 
-  async function checkToken() {
-    if (loading || logged) return;
+  const checkToken = async() => {
+    setRequestLoading(true);
     if(localStorage.getItem('token') === null){
       return;
     }
-    if(localStorage.getItem('token') !== null && !logged) {
+    if(localStorage.getItem('token') !== null) {
       setLoading(true);
       const response = await api.get("user", localStorage.getItem("token"));
       if(response.success) {
@@ -128,22 +128,28 @@ export const useUserSubsystem = () => {
   
 
   const editUser = async(data:any) => {
+    setRequestLoading(true);
+    const {firstName, lastName} = data;
+    const jsonData = JSON.stringify({first_name: firstName, last_name: lastName});
     try {
-      const response = await api.put("user/edit", data, localStorage.getItem("token"));
+      const response = await api.put("user/edit", jsonData, localStorage.getItem("token"));
       if (response.success) {
         setUserState(response.data.data.user);
         setLoading(false);
         localStorage.setItem("token", response.data.data.jwt);
-        router.replace("/profile");
+        setRequestLoading(false);
+        toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
         setLoading(false);
+        setRequestLoading(false);
         return response.data.message;
       }
     } catch (error: any) {
       toast.error(error.response.data.message);
       console.error("Edit user failed:", error);
       setLoading(false);
+      setRequestLoading(false);
       return error.response.data.message;
     }
   }
@@ -157,14 +163,13 @@ export const useUserSubsystem = () => {
       const response = await api.post("user/verify-email-token", otpData, localStorage.getItem("token"));
       if (response.success) {
         setUserState(response.data.data.user);
-        toast.success("Email verified!");
+        toast.success(response.data.message);
       } else {
         toast.error(response.data.data.message);
       }
     } catch (error: any) {
       const responseString = "Failed to verify your email, please retry."
       toast.error(responseString);
-      return responseString;
     }
     setRequestLoading(false);
   }

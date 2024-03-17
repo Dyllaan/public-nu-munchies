@@ -17,8 +17,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const { checkToken, loading, logged} = useUserSubsystem();
 
   useEffect(() => {
-    console.log("here auth");
-    checkToken;
+    checkToken();
   }, []);
 
   return (

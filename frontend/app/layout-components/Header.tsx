@@ -61,7 +61,7 @@ export default function Header() {
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                 <NavLink title="Profile" href="/profile" description="View and edit your profile" />
-                <NavLink title="Logout" description="View and edit your profile" onClick={logout} />
+                <NavLink title="Logout" href="/login" description="View and edit your profile" />
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>

@@ -16,16 +16,16 @@ class VerifiedHandler extends UserHelper {
     }
 
     public function verifyUser($verified = 1) {
-        if(!$this->exists()) {
+        if(!$this->getUser()->exists()) {
             $this->setResponse(400, "User does not exist");
         }
         if($this->isVerified()) {
             $this->setResponse(400, "User is already verified");
         }
-        $this->get();
-        $this->getDb()->createUpdate()->table($this->getTable())->set(['verified' => $verified])->where(["id = '" . $this->getId() . "'"])->execute();
+        $this->getUser()->get();
+        $this->getDb()->createUpdate()->table($this->getTable())->set(['verified' => $verified])->where(["id = '" . $this->getUser()->getId() . "'"])->execute();
         $this->setVerified(1);
-        $this->setResponse(200, "Verified User", $this->toArray());
+        $this->setResponse(200, "Verified User", $this->getUser()->toArray());
     }
 
     public function isVerified()

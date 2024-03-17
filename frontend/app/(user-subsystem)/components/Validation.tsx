@@ -3,7 +3,23 @@
  * Basic validations functions for user registration
  */
 export const validateName = (name:any) => {
-    if (name.length < 3) {
+
+    if(validateNameLength(name) === false) {
+        return false;
+    }
+
+    if(name.includes(' ')) {
+        return false;
+    }
+
+    return true;
+}
+
+export const validateNameLength = (name:any) => {
+    if(name.length > 20) {
+        return false;
+    }
+    if(name.length < 3) {
         return false;
     }
     return true;

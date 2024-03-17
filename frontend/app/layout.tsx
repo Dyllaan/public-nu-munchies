@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-
 import "../assets/globals.css";
-
 import AuthProvider from "./(user-subsystem)/components/AuthProvider";
-
 import { Toaster } from "@/components/ui/sonner";
-
 import Header from "./layout-components/Header";
-
 import React from "react";
+import Animator from "./layout-components/Animator";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,7 +26,9 @@ export default function RootLayout({
       <AuthProvider>
         <Header />
         <div className="m-2">
-          {children}
+          <Animator>
+            {children}
+          </Animator>
         </div>
         <Toaster />
       </AuthProvider>

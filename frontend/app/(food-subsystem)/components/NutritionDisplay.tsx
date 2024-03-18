@@ -56,7 +56,7 @@ function Nutritions(){
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((value:any,  key) => (
+                    {data.map((value:any,  key: number) => (
                         <tr key= {key} onClick={() => handleClick(value)}>
                             <td>{value.item_name}</td>
                             <td>{value.weight}</td>

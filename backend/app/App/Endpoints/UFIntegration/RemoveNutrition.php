@@ -7,10 +7,10 @@
      */
     namespace App\Endpoints\UFIntegration;
 
-    use Core\Endpoint\SubEndpoint\SubEndpoint;
+    use Core\Endpoint\Endpoint;
     use App\Classes\Nutrition;
 
-     class RemoveNutrition extends SubEndpoint
+     class RemoveNutrition extends Endpoint
      {
         public function __construct()
         {

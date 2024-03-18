@@ -379,6 +379,7 @@ class User extends CrudModel implements CrudInterface
                 'verified' => $this->getVerifiedHandler()->isVerified(),
                 'created_at' => $this->getCreatedAt(),
                 'allowed' => true,
+                'ip' => $_SERVER['REMOTE_ADDR']
             ];
         }
         //hardcoded provider id not good

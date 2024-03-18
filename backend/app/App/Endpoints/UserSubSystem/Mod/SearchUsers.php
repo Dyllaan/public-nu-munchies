@@ -28,8 +28,8 @@ class SearchUsers extends ModeratorEndpoint
         $searchFields = ['users.first_name', 'users.last_name', 'users.email'];
         $searchConditions = SearchHelper::searchConditionBuilder($request, $searchFields);
         
-        $verifiedCondition = SearchHelper::addBoolAndConvertToIntCondition($request, 'verified', 'users');
-        return SearchHelper::buildConditions($request, [$searchConditions, $verifiedCondition]);
+        //$verifiedCondition = SearchHelper::addBoolAndConvertToIntCondition($request, 'verified', 'users');
+        return SearchHelper::buildConditions($request, [$searchConditions]);
     }
 
 

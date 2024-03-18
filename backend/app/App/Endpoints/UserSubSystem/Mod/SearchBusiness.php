@@ -20,6 +20,7 @@ class SearchBusiness extends ModeratorEndpoint
         $this->setRequiresAuth(true);
         $this->getAttributes()->addAllowedInts(['page']);
         $this->getAttributes()->addAllowedStrings(['search']);
+        $this->getAttributes()->addAllowedBools(['verified']);
     }
 
     private function handle($request) 

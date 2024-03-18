@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import ReviewForm from './ReviewForm'
 import DisplayReviews from './DisplayReviews'
+import { Button } from "@/components/ui/button"
 
 
 function Checkout() {
@@ -44,7 +45,7 @@ function Checkout() {
       <p>Price: £{selectedItem.item_price}</p>
       <p>Expiry: {selectedItem.item_expiry}</p>
       <p>Collection Time: {selectedItem.collect_time}</p>
-      <button onClick={handleClick}>checkout</button>
+      <Button onClick={handleClick}>checkout</Button>
 
       <DisplayReviews business_id={selectedItem.business_id} />
     </>

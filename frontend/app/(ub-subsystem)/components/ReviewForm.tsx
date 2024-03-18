@@ -1,15 +1,13 @@
 "use client"
 import { useState, useEffect } from 'react';
-import { atom, useAtom } from "jotai";
-import { useRouter } from 'next/navigation';
+import { Button } from "@/components/ui/button"
 
 function ReviewForm(props) {
     const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState({
-        user_id: localStorage.getItem('token'),
         business_id: props.business_id,
         title: '',
-        rating: '1',
+        rating: 1,
         review_details: ''
     })
 
@@ -21,18 +19,20 @@ function ReviewForm(props) {
         event?.preventDefault();
         console.log("submitted");
         console.log(formData);
-
-        /* try{
-            const response = await fetch('http://localhost:8080/insertReview', {
+        try {
+            const response = await fetch('http://localhost:8080/insertreview', {
                 method: 'POST',
-                headers:{
-                    'Content-Type': 'application/json'
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify(formData)
+                
+                body: JSON.stringify(formData),
+                credentials: 'omit'
             })
-        }catch(error){
+        } catch (error) {
             console.error('fetch operation failed!', error.message)
-        } */
+        }
     }
 
     const handleChange = (e) => {
@@ -66,7 +66,7 @@ function ReviewForm(props) {
 
     return (
         <>
-            <button onClick={handleClick}>Click to review this business!</button>
+            <Button onClick={handleClick}>Click to review this business!</Button>
             {showForm && reviewForm()}
         </>
     )

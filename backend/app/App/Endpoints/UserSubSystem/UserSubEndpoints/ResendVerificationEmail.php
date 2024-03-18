@@ -8,18 +8,20 @@ namespace App\Endpoints\UserSubSystem\UserSubEndpoints;
 
 use Core\Endpoint\SubEndpoint\SubEndpoint;
 
-class ResendEmail extends SubEndpoint
+class ResendVerificationEmail extends SubEndpoint
 {
     public function __construct() 
     {
-        parent::__construct('GET', 'resend-otp');
+        parent::__construct('GET', 'resend-verification-email');
         $this->setRequiresAuth(true);
     }
 
     public function process($request)
     {
         parent::process($request);
-        $this->getUser()->sendNewEmailOTP();
+        if($this->getUser()->getEmailHandler()->sendEmailToken('email_verification')){
+            $this->setResponse(200, 'Email sent');
+        }
         
     }
 }

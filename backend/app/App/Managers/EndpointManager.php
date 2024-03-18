@@ -7,9 +7,23 @@
 
 namespace App\Managers;
 
+//use App\Endpoints\NutritionEndpoint;
+//use App\Endpoints\CatEndpoint;
+use App\Endpoints\UFIntegration\RemoveNutrition;
+use App\Endpoints\UFIntegration\RemoveCat;
+use App\Endpoints\UFIntegration\GetNutrition;
+use App\Endpoints\UFIntegration\EditNutrition;
+use App\Endpoints\UFIntegration\EditCat;
+use App\Endpoints\UFIntegration\GetCat;
+use App\Endpoints\UFIntegration\AddNutrition;
 use App\Endpoints\UserSubSystem\UserEndpoint;
+use App\Endpoints\UFIntegration\AddCat;
 use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
 use App\Endpoints\UserSubSystem\OAuthCallback;
+use App\Endpoints\UserSubSystem\ForgotPassword;
+use App\Endpoints\UserSubSystem\ResetPassword;
+use App\Endpoints\UserSubSystem\Mod\IsMod;
+use App\Endpoints\Search;
 use Core\Manager;
 use Core\HTTP\Classes\Request;
 use App\Endpoints\UBIntegration\ItemUpload;
@@ -46,13 +60,31 @@ class EndpointManager extends Manager
 
     protected function add()
     {
+        //$this->addEndpoint(new NutritionEndpoint());
+        //$this->addEndpoint(new CatEndpoint());
+        $this->addEndpoint(new RemoveNutrition());
+        $this->addEndpoint(new RemoveCat());
+        $this->addEndpoint(new EditNutrition());
+        $this->addEndpoint(new GetNutrition());
+        $this->addEndpoint(new EditCat());
+        $this->addEndpoint(new GetCat());
+        $this->addEndpoint(new AddNutrition());
+        $this->addEndpoint(new AddCat());
         $this->addEndpoint(new UserEndpoint());
+        $this->addEndpoint(new BusinessEndpoint());
+        $this->addEndpoint(new OAuthCallback());
+        $this->addEndpoint(new ForgotPassword());
+        $this->addEndpoint(new ResetPassword());
+        $this->addEndpoint(new UserEndpoint());
+        $this->addEndpoint(new IsMod());
+        $this->addEndpoint(new Search());
+            
+ 
+        //$this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new ItemUpload());
         $this->addEndpoint(new ItemReserve());
         $this->addEndpoint(new OrderCancel());
         $this->addEndpoint(new InsertOrder());
-        $this->addEndpoint(new BusinessEndpoint());
-        $this->addEndpoint(new OAuthCallback());
         $this->addEndpoint(new Webhook());
         $this->addEndpoint(new GetItems());
         $this->addEndpoint(new CheckoutItem());

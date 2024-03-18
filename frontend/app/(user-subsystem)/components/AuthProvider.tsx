@@ -4,7 +4,6 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useEffect } from "react";
 
 import { oAuthConfig } from "@/config/oauth";
-import { init } from "next/dist/compiled/webpack/webpack";
 
 /**
  * Rehydrates the user subsystem on the client side
@@ -18,7 +17,8 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const { checkToken, loading, logged} = useUserSubsystem();
 
   useEffect(() => {
-    checkToken();
+    console.log("here auth");
+    checkToken;
   }, []);
 
   return (

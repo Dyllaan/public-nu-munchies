@@ -31,14 +31,6 @@ class Moderator extends CrudModel
         return $data;
     }
 
-    public function searchBusinesses($offset, $conditions = [], $limit = 10) {
-        $data = $this->getDb()->createSelect()->cols("*")
-        ->from("businesses")
-        ->where($conditions)->limit($limit)->
-        offset($offset)->execute();
-        return $data;
-    }
-
     public function setUser($user)
     {
         $this->user = $user;

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { atom, useAtom } from "jotai";
 import { useRouter } from 'next/navigation';
 import { ClockIcon } from '@radix-ui/react-icons';
-
+import Nutritions from '@/app/(food-subsystem)/components/NutritionDisplay';
 
 interface Item {
   id?: number
@@ -55,6 +55,7 @@ function Items() {
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <ClockIcon />
               <p>{value.collect_time}</p>
+              <Nutritions />
             </div>
 
             <p className="absolute bottom-0 right-0">£{value.item_price}</p>

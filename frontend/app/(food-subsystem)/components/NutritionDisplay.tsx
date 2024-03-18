@@ -7,6 +7,7 @@ import LoadingInPage from '@/app/(user-subsystem)/components/LoadingInPage';
 import useFetchData from '@/hooks/user-subsystem/useFetchData';
 import { useRoute } from '@react-navigation/native';
 
+
 interface NutritionItem {
   food_id?: number;
   item_name?: string;
@@ -56,7 +57,7 @@ function Nutritions(){
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((value:any,  key: number) => (
+                    {data.map((value:any,  key) => (
                         <tr key= {key} onClick={() => handleClick(value)}>
                             <td>{value.item_name}</td>
                             <td>{value.weight}</td>

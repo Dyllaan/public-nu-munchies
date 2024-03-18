@@ -162,7 +162,7 @@ class User extends CrudModel implements CrudInterface
                 $this->setResponse(401, "Invalid password");
             } else {
                 $this->setUserFields($data[0]);
-                if(!$this->getIPHandler()->isIPAllowed($_SERVER['REMOTE_ADDR'])) {
+                if(!$this->getIPHandler()->isIPAllowed()) {
                     $this->getEmailHandler()->sendEmailToken('ip_verification');
                 }
                 if ($data[0]['verified'] == 0) {
@@ -365,7 +365,7 @@ class User extends CrudModel implements CrudInterface
     public function toArray($useJwt = true)
     {
         //is allowed
-        if(!$this->getIPHandler()->isIPAllowed($_SERVER['REMOTE_ADDR'])) {
+        if(!$this->getIPHandler()->isIPAllowed()) {
             $user['user'] = [
                 'email' => $this->getEmail(),
                 'allowed' => false,

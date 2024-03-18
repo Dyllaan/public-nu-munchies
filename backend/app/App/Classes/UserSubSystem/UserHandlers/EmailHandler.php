@@ -61,7 +61,7 @@ class EmailHandler extends UserHelper
                 break;
             case 'ip_verification':
                 if($emailToken->validate($token)) {
-                    $this->getUser()->getIPHandler()->verifyIP($emailToken->getIP());
+                    $this->getUser()->getIPHandler()->addIP($emailToken->getIP());
                     return true;
                 } else {
                     $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');

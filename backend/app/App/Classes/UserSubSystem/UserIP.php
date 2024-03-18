@@ -31,29 +31,12 @@ class UserIP extends CrudModel
         return $ip;
     }
 
-    public function checkForIp($ip)
-    {
-        $ip = strval($_SERVER['REMOTE_ADDR']);
-        $data = $this->getDb()->createSelect()->
-        cols("*")->from($this->getTable())->
-        where(["user_id = '" . $this->getUser()->getId() . "'", "ip_address = '" . $ip . "'"])->execute();
-        if (count($data) == 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public function isIPAllowed($ip) {
+    public function isAllowed($ip) {
         $data = $this->getDb()->createSelect()->
         cols("*")->from($this->getTable())->
         where(["user_id = '" . $this->getUser()->getId() . "'",
-         "ip_address = '" . $ip . "'", "allowed = 1"])->execute();
-        if (count($data) == 0) {
-            return false;
-        } else {
-            return true;
-        }
+         "ip_address = '" . $ip . "'"])->execute();
+        return count($data) > 0;
     
     }
 

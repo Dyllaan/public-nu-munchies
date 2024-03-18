@@ -23,13 +23,9 @@ class VerifyEmailToken extends SubEndpoint
         /** 
          * Only allow supported verification types
         */
-        switch($request->getAttribute('type')){
-            case 'ip_verification':
-            case 'email_verification':
-                break;
-            default:
-                $this->setResponse(400, 'Invalid type');
-                return;
+        if($request->getAttribute('type') !== 'email_verification' && $request->getAttribute('type') !== 'ip_verification') {
+            $this->setResponse(400, 'Invalid verification type');
+            return;
         }
 
         $this->getUser()->get();

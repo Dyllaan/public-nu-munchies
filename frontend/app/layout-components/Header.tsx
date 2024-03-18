@@ -14,45 +14,10 @@ import {
 } from "@/components/ui/navigation-menu"
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem"
 import NavLink from "./NavLink"
+import NavButton from "./NavButton"
 
 export default function Header() {
   const { user, logout, logged } = useUserSubsystem()
-
-
-  function loggedInMenu() {
-    return (
-      <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>{user.firstName ? user.firstName : "Join"}</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                <ListItem
-                  title="Profile"
-                  href="/profile"
-                >
-                  View and edit your profile
-                </ListItem>
-                <ListItem
-                  title="Logout"
-                  onClick={() => logout()}
-                >
-                  Log out of your account
-                </ListItem>
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/about" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                About
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-    )
-  }
 
   function loggedMenu() {
     return (
@@ -61,7 +26,7 @@ export default function Header() {
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                 <NavLink title="Profile" href="/profile" description="View and edit your profile" />
-                <NavLink title="Logout" href="/login" description="View and edit your profile" />
+                <NavButton title="Logout" onClick={logout} description="View and edit your profile" />
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>

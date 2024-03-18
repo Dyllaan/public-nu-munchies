@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { atom, useAtom } from "jotai";
 import { useRouter } from 'next/navigation';
+import Nutritions from '@/app/(food-subsystem)/components/NutritionDisplay';
 
 interface Item {
   id?: number
@@ -50,6 +51,8 @@ function Items() {
               <p>Price: £{value.item_price}</p>
               <p>Expiry: {value.item_expiry}</p>
               <p>Collection Time: {value.collect_time}</p>
+
+              <Nutritions />
             </div>
           ))}
         </div>

@@ -52,7 +52,7 @@ function Items() {
               <p>Expiry: {value.item_expiry}</p>
               <p>Collection Time: {value.collect_time}</p>
 
-              <Nutritions />
+              
             </div>
           ))}
         </div>

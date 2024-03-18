@@ -3,8 +3,11 @@
 import React, { useState } from 'react';
 import axios from 'axios'; // Import axios for making HTTP requests
 import { Input } from "@/components/ui/input";
-import "../css/NutritionForm.css";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {Label} from "@/components/ui/label";
 
+import "../css/NutritionForm.css";
 
 
 
@@ -20,6 +23,7 @@ const NutritionForm: React.FC = () => {
     salt: '',
     quantity: '',
   });
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -57,43 +61,45 @@ const NutritionForm: React.FC = () => {
 
   return (
     <section className="hero">
-      <div className="container">
-        <form onSubmit={handleSubmit} >
-          <h2>Nutrition Form</h2>
-          <div className="field-holder text-center">
-            <label>Item ID:</label>
-            <input type="number" placeholder="Item ID" name="item_id" value={formData.item_id} onChange={handleChange} />
-          </div>
-          <div className="field-holder text-center">
-            <label>Weight:</label>
-            <input type="number" placeholder="0" name="weight" value={formData.weight} onChange={handleChange} />
-          </div>
-          <div className="field-holder text-center">
-            <label>Calories:</label>
-            <input type="number" placeholder="0" name="calories" value={formData.calories} onChange={handleChange} />
-          </div>
-          <div className="field-holder text-center">
-            <label>Protein:</label>
-            <input type="number" placeholder="0" name="protein" value={formData.protein} onChange={handleChange} />
-          </div>
-          <div className="field-holder text-center">
-            <label>Carbs:</label>
-            <input type="number" placeholder="0" name="carbs" value={formData.carbs} onChange={handleChange} />
-          </div>
-          <div className="field-holder text-center">
-            <label>Fat:</label>
-            <input type="number" placeholder="0" name="fat" value={formData.fat} onChange={handleChange} />
-          </div>
-          <div className="field-holder text-center">
-            <label>Salt:</label>
-            <input type="number" placeholder="0" name="salt" value={formData.salt} onChange={handleChange} />
-          </div>
-          <div className="field-holder text-center">
-            <label>Quantity:</label>
-            <input type="number"placeholder="0" name="quantity" value={formData.quantity} onChange={handleChange} />
-          </div>
-          <button type="submit">Save Nutrition</button>
-        </form>
+      <div className="container flex flex-col">
+          <form className="items-center justify-center mx-auto" onSubmit={handleSubmit} >
+            <h2>Nutrition Form</h2>
+            <div className="field-holder text-center">
+              <Label>Item ID:</Label>
+              <Input className="w-full" type="number" placeholder="Item ID" name="item_id" value={formData.item_id} onChange={handleChange} />
+            </div>
+            <div className="field-holder text-center">
+              <Label>Weight:</Label>
+              <Input type="number" placeholder="0" name="weight" value={formData.weight} onChange={handleChange} />
+            </div>
+            <div className="field-holder text-center">
+              <Label>Calories:</Label>
+              <Input type="number" placeholder="0" name="calories" value={formData.calories} onChange={handleChange} />
+            </div>
+            <div className="field-holder text-center">
+              <Label>Protein:</Label>
+              <Input type="number" placeholder="0" name="protein" value={formData.protein} onChange={handleChange} />
+            </div>
+            <div className="field-holder text-center">
+              <Label>Carbs:</Label>
+              <Input type="number" placeholder="0" name="carbs" value={formData.carbs} onChange={handleChange} />
+            </div>
+            <div className="field-holder text-center">
+              <Label>Fat:</Label>
+              <Input type="number" placeholder="0" name="fat" value={formData.fat} onChange={handleChange} />
+            </div>
+            <div className="field-holder text-center">
+              <Label>Salt:</Label>
+              <Input type="number" placeholder="0" name="salt" value={formData.salt} onChange={handleChange} />
+            </div>
+            <div className="field-holder text-center">
+              <Label>Quantity:</Label>
+              <Input type="number"placeholder="0" name="quantity" value={formData.quantity} onChange={handleChange} />
+            </div>
+            <Button type="submit">
+              Save Nutrition
+            </Button>
+          </form>
       </div>
     </section>
   );

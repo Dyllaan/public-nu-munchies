@@ -94,6 +94,7 @@
                 'Fat' => ['value' => $this->getFat(), 'min' => 0, 'max' => 100, 'message' => 'fat'],
                 'Salt' => ['value' => $this->getSalt(), 'min' => 0, 'max' => 100, 'message' => 'salt'],
                 'Quantity' => ['value' => $this->getQuantity(), 'min' => 0, 'max' => 100, 'message' => 'quantity']
+
             ];
 
             foreach ($checkFields as $field => $data)

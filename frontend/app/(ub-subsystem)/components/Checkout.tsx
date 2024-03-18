@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import ReviewForm from './ReviewForm'
 import DisplayReviews from './DisplayReviews'
 import { Button } from "@/components/ui/button"
+import Nutritions from '@/app/(food-subsystem)/components/NutritionDisplay';
 
 
 function Checkout() {
@@ -45,9 +46,12 @@ function Checkout() {
       <p>Price: £{selectedItem.item_price}</p>
       <p>Expiry: {selectedItem.item_expiry}</p>
       <p>Collection Time: {selectedItem.collect_time}</p>
+      
+      
       <Button onClick={handleClick}>checkout</Button>
 
       <DisplayReviews business_id={selectedItem.business_id} />
+      <Nutritions item_id={selectedItem.id}/>
     </>
   );
 }

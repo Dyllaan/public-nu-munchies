@@ -41,7 +41,6 @@ function Categories() {
                 ))}
                 </div>
             )}
-            
         </section>
     )
 }

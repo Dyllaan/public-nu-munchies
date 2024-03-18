@@ -14,7 +14,7 @@
     class Nutrition extends CrudModel implements CrudInterface
     {
         private $item_id;
-        private $food_name;
+        private $item_name;
         private $weight;
         private $calories;
         private $protein;
@@ -94,7 +94,6 @@
                 'Fat' => ['value' => $this->getFat(), 'min' => 0, 'max' => 100, 'message' => 'fat'],
                 'Salt' => ['value' => $this->getSalt(), 'min' => 0, 'max' => 100, 'message' => 'salt'],
                 'Quantity' => ['value' => $this->getQuantity(), 'min' => 0, 'max' => 100, 'message' => 'quantity']
-
             ];
 
             foreach ($checkFields as $field => $data)
@@ -140,7 +139,7 @@
         }
         public function getAll()
         {
-            $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->execute();
+            $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->join("items", "items.id = nutrition_details.item_id")->execute();
             
             return $data;
         }
@@ -155,7 +154,7 @@
             {
                 $foodData = $data[0];
                 $this->setId($foodData['food_id']);
-                $this->setFoodName($foodData['item_name']);
+                $this->setItemName($foodData['item_name']);
                 $this->setWeight($foodData['weight']);
                 $this->setCalories($foodData['calories']);
                 $this->setProtein($foodData['protein']);
@@ -206,7 +205,7 @@
         public function toArray()
         {
             $nutrition['nutrition_details'] = [
-                'item_name' => $this->getFoodName(),
+                'item_name' => $this->getItemName(),
                 'weight' => $this->getWeight(),
                 'calories' => $this->getCalories(),
                 'protein' => $this->getProtein(),
@@ -232,13 +231,13 @@
             $this->item_id = $item_id;
         }
 
-        public function getFoodName()
+        public function getItemName()
         {
-            return $this->food_name;
+            return $this->item_name;
         }
-        public function setFoodName($food_name)
+        public function setItemName($item_name)
         {
-            $this->food_name = $food_name;
+            $this->item_name = $item_name;
         }
         public function getWeight()
         {

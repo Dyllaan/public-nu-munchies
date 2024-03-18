@@ -13,6 +13,7 @@
 
     class Nutrition extends CrudModel implements CrudInterface
     {
+        private $food_id;
         private $item_id;
         private $item_name;
         private $weight;
@@ -154,7 +155,7 @@
             } else 
             {
                 $foodData = $data[0];
-                $this->setId($foodData['food_id']);
+                $this->setFoodId($foodData['food_id']);
                 $this->setItemName($foodData['item_name']);
                 $this->setWeight($foodData['weight']);
                 $this->setCalories($foodData['calories']);
@@ -197,7 +198,7 @@
         {
             if($this->exists())
             {
-                $this->getDb()->createDelete()->from($this->getTable())->where(["food_id = '" . $this->food_id . "'"])->execute();
+                $this->getDb()->createDelete()->from($this->getTable())->where(["food_id = '" . $this->getFoodId() . "'"])->execute();
                 
                 return ['message' => "Nutrition Deleted"];
             }

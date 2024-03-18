@@ -18,6 +18,7 @@
 
             $nutrition = new Nutrition($this->getDb());
 
+            
             $item_id = $request->getAttribute('item_id');
             if(strlen($item_id) > 0){
                 $nutrition->setItemId($item_id);
@@ -27,6 +28,9 @@
                 $this->setResponse(200, 'Nutrition Shown', $nutritionArray);
             }
             $this->setResponse(200, 'No Data', []);
+            
+
+           //$this->setResponse(200, 'Nutrition Shown', $nutrition->getAll());
         }
     }
 

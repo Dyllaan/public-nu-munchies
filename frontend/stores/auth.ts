@@ -5,10 +5,12 @@ export interface UserState {
   lastName: string | undefined;
   email: string | undefined;
   verified: boolean;
+  created_at?: string;
 }
 export const userAtom = atom<UserState>({
   firstName: undefined,
   lastName: undefined,
   email: undefined,
   verified: false,
+  created_at: undefined,
 });

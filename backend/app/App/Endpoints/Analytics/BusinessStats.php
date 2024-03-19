@@ -23,12 +23,17 @@ class BusinessStats extends SubEndpoint
     public function __construct()
     {
         parent::__construct('GET', 'business-stats');
+        $this->setRequiresAuth(true);
 
     }
 
     public function process($request)
     {
         parent::process($request);
-        $this->setResponse(200, 'Business Stats retrieved');
+        // Create an instance of the Analytics class
+        $analytics = new Analytics($this->getDb(), $this->getUser());
+
+        // Assuming there is a respondJson method available
+        $this->setResponse(200, "Councilor stats retrieved", $analytics->businessStats());
     }
 }

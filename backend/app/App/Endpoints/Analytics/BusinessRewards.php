@@ -22,12 +22,17 @@ class BusinessRewards extends SubEndpoint
     public function __construct()
     {
         parent::__construct('GET', 'business-rewards');
+        $this->setRequiresAuth(true);
 
     }
 
     public function process($request)
     {
         parent::process($request);
-        $this->setResponse(200, 'Business Rewards retrieved');
+        // Create an instance of the Analytics class
+        $analytics = new Analytics($this->getDb(), $this->getUser());
+
+        // Assuming there is a respondJson method available
+        $this->setResponse(200, "User Rewards stats retrieved", $analytics->getBusinessRewards());
     }
 }

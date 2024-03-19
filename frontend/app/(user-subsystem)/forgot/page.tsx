@@ -23,26 +23,24 @@ import requireAuth from "../components/requireAuth";
 // Define the login form schema using zod
 const loginFormSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
 });
 
 // Type inference for the login form data
-type LoginFormInput = z.infer<typeof loginFormSchema>;
+type ForgotPasswordFormInput = z.infer<typeof loginFormSchema>;
 
 function ForgotPasswordPage() {
-    const { login } = useUserSubsystem();
+    const { requestPasswordReset } = useUserSubsystem();
 
-    const form = useForm<LoginFormInput>({
+    const form = useForm<ForgotPasswordFormInput>({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
-            email: "",
-            password: "",
+            email: ""
         },
     });
 
-    const handleLogin = async(data: LoginFormInput) => {
-        const { email, password } = data;
-        const response = await login(email, password);
+    const handleForgotPassword = async(data: ForgotPasswordFormInput) => {
+        const { email } = data;
+        const response = await requestPasswordReset(email);
         if (response) {
             toast.error(response);
         }
@@ -59,7 +57,7 @@ function ForgotPasswordPage() {
             </h2>
         </div>
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleLogin)}>
+            <form onSubmit={form.handleSubmit(handleForgotPassword)}>
                 <Card className="py-4 md:max-w-[550px]">
                     <CardHeader>
                         <CardTitle className="text-center">Forgot Password?</CardTitle>

@@ -7,6 +7,7 @@ use Core\HTTP\Classes\GivesResponse;
 use Core\Endpoint\Attributes\EndpointAttributes;
 use \App\Classes\UserSubSystem\Token;
 use \App\Classes\UserSubSystem\User;
+use \App\Classes\UserSubSystem\OAuthUser;
 
 abstract class EndpointBase extends GivesResponse
 {

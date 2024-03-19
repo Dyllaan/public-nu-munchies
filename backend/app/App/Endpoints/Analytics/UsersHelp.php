@@ -17,7 +17,6 @@ class UsersHelp extends SubEndpoint
     // - business names - need to get business names of businesses that are linked to the user through order id
     // - order numbers - order id of above^
     // - total businesses helped - sum of unique business id's where user_id =m the user id in orders
-    // - date of order - timestamp associated with order where 
 
     public function __construct()
     {
@@ -33,7 +32,7 @@ class UsersHelp extends SubEndpoint
         $analytics = new Analytics($this->getDb(), $this->getUser());
 
         // Assuming there is a respondJson method available
-        $this->setResponse(200, "Business Helped stats retrieved", $analytics->orderedBusinesses());
+        $this->setResponse(200, "Business Helped stats retrieved", $analytics->usersHelp());
     }
 
 }

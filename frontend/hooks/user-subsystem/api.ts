@@ -27,7 +27,6 @@ async function handleResponse(response:any) {
 }
 
 export async function get(endpoint:string, bearer:any = "") {
-    console.log(bearer);
     return httpRequest('GET', endpoint, undefined, bearer);
 }
 

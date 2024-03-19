@@ -1,43 +1,30 @@
 "use client";
-import React from 'react';
-import useUserSubsystem from '@/hooks/user-subsystem/use-user-subsystem';
+import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 import Loading from './Loading';
-import Link from 'next/link';
 import VerifyEmail from './VerifyEmail';
+import RedirectTo from "./RedirectTo";
+import { useEffect } from "react";
 
-export default function requireAuth(ChildComponents: any, auth: boolean = true) {
+export default function requireAuth(ChildComponents: any, pageNeedsAuth: boolean = true) {
     const RequireAuthComponent = (props: any) => {
-        const { status, user } = useUserSubsystem();
+        const { loading, logged, user, checkToken } = useUserSubsystem();
 
-        const isAuthenticated = status.logged;
-
-        if (status.loading) {
+        useEffect(() => {
+            checkToken();
+          }, []);
+        
+        if(loading) {
             return <Loading action={"Logging you in..."} />;
-        } else if (auth && isAuthenticated) {
-            if(user.verified) {
-                return <ChildComponents {...props} />;
-            } else {
+        } else {
+            if(!pageNeedsAuth && logged) {
+                return <RedirectTo to="/user-rewards" message="Redirecting to profile..."/>
+            } else if(pageNeedsAuth && !logged) {
+                return <RedirectTo to="/login" message="Redirecting to login..." />
+            } else if (!user.verified && logged) {
                 return <VerifyEmail />;
+            } else {
+                return <ChildComponents {...props} />;
             }
-        }
-        else if (!auth && !isAuthenticated) {
-            return <ChildComponents {...props} />;
-        }
-
-        else {
-            return auth ? 
-            <div>
-                <p>Not Logged In</p>
-                <Link href="/login">
-                    Login
-                </Link>
-            </div> : 
-            <div>
-                <p>Already Logged In</p>
-                <Link href="/profile">
-                    Profile
-                </Link>
-            </div>;
         }
     };
 

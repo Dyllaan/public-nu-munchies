@@ -1,13 +1,9 @@
 <?php
 
-/**
- * class Email
- */
 namespace App\Classes\UserSubSystem;
 
-use MailerSend\MailerSend;
-use MailerSend\Helpers\Builder\Recipient;
-use MailerSend\Helpers\Builder\EmailParams;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class Email {
 
@@ -16,7 +12,6 @@ class Email {
     private $subject;
     private $content;
     private \AppConfig $appConfigInstance;
-
 
     public function __construct($email, $name, $subject, $content)
     {
@@ -28,20 +23,29 @@ class Email {
     }
 
     public function sendEmail() {
-        $mailersend = new MailerSend(['api_key' => $this->appConfigInstance->get('MAILERSEND_API_KEY')]);
+        $mail = new PHPMailer(true); // Passing `true` enables exceptions
 
-        $recipients = [
-            new Recipient($this->email, $this->name),
-        ];
+        try {
+            $mail->isSMTP();
+            $mail->Host = $this->appConfigInstance->get('MAIL_HOST');
+            $mail->SMTPAuth = true;
+            $mail->Username = $this->appConfigInstance->get('MAIL_USER');
+            $mail->Password = $this->appConfigInstance->get('MAIL_PASS');
+            $mail->SMTPSecure = 'ssl';
+            $mail->Port = 465;
 
-        $emailParams = (new EmailParams())
-            ->setFrom($this->appConfigInstance->get('MAILERSEND_SENDER_EMAIL'))
-            ->setFromName('NU Munchies')
-            ->setRecipients($recipients)
-            ->setSubject($this->subject)
-            ->setHtml($this->content)
-            ->setText($this->content);
-        $mailersend->email->send($emailParams);
+            $mail->setFrom('no-reply@numunchies.co.uk', 'NU Munchies');
+            $mail->addAddress($this->email, $this->name);
+
+            $mail->isHTML(true);
+            $mail->Subject = $this->subject;
+            $mail->Body    = $this->content;
+            $mail->AltBody = strip_tags($this->content);
+
+            $mail->send();
+        } catch (Exception $e) {
+            $this->setResponse(500, 'Message could not be sent. Mailer Error: ' . $mail->ErrorInfo);
+        }
     }
 
 }

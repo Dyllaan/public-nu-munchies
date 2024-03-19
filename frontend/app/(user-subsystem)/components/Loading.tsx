@@ -1,3 +1,4 @@
+"use client";
 import { SquareLoader } from 'react-spinners';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { RocketIcon } from "@radix-ui/react-icons";
@@ -5,18 +6,25 @@ import messages from "./messages.json";
 import { useEffect, useState } from 'react';
 import useUserSubsystem from '@/hooks/user-subsystem/use-user-subsystem';
 
-export default function Loading({props, action}: any) {
-    const { status } = useUserSubsystem();
+export default function Loading({props, action, givenMessages = ""}: any) {
+    const { loading } = useUserSubsystem();
+    const [message, setMessage] = useState("Getting things ready...");
 
     function getRandomMessage() {
-        const data = messages.messages;
-        const randomIndex = Math.floor(Math.random() * data.length);
-        return data[randomIndex];
+        const randomIndex = Math.floor(Math.random() * getMessages().length);
+        return getMessages()[randomIndex];
     }
 
-    const [message, setMessage] = useState(getRandomMessage());
+    const getMessages = () => {
+        if (givenMessages) {
+            return givenMessages.messages;
+        }
+        return messages.messages;
+    }
+    
     useEffect(() => {
-        if (status.loading) {
+      setMessage(getRandomMessage());
+        if (loading) {
             const interval = setInterval(() => {
                 setMessage(getRandomMessage());
             }, 1000); // Change message every second
@@ -24,7 +32,7 @@ export default function Loading({props, action}: any) {
             // Clean up the interval on component unmount or status change
             return () => clearInterval(interval);
         }
-    }, [status.loading]);
+    }, [loading]);
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center">

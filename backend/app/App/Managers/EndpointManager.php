@@ -7,6 +7,7 @@
 
 namespace App\Managers;
 
+use App\Endpoints\AnalyticsEndpoint;
 use App\Endpoints\UserSubSystem\UserEndpoint;
 use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
 use App\Endpoints\UserSubSystem\OAuthCallback;
@@ -42,6 +43,7 @@ class EndpointManager extends Manager
     protected function add()
     {
         $this->addEndpoint(new UserEndpoint());
+        $this->addEndpoint(new AnalyticsEndpoint());
         $this->addEndpoint(new BusinessEndpoint());
         $this->addEndpoint(new OAuthCallback());
         $this->addEndpoint(new ForgotPassword());

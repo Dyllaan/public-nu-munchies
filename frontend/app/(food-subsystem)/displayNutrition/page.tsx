@@ -1,11 +1,12 @@
 'use client'
 
-import Nutritions from '../components/NutritionDisplay'
+import AllNutritionTable from "../components/NutritionDisplayAll"
+
 
 function Main() {
   return (
     <>
-        <Nutritions />
+     <AllNutritionTable />
     </>
   )
 }

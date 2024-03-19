@@ -50,7 +50,7 @@ function Nutritions(){
 
     return (
         <div className="container bg-stone-200 rounded-2xl">
-            <h1 className="text-center p-6">Nutrition Details</h1>
+            <h1 className="text-center p-6">All Food Nutrition Details</h1>
             <Table>
                 <TableHeader>
                     <TableRow>

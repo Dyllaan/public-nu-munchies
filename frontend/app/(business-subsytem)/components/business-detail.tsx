@@ -10,8 +10,8 @@ export const BusinessDetail: FC<{ id: string }> = async ({ id }) => {
 
   const { message } = res;
 
-  if (message === "error") {
-    return <BusinessDetailSkeleton />;
+  if (res.status === "error") {
+    return <BusinessDetailSkeleton error={true} />;
   }
   const business = message as BusinessResponse;
 

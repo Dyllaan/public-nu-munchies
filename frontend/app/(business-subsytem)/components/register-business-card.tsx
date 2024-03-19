@@ -99,6 +99,12 @@ const RegisterBusinessForm = ({
     setLoading(true);
     try {
       // call the api hook to create the business
+      data = {
+        ...data,
+        businessPhoneNumber: data?.businessPhoneNumber?.length
+          ? `+44${data.businessPhoneNumber}`
+          : "",
+      };
       const res = await createBusiness(data);
       if (res.message.id) {
         setBusinessName(res.message.name);
@@ -198,10 +204,19 @@ const RegisterBusinessForm = ({
             control={form.control}
             name="businessPhoneNumber"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="relative">
                 <FormLabel>Business Phone Number</FormLabel>
                 <FormControl>
-                  <Input placeholder="123-456-7890" {...field} />
+                  <>
+                    <div className="absolute left-2 top-[34px] text-gray-700 text-sm px-2">
+                      +44
+                    </div>
+                    <Input
+                      placeholder="123-456-7890"
+                      {...field}
+                      className="pl-12"
+                    />
+                  </>
                 </FormControl>
                 <FormMessage className="text-xs" />
               </FormItem>

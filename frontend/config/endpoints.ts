@@ -5,4 +5,7 @@ export enum Endpoints {
   myBusinesses = "business/my",
   items = "business/items",
   verification = "business/forceverify",
+  businessOrders = "business/orders",
+  deleteBusiness = "business/delete",
+  deleteItems = "business/itemsdelete",
 }

@@ -1,13 +1,39 @@
 import { FC } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import { Alert } from "@/components/ui/alert";
+import { AlertOctagonIcon } from "lucide-react";
+import Link from "next/link";
 
-export const BusinessDetailSkeleton: FC = () => {
+export const BusinessDetailSkeleton: FC<{ error?: boolean }> = ({ error }) => {
   return (
     <>
       <div className="relative h-[400px] w-full mt-20">
-        <div className="z-10 absolute inset-0 w-full h-full bg-gray-700 bg-opacity-50 flex flex-col justify-end p-10 rounded-lg">
-          <Skeleton className="w-[300px] h-[40px] mb-2" />
-          <Skeleton className="w-[500px] h-[20px] mb-2" />
+        <div
+          className={cn(
+            "z-10 absolute inset-0 w-full h-full bg-gray-700 bg-opacity-50 flex flex-col justify-end p-10 rounded-lg",
+            error ? "bg-red-300" : ""
+          )}
+        >
+          {error ? (
+            <>
+              <AlertOctagonIcon className="w-14 h-14 text-red-400 mb-4" />
+              <h1 className="text-red-400 text-3xl font-semibold">
+                Business Not Found
+              </h1>
+              <Link
+                href="/businesses"
+                className="text-red-400 underline mb-2 text-lg"
+              >
+                Go Back to Businesses List
+              </Link>
+            </>
+          ) : (
+            <>
+              <Skeleton className="w-[300px] h-[40px] mb-2" />
+              <Skeleton className="w-[500px] h-[20px] mb-2" />
+            </>
+          )}
         </div>
       </div>
       <div>

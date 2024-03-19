@@ -30,15 +30,20 @@ class Item extends Entity
     {
         $data = $this->getDb()->createSelect()->cols("*")->from("items")->where([
             "business_id = $businessId",
-            "item_status = 'open'",
-            "collect_time >= NOW()",
         ])->execute();
 
         $formattedData = [];
         foreach ($data as $row) {
             $this->_setProperties($row);
+            if ($this->category_optional > 0) {
+                $category = new Category($this->getDb());
+                $category->id = $this->category_optional;
+                $categoryData = $category->getById();
+                $this->category_optional = $categoryData;
+            }
             array_push($formattedData, $this->toArray());
         }
+
         return $formattedData;
     }
 

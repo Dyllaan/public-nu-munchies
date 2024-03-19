@@ -1,6 +1,7 @@
 import { registerFormSchema } from "@/app/(business-subsytem)/utils/register-formschema";
 import { Endpoints } from "@/config/endpoints";
-import { sendRequest } from "@/lib/send-request";
+import { mainConfig } from "@/config/main";
+import { getHeaders, sendRequest } from "@/lib/send-request";
 import { z } from "zod";
 
 interface CreateBusinessRequest {
@@ -45,7 +46,6 @@ export const useBusinessApi = () => {
 
   const getBusinesses = async () => {
     const res = await sendRequest(Endpoints.business, "GET", {});
-    console.log(res);
     return res;
   };
 
@@ -63,11 +63,35 @@ export const useBusinessApi = () => {
     return res;
   };
 
+  const getBusinessOrders = async (id: string) => {
+    const res = await sendRequest(Endpoints.businessOrders, "GET", {
+      id,
+    });
+    return res;
+  };
+
+  const deleteBusiness = async (id: string) => {
+    const res = await sendRequest(Endpoints.deleteBusiness, "DELETE", {
+      id,
+    });
+    return res;
+  };
+
+  const deleteItem = async (id: string) => {
+    const res = await sendRequest(Endpoints.deleteItems, "DELETE", {
+      id,
+    });
+    return res;
+  };
+
   return {
     createBusiness,
     getBusinesses,
     getBusiness,
     getMyBusinesses,
+    getBusinessOrders,
+    deleteBusiness,
     getItems,
+    deleteItem,
   };
 };

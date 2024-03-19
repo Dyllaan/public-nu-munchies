@@ -20,7 +20,10 @@ export const sendRequest = async (
   }
 
   // get query
-  if (method === "GET" && Object.keys(data).length > 0) {
+  if (
+    (method === "GET" || method === "DELETE") &&
+    Object.keys(data).length > 0
+  ) {
     let query = "?";
     for (const key in data) {
       query += `${key}=${data[key]}&`;
@@ -28,22 +31,21 @@ export const sendRequest = async (
     (endpoint as string) += query;
   }
 
-  console.log({
-    endpoint: mainConfig.origin + "/" + endpoint,
-    method,
-    data,
-  });
-
   // send request
   const response = await fetch(mainConfig.origin + "/" + endpoint, {
     method,
-    body: method === "GET" ? undefined : formData,
+    body:
+      method === "GET" || method === "DELETE"
+        ? undefined
+        : method === "PUT"
+        ? JSON.stringify(data)
+        : formData,
     headers: getHeaders(),
   });
   return response.json();
 };
 
-const getHeaders = () => {
+export const getHeaders = () => {
   if (typeof localStorage !== "undefined")
     // unfortunaltely it wont work from server-side as we store user token in local storage which is client side only
     return {

@@ -43,7 +43,6 @@ class ForceVerifyBusiness extends SubEndpoint
 
         $res = $business->updateVerification();
 
-
         $this->setResponse(200, $res);
     }
 }

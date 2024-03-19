@@ -7,8 +7,10 @@ use App\Endpoints\BusinessSubsystem\Subendpoints\CreateBusiness;
 use App\Endpoints\BusinessSubsystem\Subendpoints\DeleteBusiness;
 use App\Endpoints\BusinessSubsystem\Subendpoints\ForceVerifyBusiness;
 use App\Endpoints\BusinessSubsystem\Subendpoints\GetBusinessItems;
+use App\Endpoints\BusinessSubsystem\Subendpoints\GetBusinessOrders;
 use App\Endpoints\BusinessSubsystem\Subendpoints\MyBusinesses;
 use App\Endpoints\BusinessSubsystem\Subendpoints\UpdateBusiness;
+use App\Endpoints\BusinessSubsystem\Subendpoints\DeleteItem;
 use Core\Endpoint\Endpoint;
 
 class BusinessEndpoint extends Endpoint
@@ -23,6 +25,8 @@ class BusinessEndpoint extends Endpoint
         $this->addSubEndpoint(new DeleteBusiness());
         $this->addSubEndpoint(new GetBusinessItems());
         $this->addSubEndpoint(new ForceVerifyBusiness());
+        $this->addSubEndpoint(new GetBusinessOrders());
+        $this->addSubEndpoint(new DeleteItem());
     }
 
     public function process($request)

@@ -9,6 +9,7 @@ import { useEffect } from "react";
 
 import useSWR from "swr";
 import Link from "next/link";
+import { DeleteDialog } from "../../components/delete-dialog";
 
 export default function BusinessSubsystem() {
   // use "cache" - what was fetched via provider
@@ -39,6 +40,7 @@ export default function BusinessSubsystem() {
       <h2 className="uppercase font-bold text-muted-foreground text-lg mt-4">
         My Businesses
       </h2>
+
       <div className="flex flex-wrap gap-4 mt-4">
         {!businesses.loadedMyBusinesses ? (
           <>

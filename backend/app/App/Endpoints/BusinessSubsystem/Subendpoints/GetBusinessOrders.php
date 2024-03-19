@@ -2,17 +2,16 @@
 
 namespace App\Endpoints\BusinessSubsystem\Subendpoints;
 
-use App\Classes\BusinessSubsystem\Address;
 use App\Classes\BusinessSubsystem\Business;
-
+use App\Classes\BusinessSubsystem\Order;
 use Core\Endpoint\SubEndpoint\SubEndpoint;
 
-class DeleteBusiness extends SubEndpoint
+class GetBusinessOrders extends SubEndpoint
 {
 
     public function __construct()
     {
-        parent::__construct('DELETE', 'delete');
+        parent::__construct('GET', 'orders');
         $this->getAttributes()->addRequiredInts(['id']);
         $this->setRequiresAuth(true);
     }
@@ -20,9 +19,7 @@ class DeleteBusiness extends SubEndpoint
     public function process($request)
     {
         parent::process($request);
-
         $user = $this->getUser();
-
         if (!isset($user)) {
             return $this->setResponse(401, "User is not logged in!");
         }
@@ -30,18 +27,16 @@ class DeleteBusiness extends SubEndpoint
         $fields = $request->getAttributes();
 
         $business = new Business($this->getDb());
-
         $userBusinesses = $business->getBusinessesByUser($user);
 
         if (!in_array($fields['id'], array_column($userBusinesses, 'id'))) {
-            $this->setResponse(401, "You are not allowed to delete this business");
+            $this->setResponse(401, "You are not allowed to see orders for this business");
             return;
         }
 
-        $business->id = $fields['id'];
+        $order = new Order($this->getDb());
+        $res = $order->getOrdersByBusiness($fields['id']);
 
-        $res = $business->delete();
-
-        $this->setResponse(200, $fields['id']);
+        $this->setResponse(200, $res);
     }
 }

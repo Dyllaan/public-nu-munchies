@@ -17,7 +17,7 @@ import NavLink from "./NavLink"
 import NavButton from "./NavButton"
 
 export default function Header() {
-  const { user, logout, logged } = useUserSubsystem()
+  const { user, logout, logged, userTypes } = useUserSubsystem()
 
   function loggedMenu() {
     return (
@@ -35,14 +35,38 @@ export default function Header() {
 
   function guestMenu() {
     return (
-          <NavigationMenuItem>
+      <NavigationMenuItem>
         <NavigationMenuTrigger>Guest</NavigationMenuTrigger>
         <NavigationMenuContent>
           <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
             <NavLink title="Login" href="/login" description="Log in to your account" />
-<NavLink title="Register" href="/register" description="Create a new account" />
+            <NavLink title="Register" href="/register" description="Create a new account" />
           </ul>
         </NavigationMenuContent>
+      </NavigationMenuItem>
+    )
+  }
+
+  function councillorMenu() {
+    return (
+      <NavigationMenuItem>
+        <Link href="/councillor" legacyBehavior passHref>
+          <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+            Councillor
+          </NavigationMenuLink>
+        </Link>
+      </NavigationMenuItem>
+    )
+  }
+
+  function moderatorMenu() {
+    return (
+      <NavigationMenuItem>
+        <Link href="/moderator" legacyBehavior passHref>
+          <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+            Moderator
+          </NavigationMenuLink>
+        </Link>
       </NavigationMenuItem>
     )
   }
@@ -50,6 +74,13 @@ export default function Header() {
   return (
     <NavigationMenu>
       <NavigationMenuList>
+      <NavigationMenuItem>
+          <Link href="/" legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Home
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
         {logged ? loggedMenu() : guestMenu()}
         <NavigationMenuItem>
           <Link href="/about" legacyBehavior passHref>
@@ -58,6 +89,8 @@ export default function Header() {
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
+        {userTypes.councillor ? councillorMenu() : null}
+        {userTypes.moderator ? moderatorMenu() : null}
       </NavigationMenuList>
     </NavigationMenu>
   )

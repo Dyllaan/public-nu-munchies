@@ -15,6 +15,9 @@ use Core\Database\CrudInterface;
 use App\Classes\UserSubSystem\UserHandlers\EmailHandler;
 use App\Classes\UserSubSystem\UserHandlers\VerifiedHandler;
 use App\Classes\UserSubSystem\UserHandlers\IPHandler;
+use App\Classes\UserSubSystem\UserHandlers\BannedHandler;
+use App\Classes\UserSubSystem\UserTypes\Moderator;
+use App\Classes\UserSubSystem\UserTypes\Councillor;
 
 class User extends CrudModel implements CrudInterface
 {
@@ -29,6 +32,7 @@ class User extends CrudModel implements CrudInterface
     private $emailHandler;
     private $verifiedHandler;
     private $ipHandler;
+    private $bannedHandler;
 
     protected static $instance = null;
 
@@ -41,6 +45,7 @@ class User extends CrudModel implements CrudInterface
         $this->emailHandler = new EmailHandler($this->getDb(), $this);
         $this->verifiedHandler = new VerifiedHandler($this->getDb(), $this);
         $this->ipHandler = new IPHandler($this->getDb(), $this);
+        $this->bannedHandler = new BannedHandler($this->getDb(), $this);
         $this->setTable("users");
     }
 
@@ -145,16 +150,17 @@ class User extends CrudModel implements CrudInterface
         return count($data) > 0;
     }
 
-    public function doesUserExistAtId($email)
+    public function doesUserExistAtId($id)
     {
-        $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["email = '" . $email . "'"])->execute();
+        $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["id = '" . $id . "'"])->execute();
         return count($data) > 0;
     }
 
     public function login()
     {
         $cons[] = "email = '$this->email'";
-        $data = $this->getDb()->createSelect()->cols("users.first_name, users.last_name, users.id, passwords.password, users.verified, users.created_at")->from($this->getTable())->join("passwords", "users.id = passwords.user_id")->where($cons)->execute();
+        $data = $this->getDb()->createSelect()->cols("users.first_name, users.last_name, users.id, passwords.password, users.verified, users.created_at, banned")->from($this->getTable())->join("passwords", "users.id = passwords.user_id")
+        ->where($cons)->execute();
         if (count($data) == 0) {
             $this->setResponse(401, "Account not found!");
         } else {
@@ -302,6 +308,9 @@ class User extends CrudModel implements CrudInterface
         if(isset($data['created_at'])) {
             $this->setCreatedAt($data['created_at']);
         }
+        if(isset($data['banned'])) {
+            $this->getBannedHandler()->setBanned($data['banned']);
+        }
     }
     
     public function update()
@@ -328,6 +337,10 @@ class User extends CrudModel implements CrudInterface
             if ($this->getPassword() != null) {
                 $this->setResponse(400, "Password cannot be updated by this method");
             }
+            if($this->getBannedHandler()->isBanned() != $data[0]['banned']) {
+                $changed['banned'] = $this->getBannedHandler()->isBanned();
+            }
+
             if ($changed != []) {
                 $this->getDb()->beginTransaction();
                 try {
@@ -369,6 +382,8 @@ class User extends CrudModel implements CrudInterface
             $user['user'] = [
                 'email' => $this->getEmail(),
                 'allowed' => false,
+                'ip' => $_SERVER['REMOTE_ADDR'],
+                'banned' => boolval($this->getBannedHandler()->isBanned())
             ];
         } else {
             $user['user'] = [
@@ -379,8 +394,10 @@ class User extends CrudModel implements CrudInterface
                 'verified' => $this->getVerifiedHandler()->isVerified(),
                 'created_at' => $this->getCreatedAt(),
                 'allowed' => true,
-                'ip' => $_SERVER['REMOTE_ADDR']
+                'ip' => $_SERVER['REMOTE_ADDR'],
+                'banned' => boolval($this->getBannedHandler()->isBanned())
             ];
+            $user['types'] = $this->getUserTypes();
         }
         //hardcoded provider id not good
         if($useJwt) {
@@ -388,6 +405,24 @@ class User extends CrudModel implements CrudInterface
             $user['jwt'] = $jwt;
         }
         return $user;
+    }
+
+    public function getUserTypes() {
+        $isModerator = false;
+        $mod = new Moderator($this->getDb(), 'moderator');
+        $mod->setUser($this);
+        if ($mod->is()) {
+            $isModerator = true;
+        }
+    
+        $isCouncillor = false;
+        $councillor = new Councillor($this->getDb(), 'councillor');
+        $councillor->setUser($this);
+        if ($councillor->is()) {
+            $isCouncillor = true;
+        }
+
+        return ['moderator' => $isModerator, 'councillor' => $isCouncillor];
     }
 
     public function checkPassword($password, $hash)
@@ -415,6 +450,14 @@ class User extends CrudModel implements CrudInterface
         ];
         $jwt = JWT::encode($payload, $secretKey, 'HS256');
         return $jwt;
+    }
+
+    function getBannedHandler() {
+        return $this->bannedHandler;
+    }
+
+    function setBannedHandler($bannedHandler) {
+        $this->bannedHandler = $bannedHandler;
     }
 
     public function getEmailHandler()

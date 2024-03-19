@@ -28,9 +28,9 @@ const useFetchData = (initialEndpoint:any) => {
             const headers = localStorage.getItem("token") ? localStorage.getItem("token") : {};
             const response = await api.get(endpoint, headers);
             if (response.success) {
-                console.log(response.data.data)
                 setData(response.data.data);
                 setLoading(false);
+                setSent(false);
             } else {
                 toast.error(response.data.message);
             }

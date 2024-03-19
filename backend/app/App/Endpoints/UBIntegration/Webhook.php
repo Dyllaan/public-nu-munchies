@@ -27,6 +27,7 @@ try {
         $sig_header,
         $endpoint_secret
     );
+    $event_json = json_decode($payload);
 } catch (\Stripe\Exception\SignatureVerificationException $e) {
     // Invalid signature
     echo "Invalid signature";
@@ -34,13 +35,33 @@ try {
     exit();
 }
 
-$userId = null;
-
 // Handle the event
 switch ($event->type) {
         case 'payment_intent.succeeded':
             $paymentIntent = $event->data->object;
-            $userId = $paymentIntent->metadata['user_id'];
+            $session = $event_json->data->object;
+            $customer_email = $session->customer_email;
+
+            $url = 'http://localhost:8080/insertorder';
+            $data = array('business_id' => $paymentIntent->metadata['business_id'],
+                            'user_id' => $this->getUser()->getId(),
+                            'item_id' => $paymentIntent->metadata['item_id']);
+            $ch = curl_init($url);
+            curl_setopt($ch,CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            $url = 'http://localhost:8080/itemreserve';
+            $data = array('item_id' => $paymentIntent->metadata['item_id']);
+            $ch = curl_init($url);
+            curl_setopt($ch,CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            curl_close($ch);
             break;
     default:
         error_log('Received unknown event type');

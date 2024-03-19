@@ -9,6 +9,9 @@ import { useAtom } from "jotai";
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import ReviewForm from './ReviewForm'
+import DisplayReviews from './DisplayReviews'
+import { Button } from "@/components/ui/button"
+import Nutritions from '@/app/(food-subsystem)/components/NutritionDisplay';
 
 
 function Checkout() {
@@ -21,7 +24,7 @@ function Checkout() {
   };
 
 
-  useEffect(() => { if (selectedItem.id == undefined) { router.replace("/items") } })
+  useEffect(() => { if (selectedItem.id == undefined) { router.replace("/") } })
 
 
   //when the button is clicked, run this function - check if the respone has data, then redirect the user to the checkout_url.
@@ -43,7 +46,12 @@ function Checkout() {
       <p>Price: £{selectedItem.item_price}</p>
       <p>Expiry: {selectedItem.item_expiry}</p>
       <p>Collection Time: {selectedItem.collect_time}</p>
-      <button onClick={handleClick}>checkout</button>
+      
+      
+      <Button onClick={handleClick}>checkout</Button>
+
+      <DisplayReviews business_id={selectedItem.business_id} />
+      <Nutritions item_id={selectedItem.id}/>
     </>
   );
 }

@@ -19,14 +19,13 @@ class InsertReview extends Endpoint
         parent::__construct('POST', 'insertreview');
         $this->setRequiresAuth(true);
         $this->getAttributes()->addRequiredStrings(['title', 'review_details']);
-        $this->getAttributes()->addRequiredInts(['user_id', 'business_id', 'rating']);
+        $this->getAttributes()->addRequiredInts(['business_id', 'rating']);
     }
 
     public function process($request)
     {
         parent::process($request);
-        
-        $id = $this->getDb()->createInsert()->into('reviews')->cols('user_id, business_id, title, rating, review_details')->values([$this->getUser()->getId(), $request->getAttribute('business_id'), $request->getAttribute('title'), $request->getAttribute('rating'), $request->getAttribute('review_details')])->execute();
+        $id = $this->getDb()->createInsert()->into('reviews')->cols('user_id, first_name, last_name, business_id, title, rating, review_details')->values([$this->getUser()->getId(), $this->getUser()->getFirstName(), $this->getUser()->getLastName(), $request->getAttribute('business_id'), $request->getAttribute('title'), $request->getAttribute('rating'), $request->getAttribute('review_details')])->execute();
 
         $this->setResponse(200, 'Review inserted', ['id' => $id]);
     }

@@ -30,14 +30,13 @@ use App\Endpoints\UBIntegration\ItemUpload;
 use App\Endpoints\UBIntegration\ItemReserve;
 use App\Endpoints\UBIntegration\OrderCancel;
 use App\Endpoints\UBIntegration\OrderCollect;
-use App\Endpoints\UBIntegration\OrderItem;
-use App\Endpoints\UBIntegration\ApproveReview;
+use App\Endpoints\UBIntegration\InsertOrder;
 use App\Endpoints\UBIntegration\InsertReview;
-use App\Endpoints\UBIntegration\DeleteReview;
 use App\Endpoints\UBIntegration\CheckoutItem;
 use App\Endpoints\UBIntegration\Webhook;
 use Core\ClientErrorException;
 use App\Endpoints\UBIntegration\GetItems;
+use App\Endpoints\UBIntegration\GetReviews;
 
 class EndpointManager extends Manager
 {
@@ -82,21 +81,16 @@ class EndpointManager extends Manager
             
  
         //$this->addEndpoint(new UserEndpoint());
-            /*
         $this->addEndpoint(new ItemUpload());
         $this->addEndpoint(new ItemReserve());
         $this->addEndpoint(new OrderCancel());
-        $this->addEndpoint(new OrderItem());
-        $this->addEndpoint(new InsertReview());
-        $this->addEndpoint(new ApproveReview());
-        $this->addEndpoint(new DeleteReview());
-        
-        $this->addEndpoint(new BusinessEndpoint());
-        $this->addEndpoint(new OAuthCallback());
+        $this->addEndpoint(new InsertOrder());
         $this->addEndpoint(new Webhook());
-        */
         $this->addEndpoint(new GetItems());
         $this->addEndpoint(new CheckoutItem());
+        $this->addEndpoint(new InsertReview());
+        $this->addEndpoint(new GetReviews());
+        $this->addEndpoint(new OrderCollect());
 
     }
 

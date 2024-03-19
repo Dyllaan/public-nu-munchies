@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import axios from 'axios'; // Import axios for making HTTP requests
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import {Label} from "@/components/ui/label";
 
 import "../css/NutritionForm.css";

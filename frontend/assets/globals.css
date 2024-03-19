@@ -119,4 +119,16 @@
     ::-webkit-scrollbar-thumb:hover {
         @apply bg-slate-400; 
     }
+
+    .hover-scale {
+        @apply transition-transform transform-gpu hover:scale-105;
+    }
+
+    .valid {
+        @apply text-green-500;
+    }
+
+    .invalid {
+        @apply text-red-500;
+    }
 }

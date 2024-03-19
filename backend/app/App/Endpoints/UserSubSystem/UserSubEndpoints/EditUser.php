@@ -34,7 +34,7 @@ class EditUser extends SubEndpoint
         } 
         if($request->hasAttribute('last_name')) {
             $changeFlag = true;
-            $this->getUser()->setFirstName($request->getAttribute('last_name'));
+            $this->getUser()->setLastName($request->getAttribute('last_name'));
         } 
         if($request->hasAttribute('email')) {
             $changeFlag = true;

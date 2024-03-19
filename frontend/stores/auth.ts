@@ -6,6 +6,7 @@ export interface UserState {
   email: string | undefined;
   verified: boolean;
   created_at?: string;
+  allowed?: boolean;
 }
 export const userAtom = atom<UserState>({
   firstName: undefined,
@@ -13,4 +14,5 @@ export const userAtom = atom<UserState>({
   email: undefined,
   verified: false,
   created_at: undefined,
+  allowed: false
 });

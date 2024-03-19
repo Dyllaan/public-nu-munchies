@@ -20,9 +20,7 @@ class ResetPassword extends Endpoint
     {
         parent::process($request);
         $user = new User($this->getDb());
-        if($user->changePassword($request->getAttribute('new_password'), $request->getAttribute('token'))) {
-            $this->setResponse(200, 'Password changed successfully');
-        } else {
+        if(!$user->changePassword($request->getAttribute('new_password'), $request->getAttribute('token'))) {
             $this->setResponse(400, 'Password reset failed');
         }
     }

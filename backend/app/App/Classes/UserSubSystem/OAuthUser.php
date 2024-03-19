@@ -20,7 +20,7 @@ class OAuthUser extends User
     public static function getInstance($db)
     {
         if (self::$instance === null) {
-            self::$instance = new OAuthUser($db);
+            self::$instance = new self($db);
         }
         return self::$instance;
     }
@@ -39,7 +39,7 @@ class OAuthUser extends User
         if(!$this->isOAuthEmail()) {
             $this->setResponse(401, "This email is not registered as OAuth, please delete your account and re-register via Google.");
         } else {
-            $this->setResponse(200, 'Login Successful', $this->get());
+            $this->setResponse(200, 'Login Successful', $this->toArray());
         }
     }
 
@@ -108,7 +108,7 @@ class OAuthUser extends User
         $this->setFirstName($data['first_name']);
         $this->setLastName($data['last_name']);
         $this->setEmail($data['email']);
-        $this->setVerified($data['verified']);
+        $this->getVerifiedHandler()->setVerified($data['verified']);
         $this->setCreatedAt($data['created_at']);
         $this->setExists(true);
     }
@@ -138,7 +138,7 @@ class OAuthUser extends User
     public function get()
     {
         if ($this->exists()) {
-            return $this->toArray();
+            return true;
         } else {
             $this->setResponse(404, "User not found");
         }
@@ -149,25 +149,6 @@ class OAuthUser extends User
             $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->join("users", "oauth_users.user_id = users.id")->where(["oauth_users.id = '" . $this->getOAuthId() . "'"])->execute();
             return $data;
         }
-    }
-
-    public function toArray($useJwt = true)
-    {
-        $user['user'] = [
-            'id' => $this->getId(),
-            'first_name' => $this->getFirstName(),
-            'last_name' => $this->getLastName(),
-            'email' => $this->getEmail(),
-            'verified' => $this->isVerified(),
-            'created_at' => $this->getCreatedAt(),
-            'oauth' => true
-        ];
-        //hardcoded provider id not good
-        if($useJwt) {
-            $jwt = $this->generateJWT($this->getId(), 2);
-            $user['jwt'] = $jwt;
-        }
-        return $user;
     }
 
     public function getOAuthId() {

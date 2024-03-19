@@ -26,7 +26,7 @@ class ForgotPassword extends Endpoint
         * we need to return the same thing to not give away if a user exists
         at that email or not
         */
-        $user->sendPasswordResetEmail();
+        $user->getEmailHandler()->sendEmailToken("password_reset");
         $this->setResponse(200, 'If a user with that email exists, a password reset email has been sent');
     }
 }

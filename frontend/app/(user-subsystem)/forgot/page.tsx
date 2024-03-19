@@ -47,43 +47,45 @@ function ForgotPasswordPage() {
     };
 
     return (
-        <>
-        <div className="m-2">
-            <h2>
-                Remembered it?
-                <Link href="/login" className="underline m-1">
-                    Login here
-                </Link>
-            </h2>
+        // Outer div to center content vertically and horizontally
+        <div className="flex flex-col items-center justify-center min-h-screen">
+            <div className="w-full max-w-md px-4">
+                <div className="m-2">
+                    <h2>
+                        Remembered it?
+                        <Link href="/login" className="underline m-1">
+                            Login here
+                        </Link>
+                    </h2>
+                </div>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(handleForgotPassword)}>
+                        <Card className="py-4">
+                            <CardHeader>
+                                <CardTitle className="text-center">Forgot Password?</CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex flex-col gap-y-4">
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Email</FormLabel>
+                                            <FormControl>
+                                                <Input type="email" placeholder="your-email@example.com" {...field} />
+                                            </FormControl>
+                                            <FormMessage className="text-xs" />
+                                        </FormItem>
+                                    )} />
+                                <Button className="py-2 text-md" type="submit">
+                                    Reset
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </form>
+                </Form>
+            </div>
         </div>
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleForgotPassword)}>
-                <Card className="py-4 md:max-w-[550px]">
-                    <CardHeader>
-                        <CardTitle className="text-center">Forgot Password?</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-col gap-y-4">
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input type="email" placeholder="your-email@example.com" {...field} />
-                                    </FormControl>
-                                    <FormMessage className="text-xs" />
-                                </FormItem>
-                            )} />
-                        <Button className="py-2 text-md" type="submit">
-                            Reset
-                        </Button>
-                    </CardContent>
-                </Card>
-            </form>
-        </Form>
-        <GoogleSignIn />
-        </>
     );      
 }
 export default requireAuth(ForgotPasswordPage, false);

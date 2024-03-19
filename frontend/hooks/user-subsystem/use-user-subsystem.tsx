@@ -2,27 +2,32 @@ import axios from "axios";
 import { useAtom } from "jotai";
 import { userAtom } from "@/stores/auth";
 import { atom } from "jotai";
-import { useState } from "react";
+import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as api from './api'; 
 import { toast } from "sonner";
 import { set } from "react-hook-form";
+import RedirectTo from "@/app/(user-subsystem)/components/RedirectTo";
+import { json } from "stream/consumers";
 
 /**
  * @author Louis Figes
  */
 export const loadingAtom = atom(false);
 export const loggedAtom = atom(false);
+export const oAuthAtom = atom(false);
 
 export const useUserSubsystem = () => {
   const [user, setUser] = useAtom(userAtom);
   const [loading, setLoadingState] = useAtom(loadingAtom);
   const [logged, setLoggedState] = useAtom(loggedAtom);
   const [requestLoading, setRequestLoading ] = useState(false);
+  const [isOAuth, setIsOAuth] = useAtom(oAuthAtom);
   const router = useRouter();
+  
 
-  const setUserState = ({ first_name, last_name, email, verified}: { first_name: string; last_name: string; email: string; verified: boolean}) => {
-    setUser({ firstName: first_name, lastName: last_name, email, verified});
+  const setUserState = ({ first_name, last_name, email, verified, created_at, allowed}: { first_name: string; last_name: string; email: string; verified: boolean; created_at: string, allowed: boolean}) => {
+    setUser({ firstName: first_name, lastName: last_name, email, verified, created_at, allowed});
   };
 
   const setLoading = (state:boolean) => {
@@ -32,17 +37,29 @@ export const useUserSubsystem = () => {
     setLoggedState((logged) => state);
   }
 
-  async function checkToken() {
+  const setOAuth = (state:boolean) => {
+    setIsOAuth((isOAuth) => state);
+  }
+
+  function checkForOAuth(response:any) {
+    if(response.data.data.user.oauth) {
+      setOAuth(true);
+    }
+  }
+
+  const checkToken = async() => {
+    setRequestLoading(true);
     if(localStorage.getItem('token') === null){
       return;
     }
-    if(localStorage.getItem('token') !== null && !logged) {
+    if(localStorage.getItem('token') !== null) {
       setLoading(true);
       const response = await api.get("user", localStorage.getItem("token"));
       if(response.success) {
         setUserState(response.data.data.user);
         setLoading(false);
         setLogged(true);
+        checkForOAuth(response);
       } else {
         console.error("Failed to get user:", response.data.message);
         toast.error(`Please relogin: ${response.data.message}`);
@@ -53,17 +70,6 @@ export const useUserSubsystem = () => {
       setLoading(false);
     }
   }
-
-  const currentUser = async () => {
-    const response = await api.get("user", localStorage.getItem("token"));
-    if (response.success) {
-      setUserState(response.data.data.user);
-      setLoading(false);
-    } else {
-      console.error("Failed to get user:", response.data.message);
-      setLoading(false);
-    }
-  };
 
   const login = async (email: string, password: string) => {
     setLoading(true);
@@ -121,50 +127,58 @@ export const useUserSubsystem = () => {
   };
   
 
-  const editUser = async(data: any) => {
+  const editUser = async(data:any) => {
+    setRequestLoading(true);
+    const {firstName, lastName} = data;
+    const jsonData = JSON.stringify({first_name: firstName, last_name: lastName});
     try {
-      const response = await api.put("user", data, localStorage.getItem("token"));
+      const response = await api.put("user/edit", jsonData, localStorage.getItem("token"));
       if (response.success) {
         setUserState(response.data.data.user);
         setLoading(false);
         localStorage.setItem("token", response.data.data.jwt);
-        router.replace("/profile");
+        setRequestLoading(false);
+        toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
         setLoading(false);
+        setRequestLoading(false);
         return response.data.message;
       }
     } catch (error: any) {
       toast.error(error.response.data.message);
       console.error("Edit user failed:", error);
       setLoading(false);
+      setRequestLoading(false);
       return error.response.data.message;
     }
   }
 
-  const checkOTP = async (otp: string) => {
+  const checkCode = async (code: string, type:string) => {
     setRequestLoading(true);
     const otpData = new FormData();
-    otpData.append("token", otp);
+    otpData.append("token", code);
+    otpData.append("type", type);
     try {
-      const response = await api.post("user/verify-user", otpData, localStorage.getItem("token"));
+      const response = await api.post("user/verify-email-token", otpData, localStorage.getItem("token"));
       if (response.success) {
         setUserState(response.data.data.user);
-        toast.success("Email verified!");
+        toast.success(response.data.message);
       } else {
-        toast.error(response.data.message);
+        toast.error(response.data.data.message);
       }
     } catch (error: any) {
-      toast.error(error.response.data.message);
-      return error.response.data.message;
+      const responseString = "Failed to verify your email, please retry."
+      toast.error(responseString);
     }
     setRequestLoading(false);
   }
 
-  const requestNewOTP = async () => {
+  const requestNewCode = async (type: string) => {
     setRequestLoading(true);
     try {
-      const response = await api.get("user/resend-otp", localStorage.getItem("token"));
+      let endpoint = "user/resend-email?type=" + type;
+      const response = await api.get(endpoint, localStorage.getItem("token"));
       if (response.success) {
         toast.success("Email sent!");
       } else {
@@ -204,21 +218,26 @@ export const useUserSubsystem = () => {
       const response = await api.post("reset-password", data);
       if (response.success) {
         toast.success(response.data.message);
+        router.replace("/login");
       } else {
         toast.error(response.data.message);
+        return <RedirectTo to={"/login"} message={response.data.message} />
       }
     } catch (error: any) {
       toast.error(error.response.data.message);
-      return error.response.data.message;
+      return <RedirectTo to={"/login"} message={error.response.data.message} />
     }
     setRequestLoading(false);
   }
 
   const oAuthLogin = async (redirectUri:string, data: any) => {
+    setLoading(true);
     try {
       const response = await axios.post(redirectUri, data);
       setUserState(response.data.data.user);
       localStorage.setItem("token", response.data.data.jwt);
+      setLogged(true);
+      setOAuth(true);
       setLoading(false);
       router.push("/profile");
     } catch (error: any) {
@@ -231,9 +250,10 @@ export const useUserSubsystem = () => {
  
   function logout() {
     localStorage.removeItem("token");
-    setUserState({ first_name: "", last_name: "", email: "", verified: false});
+    setUserState({ first_name: "", last_name: "", email: "", verified: false, created_at: "", allowed: false});
     setLogged(false);
     setLoading(false);
+    setOAuth(false);
     router.replace("/");
   }
 
@@ -243,8 +263,8 @@ export const useUserSubsystem = () => {
     oAuthLogin,
     editUser,
     logout,
-    checkOTP,
-    requestNewOTP,
+    checkCode,
+    requestNewCode,
     requestPasswordReset,
     changePassword,
     checkToken,
@@ -252,6 +272,7 @@ export const useUserSubsystem = () => {
     logged,
     loading,
     user,
+    isOAuth,
   };
 };
 

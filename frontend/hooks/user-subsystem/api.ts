@@ -42,10 +42,26 @@ export async function del(endpoint:string, data:any, bearer:any = "") {
     return httpRequest('DELETE', endpoint, data, bearer);
 }
 
+interface HTTPHeaders {
+    bearer?: string;
+    contentType?: string;
+}
+
 async function httpRequest(method:string, endpoint:string, data:any, bearer: string) {
+
+    const requestHeaders: HeadersInit = {};
+
+    if (bearer) {
+        requestHeaders["Authorization"] = `Bearer ${bearer}`;
+    }
+
+    if(method === 'PUT') {
+        requestHeaders["Content-Type"] = 'application/json';
+    }
+
     const response = await fetch(`${BASE_URL}${endpoint}`, {
         method,
-        headers: bearer ? {"Authorization": `Bearer ${bearer}`} : {},
+        headers: requestHeaders,
         body: data ? data : undefined
     });
     return handleResponse(response);

@@ -4,7 +4,6 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useEffect } from "react";
 
 import { oAuthConfig } from "@/config/oauth";
-import { init } from "next/dist/compiled/webpack/webpack";
 
 /**
  * Rehydrates the user subsystem on the client side

@@ -15,7 +15,8 @@ class EditUser extends SubEndpoint
     public function __construct() 
     {
         parent::__construct('PUT', 'edit');
-        $this->getAttributes()->addAllowedStrings(['name', 'email', 'password']);
+        $this->getAttributes()->addAllowedStrings(['first_name', 'last_name', 'email', 'password']);
+        $this->setRequiresAuth(true);
     }
 
     public function process($request)
@@ -25,11 +26,15 @@ class EditUser extends SubEndpoint
         
         $attributes = $request->getAttributes();
         if($attributes === null || empty($attributes)) {
-            $this->setResponse(400, ['message' => 'No attributes to edit']);
+            $this->setResponse(400, "No attributes given", ['hint'=>'You must use JSON format for PUT as it doesnt support form data']);
         }
-        if($request->hasAttribute('name')) {
+        if($request->hasAttribute('first_name')) {
             $changeFlag = true;
-            $this->getUser()->setName($request->getAttribute('name'));
+            $this->getUser()->setFirstName($request->getAttribute('first_name'));
+        } 
+        if($request->hasAttribute('last_name')) {
+            $changeFlag = true;
+            $this->getUser()->setLastName($request->getAttribute('last_name'));
         } 
         if($request->hasAttribute('email')) {
             $changeFlag = true;
@@ -43,7 +48,7 @@ class EditUser extends SubEndpoint
         if($changeFlag) {
             $this->getUser()->update();
         } else {
-            $this->setResponse(400, ['message' => 'No attributes to edit']);
+            $this->setResponse(400, "No attributes given");
         }
 
         $this->setResponse(201, "Profile updated", $this->getUser()->toArray()); 

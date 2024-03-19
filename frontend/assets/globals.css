@@ -65,13 +65,37 @@
     --ring: 212.7 26.8% 83.9%;
   }
 }
+
+.loginPageBackground {
+  background-image: url('./loginbg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
  
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  .primarybg {
+    @apply bg-gradient-to-b from-muted/50 to-muted;
+  }
+
+  h1  {
+    @apply text-2xl font-bold;
+  }
+
+  h2 {
+    @apply text-xl;
+  }
+
+  h3 {
+    @apply text-lg;
   }
 
   .primary {
@@ -94,5 +118,17 @@
   
     ::-webkit-scrollbar-thumb:hover {
         @apply bg-slate-400; 
+    }
+
+    .hover-scale {
+        @apply transition-transform transform-gpu hover:scale-105;
+    }
+
+    .valid {
+        @apply text-green-500;
+    }
+
+    .invalid {
+        @apply text-red-500;
     }
 }

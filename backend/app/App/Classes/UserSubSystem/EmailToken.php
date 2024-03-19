@@ -20,6 +20,7 @@ class EmailToken extends CrudModel
     protected \AppConfig $appConfigInstance;
     private $user;
     private $type;
+    private $ip;
 
     public function __construct($db, $type = 'email_verification')
     {
@@ -29,18 +30,49 @@ class EmailToken extends CrudModel
         $this->setTable('used_email_tokens');
     }
   
-    public function sendEmail()
-    {
-        $jwt = $this->generateEmailToken();
+public function sendEmail()
+{
+    $jwt = $this->generateEmailToken();
 
-        if($this->getType() === 'password_reset'){
+    switch ($this->getType()) {
+        case 'password_reset':
             $subject = "NU Munchies Password Reset";
             $link = "http://localhost:3000/change?token=" . $jwt;
-            $content = "Please click the link to reset your pasword: ". $link . " This link will expire in 10 minutes";
-        } else {
+            // Using HTML elements to style the content
+            $content = "<html>
+                            <body>
+                                <h1>Password Reset Request</h1>
+                                <p>Please click the link below to reset your password. This link will expire in 10 minutes.</p>
+                                <a href='" . $link . "'>Reset Password</a>
+                            </body>
+                        </html>";
+            break;
+        case 'email_verification':
             $subject = "NU Munchies Email Verification";
-            $content = "Enter this code on the verification page: ". $jwt . " This code will expire in 10 minutes";
-        }
+            // Using HTML elements to style the content
+            $content = "<html>
+                            <body>
+                                <h1>Email Verification</h1>
+                                <p>Enter this code on the verification page: <strong>" . $jwt . "</strong></p>
+                                <p>This code will expire in 10 minutes.</p>
+                            </body>
+                        </html>";
+            break;
+        case 'ip_verification':
+            $subject = "NU Munchies IP Verification";
+            // Using HTML elements to style the content
+            $content = "<html>
+                            <body>
+                                <h1>IP Verification</h1>
+                                <p>Enter this code when you log in: <strong>" . $jwt . "</strong></p>
+                                <p>This code will expire in 10 minutes.</p>
+                            </body>
+                        </html>";
+                        break;
+        default:
+            $this->setResponse(400, 'Invalid type');
+    }
+
 
         $email = EmailFactory::createEmail(
             $this->getUser()->getEmail(), 
@@ -61,12 +93,18 @@ class EmailToken extends CrudModel
             $decodedJWT = JWT::decode($jwt, new \Firebase\JWT\Key($key, 'HS256'));
             if($decodedJWT->type !== $this->getType()) {
                 $this->setResponse(401, 'Email token invalid type');
-            } else if($decodedJWT->id !== $this->getUser()->getId()) {
-                $this->setResponse(401, 'Email token invalid user');
-            } else {
-                $this->storeAsUsed($jwt, $decodedJWT->id);
-                return true;
             }
+            
+            if($decodedJWT->type == 'ip_verification') {
+                $this->setIP($decodedJWT->ip);
+            }
+
+            if($decodedJWT->id !== $this->getUser()->getId() && $this->getType() !== "password_reset") {
+                $this->setResponse(401, 'Email token invalid user', ['id' => $decodedJWT->id, 'user_id' => $this->getUser()->getId()]);
+            }
+            $this->getUser()->setId($decodedJWT->id);
+            $this->storeAsUsed($jwt, $decodedJWT->id);
+            return true;
         } catch (\Firebase\JWT\ExpiredException $e) {
             $this->setResponse(401, 'Email token expired');
         } catch (\Exception $e) {
@@ -105,6 +143,10 @@ class EmailToken extends CrudModel
             'iss' => $iss,
             'type' => $this->getType()
         ];
+        if($this->getType() === 'ip_verification') {
+            $payload['ip'] = $_SERVER['REMOTE_ADDR'];
+        }
+
         $jwt = JWT::encode($payload, $secretKey, 'HS256');
         return $jwt;
     }
@@ -113,11 +155,22 @@ class EmailToken extends CrudModel
     {
         return $this->type;
     }
+    
 
   public function setType($type)
   {
     $this->type = $type;
   }
+
+  public function getIP()
+  {
+    return $this->ip;
+  }
+
+    public function setIP($ip)
+    {
+        $this->ip = $ip;
+    }
 
   public function getUser() {
     return $this->user;

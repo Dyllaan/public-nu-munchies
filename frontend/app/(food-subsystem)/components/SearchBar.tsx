@@ -3,6 +3,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
 import "../css/SearchBar.css"
 import {FaSearch} from "react-icons/fa"
 
@@ -28,13 +31,13 @@ const SearchBar: React.FC = () => {
   return (
     <div className="input-wrapper">
         <FaSearch id="search-icon"/>
-      <input
+      <Input
         type="text"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="Enter search"
       />
-      <button onClick={handleSearch}>Search</button>
+      <Button onClick={handleSearch}>Search</Button>
       {searchResults && (
         <div>
           {searchResults.businesses.length > 0 && (

@@ -7,6 +7,7 @@ Items
 
 import {Table,TableBody,TableCaption, TableCell,TableFooter,TableHead,TableHeader,TableRow, } from "@/components/ui/table"
 import { useState, useEffect } from 'react'
+import requireType from "@/app/(user-subsystem)/components/requireType";
 
 function Councilor() {
 const [items, setItems] = useState([]);
@@ -108,4 +109,4 @@ const headers = {
     }
     
  
-export default Councilor
+export default requireType(Councilor, 'councillor');

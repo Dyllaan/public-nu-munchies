@@ -15,4 +15,4 @@ function Main() {
     )
 }
  
-export default Main
+export default requireAuth(Main)

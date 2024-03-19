@@ -36,7 +36,7 @@ function DisplayReviews(props) {
                     {reviews.data.id?.map((value, key) => (
                         <div key={key} className="mb-2">
                             <p className="font-bold">{value.title}</p>
-                            <p>rating: £{value.rating}</p>
+                            <p>rating: {value.rating}</p>
                             <p>details: {value.review_details}</p>
                             <p>by: {value.first_name}</p>
                         </div>

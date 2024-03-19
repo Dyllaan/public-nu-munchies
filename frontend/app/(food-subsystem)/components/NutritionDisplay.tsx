@@ -18,6 +18,7 @@ function Nutritions({item_id}:{item_id:any}){
         return <LoadingInPage />;
     }
     function renderItems(data:any) {
+        
         return data.map((value:any, key:any) => 
             <TableRow key={key}>
                 <TableCell>{value.item_name}</TableCell>
@@ -52,6 +53,7 @@ function Nutritions({item_id}:{item_id:any}){
                 </TableBody>
             </Table>
         </div>
+    
     )
 }
 export default Nutritions;

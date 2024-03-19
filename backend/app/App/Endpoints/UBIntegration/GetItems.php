@@ -22,11 +22,13 @@ class GetItems extends Endpoint
         parent::process($request);
         $id = $this->getDb()->createSelect()
     ->from('items')
-    ->cols("items.id, business_id, item_name, item_price, item_expiry, TO_CHAR(collect_time, 'DD:HH:MI') as collect_time, business_name, business_address")
+    ->cols("items.id, items.business_id, item_name, item_price, item_expiry, TO_CHAR(collect_time, 'HH24:MI') as collect_time, TO_CHAR(collect_time, 'DD') as collect_date, ROUND(AVG(rating), 1) AS average_rating, businesses.business_name, addresses.address_line1, addresses.address_postcode, addresses.address_city")
     ->join('businesses', 'businesses.id = business_id')
+    ->join('reviews', 'reviews.business_id = items.business_id')
+    ->join('addresses', 'addresses.id = businesses.business_address')
     ->where([
         "item_status = 'open'",
-        "collect_time >= NOW() AND collect_time <= NOW() + INTERVAL '24 hours'"
+        "collect_time >= NOW() AND collect_time <= NOW() + INTERVAL '24 hours' GROUP BY items.id, businesses.business_name, businesses.business_address, addresses.address_line1, addresses.address_postcode, addresses.address_city"
     ])->execute();
 
         

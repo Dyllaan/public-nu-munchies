@@ -2,17 +2,18 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button"
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { Pencil2Icon } from '@radix-ui/react-icons';
 
 
 function ReviewForm(props) {
@@ -23,6 +24,9 @@ function ReviewForm(props) {
         rating: 1,
         review_details: ''
     })
+    
+
+
 
     const handleClick = () => {
         setShowForm(!showForm);
@@ -61,20 +65,14 @@ function ReviewForm(props) {
                 <Label className="text-xl" htmlFor="title">Review Title</Label>
                 <Input type="text" id="title" className="block mb-2 w-200" name="title" value={formData.title} onChange={handleChange} />
                 <Label className="text-lg" htmlFor="rating">What would you rate this business?</Label>
-                <Select>
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select a rating" />
-                    </SelectTrigger>
-                    <SelectContent id="rating" name="rating" value={formData.rating} onChange={handleChange}>
-                        <SelectGroup>
-                            <SelectItem value="1">1</SelectItem>
-                            <SelectItem value="2">2</SelectItem>
-                            <SelectItem value="3">3</SelectItem>
-                            <SelectItem value="4">4</SelectItem>
-                            <SelectItem value="5">5</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+            
+                <select id="rating" name="rating" value={formData.rating} onChange={handleChange}>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
                 <Label htmlFor="review" className="block">Give us your opinion!</Label><br />
                 <Textarea id="review" className="w-200" name="review_details" value={formData.review_details} onChange={handleChange}>{formData.review_details}</Textarea>
 
@@ -85,7 +83,10 @@ function ReviewForm(props) {
 
     return (
         <>
-            <Button onClick={handleClick}>Click to review this business!</Button>
+            <div onClick={handleClick} className="flex">
+                <p className="text-s">write a review</p>
+                <Pencil2Icon />
+            </div>
             {showForm && reviewForm()}
         </>
     )

@@ -1,5 +1,6 @@
 'use client'
 import Checkout from '../components/Checkout'
+import requireAuth from "../../../user-subsystem/components/requireAuth";
 
 /**
  * page

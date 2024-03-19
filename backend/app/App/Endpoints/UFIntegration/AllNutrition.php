@@ -5,7 +5,7 @@
     use Core\Endpoint\Endpoint;
     use App\Classes\Nutrition;
 
-    class GetNutrition extends Endpoint
+    class AllNutrition extends Endpoint
     {
         public function __construct()
         {

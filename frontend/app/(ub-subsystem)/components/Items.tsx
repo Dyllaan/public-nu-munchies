@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ClockIcon } from '@radix-ui/react-icons';
 import Categories from '@/app/(food-subsystem)/components/Category';
 import SearchBar from '@/app/(food-subsystem)/components/SearchBar';
+import { StarIcon } from '@radix-ui/react-icons';
 
 
 interface Item {
@@ -14,8 +15,20 @@ interface Item {
   item_price?: number
   item_expiry?: string
   collect_time?: string
+  collect_date?: string
+  average_rating?: string
   business_name?: string
-  business_address?: string
+  address_line1?: string
+  address_postcode?: string
+  address_city?: string
+  business_description?: string
+  weight: number
+  calories: number
+  protein: number
+  carbs: number
+  fat: number
+  salt: number
+  quantity: number
 }
 
 function Items() {
@@ -24,6 +37,8 @@ function Items() {
     data: []
   });
   const [selectedItem, setSelectedItem] = useAtom(selectedItemAtom);
+  const today = new Date();
+  const todaysDate = String(today.getDate());
 
   const fetchData = async () => {
     const res = await fetch("http://localhost:8080/getitems")
@@ -43,7 +58,7 @@ function Items() {
   const handleClick = (item: Item) => {
     console.log(item);
     setSelectedItem(item);
-    router.replace("/checkout");
+    router.replace("/viewitem");
   }
 
   return (
@@ -51,22 +66,39 @@ function Items() {
       <SearchBar />
       <Categories />
       <div className="grid-cols-{4}">
-        {items.data?.map((value, key) => (
-          <div key={key} className="relative mb-2 my-2 bg-[#eaeaea] rounded px-10" onClick={() => handleClick(value)}>
-            <p className="font-bold">{value.item_name}</p>
-            <p>Company: {value.business_name}</p>
-            <p>Expiry: {value.item_expiry}</p>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <ClockIcon />
-              <p>{value.collect_time}</p> 
-            </div>
+        <div className="">
+          {items.data?.map((value, key) => (
+            <div key={key} className="border border-grey-200 rounded-md my-4" onClick={() => handleClick(value)}>
+              <div className="pb-3 ">
+                <p className="font-bold text-red-500 text-lg">{value.item_name}</p>
+                <div className="flex relative items-center">
+                  <p>{value.business_name}</p>
+                  
+                  <StarIcon color='red' className="ml-1" radius='full'/>
+                  <p className="pr-1">{value.average_rating}</p>
+                </div>
+                <p className="text-sm text-gray-500">{value.address_city} <span className="text-black">|</span> {value.address_postcode}</p>
+              </div>
 
-            <p className="absolute bottom-0 right-0">£{value.item_price}</p>
-          </div>
-        ))}
+              <div className="flex relative text-sm items-center">
+                <ClockIcon className="w-3 h-3" />
+                {value.collect_date !== todaysDate ? (
+                  <>
+                    <p className="ml-1">{value.collect_time} (tomorrow)</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="ml-1">{value.collect_time}</p>
+                  </>
+                )}
+                <p className="absolute bottom-0 right-0">£{value.item_price}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </>
-  )
+  );
 }
-export const selectedItemAtom = atom<Item>({ id: undefined, item_name: undefined, item_price: undefined, item_expiry: undefined, collect_time: undefined, business_name: undefined, business_address: undefined });
+export const selectedItemAtom = atom<Item>({ id: undefined, item_name: undefined, item_price: undefined, item_expiry: undefined, average_rating: undefined,collect_time: undefined, collect_date: undefined, business_name: undefined, address_line1: undefined, address_postcode: undefined, address_city: undefined, business_description: undefined, weight: undefined, calories: undefined, protein: undefined, carbs:undefined, fat: undefined, salt:undefined, quantity: undefined});
 export default Items;

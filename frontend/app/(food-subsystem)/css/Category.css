@@ -1,0 +1,38 @@
+/* Container styles */
+.title {
+    text-align: center;
+    padding-top: 20px;
+    cursor: pointer;
+}
+/* Category item styles */
+/*
+.grid {
+    display: grid;
+    padding-top: 50px;
+    padding-left: 11%;
+}
+
+
+.bg-gray-200 {
+    background-color: #eaeaea;
+}
+
+.p-4 {
+    padding: 1rem;
+    width: 60%;
+}
+
+.rounded {
+    border-radius: 0.5rem;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.font-bold {
+    font-weight: bold;
+    text-align: center;
+}
+
+*/

@@ -89,8 +89,6 @@ const BusinessItemsPage: FC<{ params: { id: string } }> = ({
   );
 };
 
-export default BusinessItemsPage;
-
 const TblComponent = ({
   data,
   isLoading,

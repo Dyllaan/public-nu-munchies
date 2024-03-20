@@ -17,6 +17,7 @@ const SearchBar: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchResults, setSearchResults] = useState<SearchResult | null>(null);
 
+  
   const handleSearch = async () => {
     try {
       const response = await axios.get<SearchResult>('/search', {
@@ -27,6 +28,9 @@ const SearchBar: React.FC = () => {
       console.error('Error fetching search results:', error);
     }
   };
+  
+  
+  
 
   return (
     <div className="input-wrapper">

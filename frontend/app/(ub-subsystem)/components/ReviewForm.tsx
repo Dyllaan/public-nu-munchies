@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input"
 import { Pencil2Icon } from '@radix-ui/react-icons';
 
 
-function ReviewForm(props) {
+function ReviewForm(props:any) {
     const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState({
         business_id: props.business_id,
@@ -32,7 +32,7 @@ function ReviewForm(props) {
         setShowForm(!showForm);
     }
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event:any) => {
         event?.preventDefault();
         console.log("submitted");
         console.log(formData);
@@ -52,7 +52,7 @@ function ReviewForm(props) {
         }
     }
 
-    const handleChange = (e) => {
+    const handleChange = (e:any) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value

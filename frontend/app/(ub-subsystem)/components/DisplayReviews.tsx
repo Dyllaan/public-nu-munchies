@@ -10,7 +10,7 @@ interface Review {
   last_name?: string
 }
 
-function DisplayReviews(props) {
+function DisplayReviews(props:any) {
   const [reviews, setReviews] = useState<{ data: Review[] }>({
     data: []
   });
@@ -34,7 +34,7 @@ function DisplayReviews(props) {
     <>
       <div className="grid-cols-{4}">
         <div className="my-2">
-          {reviews.data.id?.map((value, key) => (
+          {reviews.data.id?.map((value:any, key:any) => (
             <div key={key} className="border rounded my-2">
             
               

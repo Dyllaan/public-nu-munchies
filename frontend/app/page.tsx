@@ -1,4 +1,8 @@
 import Header from "./layout-components/Header";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { RocketIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import Items from './(ub-subsystem)/components/Items'
 
 /**
  * @author Louis Figes W21017657
@@ -16,6 +20,7 @@ export default function Home() {
         NU-Munchies is a new food collection service giving you the option to
         get great goodies, for low prices!
       </p>
+      <Items />
     </div>
   );
 }

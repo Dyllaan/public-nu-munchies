@@ -10,6 +10,7 @@ import { set } from "react-hook-form";
 import RedirectTo from "@/app/(user-subsystem)/components/RedirectTo";
 import { userTypesAtom } from "@/stores/user-types";
 
+
 /**
  * @author Louis Figes
  */
@@ -77,7 +78,7 @@ export const useUserSubsystem = () => {
   }
 
   const login = async (email: string, password: string) => {
-    setLoading(true);
+    setAuthStatus(true);
     try {
       const loginData = new FormData();
       loginData.append("email", email);
@@ -103,7 +104,7 @@ export const useUserSubsystem = () => {
   };
 
   const register = async (firstName: string, lastName: string, email: string, password: string) => {
-    setLoading(true);
+    setAuthStatus(true);
     try {
       const registerData = new FormData();
       registerData.append("first_name", firstName);
@@ -128,7 +129,7 @@ export const useUserSubsystem = () => {
     } catch (error: any) {
       toast.error(error.response.data.message);
       console.error("Register failed:", error);
-      setLoading(false);
+      setAuthStatus(false, false);
       return error.response.data.message;
     }
   };
@@ -257,7 +258,7 @@ export const useUserSubsystem = () => {
       return error.response.data.message;
     }
   }
- 
+
   function logout() {
     localStorage.removeItem("token");
     setUserState({ first_name: "", last_name: "", email: "", verified: false, created_at: "", allowed: false, banned: false});
@@ -265,6 +266,28 @@ export const useUserSubsystem = () => {
     setLogged(false);
     setLoading(false);
     setOAuth(false);
+    router.replace("/");
+  }
+
+  const setAuthStatus = (loading: boolean, logged: boolean) => {
+    setLoading(loading);
+    setLogged(logged);
+  };
+
+  function initFromLocalStorage() {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    if (token && user) {
+      setUserState(JSON.parse(user));
+      setAuthStatus(false, true);
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUserState({ first_name: "", last_name: "", email: "" });
+    setAuthStatus(false, false);
     router.replace("/");
   }
 

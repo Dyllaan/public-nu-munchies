@@ -100,7 +100,11 @@ export default function Header() {
         {logged ? loggedMenu() : guestMenu()}
         <NavigationMenuItem>
 
-      
+        <Link href="/" legacyBehavior passHref>
+          <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+            Home
+          </NavigationMenuLink>
+          </Link>
           <Link href="/about" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               About

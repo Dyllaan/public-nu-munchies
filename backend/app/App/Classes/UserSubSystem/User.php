@@ -253,7 +253,7 @@ class User extends CrudModel implements CrudInterface
                     $this->getDb()->commit();
                     $id = intval($id);
                     $this->setId($id);
-                    $this->getIPHandler()->checkForIP(true);
+                    $this->getIPHandler()->addIP($_SERVER['REMOTE_ADDR']);
                     return $this->sendVerificationEmail();
                 } else {
                     $this->getDb()->rollBack();

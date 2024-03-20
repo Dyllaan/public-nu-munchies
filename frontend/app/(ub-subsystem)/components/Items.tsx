@@ -19,6 +19,14 @@ interface Item {
   address_line1?: string
   address_postcode?: string
   address_city?: string
+  business_description?: string
+  weight: number
+  calories: number
+  protein: number
+  carbs: number
+  fat: number
+  salt: number
+  quantity: number
 }
 
 function Items() {
@@ -48,7 +56,7 @@ function Items() {
   const handleClick = (item: Item) => {
     console.log(item);
     setSelectedItem(item);
-    router.replace("/checkout");
+    router.replace("/viewitem");
   }
 
   return (
@@ -57,12 +65,12 @@ function Items() {
         {items.data?.map((value, key) => (
           <div key={key} className="border border-grey-200 rounded-md my-4" onClick={() => handleClick(value)}>
             <div className="pb-3 ">
-              <p className="font-bold text-red-500">{value.item_name}</p>
+              <p className="font-bold text-red-500 text-lg">{value.item_name}</p>
               <div className="flex relative items-center">
               <p>{value.business_name}</p>
               
               <StarIcon color='red' className="ml-1"radius='full'/>
-              <p >{value.average_rating}</p>
+              <p className="pr-1">{value.average_rating}</p>
               </div>
               <p className="text-sm text-gray-500">{value.address_city} <span className="text-black">|</span> {value.address_postcode}</p>
             </div>
@@ -87,5 +95,5 @@ function Items() {
     </>
   )
 }
-export const selectedItemAtom = atom<Item>({ id: undefined, item_name: undefined, item_price: undefined, item_expiry: undefined, average_rating: undefined,collect_time: undefined, collect_date: undefined, business_name: undefined, address_line1: undefined, address_postcode: undefined, address_city: undefined});
+export const selectedItemAtom = atom<Item>({ id: undefined, item_name: undefined, item_price: undefined, item_expiry: undefined, average_rating: undefined,collect_time: undefined, collect_date: undefined, business_name: undefined, address_line1: undefined, address_postcode: undefined, address_city: undefined, business_description: undefined, weight: undefined, calories: undefined, protein: undefined, carbs:undefined, fat: undefined, salt:undefined, quantity: undefined});
 export default Items;

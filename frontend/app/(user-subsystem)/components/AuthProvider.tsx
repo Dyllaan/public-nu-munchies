@@ -4,7 +4,6 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useEffect } from "react";
 
 import { oAuthConfig } from "@/config/oauth";
-import { init } from "next/dist/compiled/webpack/webpack";
 
 /**
  * Rehydrates the user subsystem on the client side
@@ -15,13 +14,11 @@ type AuthProviderProps = {
 };
 
 export default function AuthProvider({ children }: AuthProviderProps) {
-  const { initFromLocalStorage, status} = useUserSubsystem();
+  const { checkToken, loading, logged} = useUserSubsystem();
 
   useEffect(() => {
-    if (localStorage.getItem("token") && localStorage.getItem("user") && !status.logged) {
-      initFromLocalStorage();
-    }
-  }, [status.logged]);
+    checkToken();
+  }, []);
 
   return (
     <GoogleOAuthProvider clientId={oAuthConfig.clientId}>

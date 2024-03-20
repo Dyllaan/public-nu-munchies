@@ -1,5 +1,5 @@
 "use-client";
-const BASE_URL = 'http://localhost:8080/';
+const BASE_URL = 'https://backend.nu-munchies.xyz/';
 
 async function handleResponse(response:any) {
     const contentType = response.headers.get("content-type");
@@ -27,7 +27,6 @@ async function handleResponse(response:any) {
 }
 
 export async function get(endpoint:string, bearer:any = "") {
-    console.log(bearer);
     return httpRequest('GET', endpoint, undefined, bearer);
 }
 
@@ -43,10 +42,26 @@ export async function del(endpoint:string, data:any, bearer:any = "") {
     return httpRequest('DELETE', endpoint, data, bearer);
 }
 
+interface HTTPHeaders {
+    bearer?: string;
+    contentType?: string;
+}
+
 async function httpRequest(method:string, endpoint:string, data:any, bearer: string) {
+
+    const requestHeaders: HeadersInit = {};
+
+    if (bearer) {
+        requestHeaders["Authorization"] = `Bearer ${bearer}`;
+    }
+
+    if(method === 'PUT') {
+        requestHeaders["Content-Type"] = 'application/json';
+    }
+
     const response = await fetch(`${BASE_URL}${endpoint}`, {
         method,
-        headers: bearer ? {"Authorization": `Bearer ${bearer}`} : {},
+        headers: requestHeaders,
         body: data ? data : undefined
     });
     return handleResponse(response);

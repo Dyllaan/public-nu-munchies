@@ -23,69 +23,69 @@ import requireAuth from "../components/requireAuth";
 // Define the login form schema using zod
 const loginFormSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
 });
 
 // Type inference for the login form data
-type LoginFormInput = z.infer<typeof loginFormSchema>;
+type ForgotPasswordFormInput = z.infer<typeof loginFormSchema>;
 
 function ForgotPasswordPage() {
-    const { login } = useUserSubsystem();
+    const { requestPasswordReset } = useUserSubsystem();
 
-    const form = useForm<LoginFormInput>({
+    const form = useForm<ForgotPasswordFormInput>({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
-            email: "",
-            password: "",
+            email: ""
         },
     });
 
-    const handleLogin = async(data: LoginFormInput) => {
-        const { email, password } = data;
-        const response = await login(email, password);
+    const handleForgotPassword = async(data: ForgotPasswordFormInput) => {
+        const { email } = data;
+        const response = await requestPasswordReset(email);
         if (response) {
             toast.error(response);
         }
     };
 
     return (
-        <>
-        <div className="m-2">
-            <h2>
-                Remembered it?
-                <Link href="/login" className="underline m-1">
-                    Login here
-                </Link>
-            </h2>
+        // Outer div to center content vertically and horizontally
+        <div className="flex flex-col items-center justify-center min-h-screen">
+            <div className="w-full max-w-md px-4">
+                <div className="m-2">
+                    <h2>
+                        Remembered it?
+                        <Link href="/login" className="underline m-1">
+                            Login here
+                        </Link>
+                    </h2>
+                </div>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(handleForgotPassword)}>
+                        <Card className="py-4">
+                            <CardHeader>
+                                <CardTitle className="text-center">Forgot Password?</CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex flex-col gap-y-4">
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Email</FormLabel>
+                                            <FormControl>
+                                                <Input type="email" placeholder="your-email@example.com" {...field} />
+                                            </FormControl>
+                                            <FormMessage className="text-xs" />
+                                        </FormItem>
+                                    )} />
+                                <Button className="py-2 text-md" type="submit">
+                                    Reset
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </form>
+                </Form>
+            </div>
         </div>
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleLogin)}>
-                <Card className="py-4 md:max-w-[550px]">
-                    <CardHeader>
-                        <CardTitle className="text-center">Forgot Password?</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-col gap-y-4">
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input type="email" placeholder="your-email@example.com" {...field} />
-                                    </FormControl>
-                                    <FormMessage className="text-xs" />
-                                </FormItem>
-                            )} />
-                        <Button className="py-2 text-md" type="submit">
-                            Reset
-                        </Button>
-                    </CardContent>
-                </Card>
-            </form>
-        </Form>
-        <GoogleSignIn />
-        </>
     );      
 }
 export default requireAuth(ForgotPasswordPage, false);

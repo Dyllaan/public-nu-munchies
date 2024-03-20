@@ -12,8 +12,12 @@ namespace App\Classes\UserSubSystem;
 use Firebase\JWT\JWT;
 use Core\Database\CrudModel;
 use Core\Database\CrudInterface;
-use App\Classes\UserSubSystem\EmailToken;
-use App\Classes\UserSubSystem\PasswordResetJWT;
+use App\Classes\UserSubSystem\UserHandlers\EmailHandler;
+use App\Classes\UserSubSystem\UserHandlers\VerifiedHandler;
+use App\Classes\UserSubSystem\UserHandlers\IPHandler;
+use App\Classes\UserSubSystem\UserHandlers\BannedHandler;
+use App\Classes\UserSubSystem\UserTypes\Moderator;
+use App\Classes\UserSubSystem\UserTypes\Councillor;
 
 class User extends CrudModel implements CrudInterface
 {
@@ -22,7 +26,14 @@ class User extends CrudModel implements CrudInterface
     private $email;
     private $password;
     private $token;
-    private $verified;
+    private $exists;
+    private $createdAt;
+
+    private $emailHandler;
+    private $verifiedHandler;
+    private $ipHandler;
+    private $bannedHandler;
+
     protected static $instance = null;
 
     private \AppConfig $appConfigInstance;
@@ -31,7 +42,20 @@ class User extends CrudModel implements CrudInterface
     {
         parent::__construct($db);
         $this->appConfigInstance = new \AppConfig();
+        $this->emailHandler = new EmailHandler($this->getDb(), $this);
+        $this->verifiedHandler = new VerifiedHandler($this->getDb(), $this);
+        $this->ipHandler = new IPHandler($this->getDb(), $this);
+        $this->bannedHandler = new BannedHandler($this->getDb(), $this);
         $this->setTable("users");
+    }
+
+    /**
+     * Short term MFA solution
+     * user is prompted to enter a token sent to their email
+     * when their token expires
+     */
+    public function tokenExpired() {
+        $this->verifyUser(0);
     }
 
     public static function getInstance($db)
@@ -42,80 +66,49 @@ class User extends CrudModel implements CrudInterface
         return self::$instance;
     }
 
-    public function sendVerificationEmail()
-    {
-        $emailOTP = new EmailToken('email_verification');
-        $emailOTP->setUser($this);
-        try {
-            $emailOTP->sendEmail();
-            return true;
-        } catch (\Exception $e) {
-            $this->setResponse(400, 'Error sending email', ['error' => $e->getMessage()]);
-        }
+    public function searchBusinesses($offset, $conditions = [], $limit = 10) {
+            $data = $this->getDb()->createSelect()->cols("*")
+        ->from("businesses")
+        ->where($conditions)->limit($limit)->
+        offset($offset)->execute();
+        return $data;
     }
 
-    public function sendPasswordResetEmail()
-    {
-        $emailOTP = new PasswordResetJWT();
-        $emailOTP->setUser($this);
-        try {
-            $emailOTP->sendEmail();
-            return true;
-        } catch (\Exception $e) {
-            $this->setResponse(400, 'Error sending email', ['error' => $e->getMessage()]);
-        }
-    }
-
-    public function sendNewEmailOTP() {
-        $this->get();
-        if($this->isVerified()) {
-            $this->setResponse(400, 'User is already verified');
-            return;
-        }
-        $emailOTP = new PasswordResetJWT();
-        $emailOTP->setUser($this);
-        $emailOTP->get();
-        $emailOTP->create();
-        $this->setResponse(200, 'New OTP sent');
-    }
-    
-    public function verifyEmailOTP($otp, $type) {
-        $emailOTP = new EmailToken();
-        $emailOTP->setUser($this);
-        $emailOTP->setType($type);
-        if($emailOTP->validate($otp)) { 
-            $this->verifyUser();
-            $this->setResponse(200, 'Email token verified', $this->toArray());
-            return;
+    public function searchItems($offset, $conditions = [], $limit = 10, $catId = null) {
+        if($catId != null) {
+            $conditions[] = "cat_id = '" . $catId . "'";
+            $data = $this->getDb()->createSelect()->cols("*")
+            ->from("items")->join("categories", "items.item_category = cat_id")
+            ->where($conditions)->limit($limit)->
+            offset($offset)->execute();
+        return $data;
         } else {
-            $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');
-            return;
+            $data = $this->getDb()->createSelect()->cols("*")
+            ->from("items")->where($conditions)->limit($limit)->
+            offset($offset)->execute();
+        return $data;
         }
     }
 
-    public function verifyPasswordResetOTP($otp, $type) {
-        $emailOTP = new PasswordResetJWT();
-        $emailOTP->setUser($this);
-        $emailOTP->setType($type);
-        if($emailOTP->validate($otp)) {
-            $this->setId($emailOTP->getUserId());
-            return true;
+    public function getBusinesses()
+    {
+        if(!$this->exists()) {
             return;
-        } else {
-            $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');
-            return false;
         }
+        $data = $this->getDb()->createSelect()->cols("*")->from('businesses')->where(["user_id = '" . $this->getId() . "'"])->execute();
+        return $data;
     }
 
     public function changePassword($newPassword, $jwt) {
         //validate email token
-        if($this->verifyPasswordResetOTP($jwt, "password_reset")) {
+        if($this->getEmailHandler()->verifyEmailToken($jwt, 'password_reset')){
             //hash password
             $password = password_hash($newPassword, PASSWORD_BCRYPT);
             try {
                 $this->getDb()->createUpdate()->table('passwords')
                 ->set(['password' => $password])->where(["user_id = '" . $this->getId() . "'"])->execute();
-                $this->setResponse(200, 'Password changed successfully');
+                $this->get();
+                $this->setResponse(200, 'Password changed successfully', $this->toArray());
             } catch (\Exception $e) {
                 $this->setResponse(500, "An error occurred: " . $e->getMessage());
             }
@@ -123,46 +116,51 @@ class User extends CrudModel implements CrudInterface
         $this->setResponse(400, "Password reset failed");
     }
 
-    public function isVerified()
-    {
-        return $this->verified;
-    }
-
     public function exists()
     {
+        if($this->exists) {
+            return $this->exists;
+        }
+        if ($this->getEmail() != null) {
+            if($this->doesUserExistAtEmail($this->getEmail())) {
+                return true;
+            }
+        } elseif ($this->getId() != null) {
+            if($this->doesUserExistAtId($this->getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function get()
+    {
         if ($this->getId() != null) {
-            $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["id = '" . $this->getId() . "'"])->execute();
-            if (count($data) == 0) {
-                return false;
-            } else {
-                return true;
-            }
+            $this->getFromId();
         } elseif ($this->getEmail() != null) {
-            $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["email = '" . $this->getEmail() . "'"])->execute();
-            if (count($data) == 0) {
-                return false;
-            } else {
-                return true;
-            }
+            $this->getFromEmail();
         } else {
-            return false;
+            $this->setResponse(500, "User object improperly initialised");
         }
     }
 
     public function doesUserExistAtEmail($email)
     {
         $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["email = '" . $email . "'"])->execute();
-        if (count($data) == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return count($data) > 0;
+    }
+
+    public function doesUserExistAtId($id)
+    {
+        $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["id = '" . $id . "'"])->execute();
+        return count($data) > 0;
     }
 
     public function login()
     {
         $cons[] = "email = '$this->email'";
-        $data = $this->getDb()->createSelect()->cols("users.first_name, users.last_name, users.id, passwords.password, users.verified")->from($this->getTable())->join("passwords", "users.id = passwords.user_id")->where($cons)->execute();
+        $data = $this->getDb()->createSelect()->cols("users.first_name, users.last_name, users.id, passwords.password, users.verified, users.created_at, banned")->from($this->getTable())->join("passwords", "users.id = passwords.user_id")
+        ->where($cons)->execute();
         if (count($data) == 0) {
             $this->setResponse(401, "Account not found!");
         } else {
@@ -170,8 +168,12 @@ class User extends CrudModel implements CrudInterface
                 $this->setResponse(401, "Invalid password");
             } else {
                 $this->setUserFields($data[0]);
+                if(!$this->getIPHandler()->isIPAllowed()) {
+                    $this->getEmailHandler()->sendEmailToken('ip_verification');
+                }
                 if ($data[0]['verified'] == 0) {
-                    $this->sendVerificationEmail();
+                    $this->getEmailHandler()->sendEmailToken('email_verification');
+                    return $this->toArray();
                 } else {
                     return $this->toArray();
                 }
@@ -249,7 +251,9 @@ class User extends CrudModel implements CrudInterface
                 if ($id != null) {
                     $this->getDb()->createInsert()->into('passwords')->cols('user_id, password')->values([$id, $this->getPassword()])->execute();
                     $this->getDb()->commit();
+                    $id = intval($id);
                     $this->setId($id);
+                    $this->getIPHandler()->checkForIP(true);
                     return $this->sendVerificationEmail();
                 } else {
                     $this->getDb()->rollBack();
@@ -264,33 +268,24 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
-    public function get()
-    {
-        if ($this->getId() != null) {
-            $this->getFromId();
-        } elseif ($this->getEmail() != null) {
-            $this->getFromEmail();
-        } else {
-            $this->setResponse(500, "User object improperly initialised");
-        }
-    }
-
-    private function getFromId()
+    protected function getFromId()
     {
         $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["id = '" . $this->getId() . "'"])->execute();
         if (count($data) == 0) {
             return null;
         } else {
             $this->setUserFields($data[0]);
+            return $data;
         }
     }
 
-    private function getFromEmail() {
-        $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["email = '" . $this->getEmail() . "'"])->execute();
+    protected function getFromEmail() {
+        $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["email = '" . $this->getEmail() . "'"])->execute();
         if (count($data) == 0) {
             return null;
         } else {
             $this->setUserFields($data[0]);
+            return $data;
         }
     }
 
@@ -308,21 +303,14 @@ class User extends CrudModel implements CrudInterface
             $this->setEmail($data['email']);
         }
         if(isset($data['verified'])) {
-            $this->setVerified($data['verified']);
+            $this->getVerifiedHandler()->setVerified($data['verified']);
         }
-    }
-    
-    public function verifyUser() {
-        if(!$this->exists()) {
-            $this->setResponse(400, "User does not exist");
+        if(isset($data['created_at'])) {
+            $this->setCreatedAt($data['created_at']);
         }
-        if($this->isVerified()) {
-            $this->setResponse(400, "User is already verified");
+        if(isset($data['banned'])) {
+            $this->getBannedHandler()->setBanned($data['banned']);
         }
-        $this->get();
-        $this->getDb()->createUpdate()->table($this->getTable())->set(['verified' => 1])->where(["id = '" . $this->getId() . "'"])->execute();
-        $this->setVerified(1);
-        $this->setResponse(200, "Verified User", $this->toArray());
     }
     
     public function update()
@@ -349,10 +337,15 @@ class User extends CrudModel implements CrudInterface
             if ($this->getPassword() != null) {
                 $this->setResponse(400, "Password cannot be updated by this method");
             }
+            if($this->getBannedHandler()->isBanned() != $data[0]['banned']) {
+                $changed['banned'] = $this->getBannedHandler()->isBanned();
+            }
+
             if ($changed != []) {
                 $this->getDb()->beginTransaction();
                 try {
-                    $this->getDb()->createUpdate()->table($this->getTable())->set($changed)->where(["user_id = '" . $this->getId() . "'"])->execute();
+                    $this->getDb()->createUpdate()->table($this->getTable())->set($changed)->where(["
+                    id = '" . $this->getId() . "'"])->execute();
                     $this->getDb()->commit();
                     return ['message' => "User updated"];
                 } catch (\Exception $e) {
@@ -362,6 +355,13 @@ class User extends CrudModel implements CrudInterface
             } else {
                 return ['message' => "No changes"];
             }
+        }
+    }
+
+    public function getFromUserId() {
+        if ($this->getId() != null) {
+            $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["id = '" . $this->getId() . "'"])->execute();
+            return $data;
         }
     }
 
@@ -377,19 +377,52 @@ class User extends CrudModel implements CrudInterface
 
     public function toArray($useJwt = true)
     {
-        $user['user'] = [
-            'id' => $this->getId(),
-            'first_name' => $this->getFirstName(),
-            'last_name' => $this->getLastName(),
-            'email' => $this->getEmail(),
-            'verified' => $this->isVerified()
-        ];
+        //is allowed
+        if(!$this->getIPHandler()->isIPAllowed()) {
+            $user['user'] = [
+                'email' => $this->getEmail(),
+                'allowed' => false,
+                'ip' => $_SERVER['REMOTE_ADDR'],
+                'banned' => boolval($this->getBannedHandler()->isBanned())
+            ];
+        } else {
+            $user['user'] = [
+                'id' => $this->getId(),
+                'first_name' => $this->getFirstName(),
+                'last_name' => $this->getLastName(),
+                'email' => $this->getEmail(),
+                'verified' => $this->getVerifiedHandler()->isVerified(),
+                'created_at' => $this->getCreatedAt(),
+                'allowed' => true,
+                'ip' => $_SERVER['REMOTE_ADDR'],
+                'banned' => boolval($this->getBannedHandler()->isBanned())
+            ];
+            $user['types'] = $this->getUserTypes();
+        }
         //hardcoded provider id not good
         if($useJwt) {
             $jwt = $this->generateJWT($this->getId(), 1);
             $user['jwt'] = $jwt;
         }
         return $user;
+    }
+
+    public function getUserTypes() {
+        $isModerator = false;
+        $mod = new Moderator($this->getDb(), 'moderator');
+        $mod->setUser($this);
+        if ($mod->is()) {
+            $isModerator = true;
+        }
+    
+        $isCouncillor = false;
+        $councillor = new Councillor($this->getDb(), 'councillor');
+        $councillor->setUser($this);
+        if ($councillor->is()) {
+            $isCouncillor = true;
+        }
+
+        return ['moderator' => $isModerator, 'councillor' => $isCouncillor];
     }
 
     public function checkPassword($password, $hash)
@@ -419,21 +452,17 @@ class User extends CrudModel implements CrudInterface
         return $jwt;
     }
 
-    public function verifyToken()
-    {
-        $token = new Token();
-        if ($token->isValid()) {
-            $this->setId($token->getUserId());
-            $this->get();
-            return true;
-        } else {
-            $this->setResponse(400, "Invalid token");
-        }
+    function getBannedHandler() {
+        return $this->bannedHandler;
     }
 
-    public function setVerified($verified)
+    function setBannedHandler($bannedHandler) {
+        $this->bannedHandler = $bannedHandler;
+    }
+
+    public function getEmailHandler()
     {
-        $this->verified = $verified;
+        return $this->emailHandler;
     }
 
     public function getToken()
@@ -488,5 +517,29 @@ class User extends CrudModel implements CrudInterface
 
     public function getName() {
         return $this->getFirstName() . " " . $this->getLastName();
+    }
+
+    public function doesExist() {
+        return $this->exists;
+    }
+
+    public function setExists($exists) {
+        $this->exists = $exists;
+    }
+
+    public function getCreatedAt() {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt($createdAt) {
+        $this->createdAt = $createdAt;
+    }
+
+    public function getVerifiedHandler() {
+        return $this->verifiedHandler;
+    }
+
+    public function getIPHandler() {
+        return $this->ipHandler;
     }
 }

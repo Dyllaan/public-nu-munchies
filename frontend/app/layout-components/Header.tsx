@@ -113,6 +113,13 @@ export default function Header() {
             Business Subsystem
           </NavigationMenuLink>
         </NavigationMenuItem>
+        <NavigationMenuItem>
+          <Link href="/logNutritions" legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Nutritions
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
         {userTypes.councillor ? councillorMenu() : null}
         {userTypes.moderator ? moderatorMenu() : null}
       </NavigationMenuList>

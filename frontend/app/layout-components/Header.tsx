@@ -120,8 +120,8 @@ export default function Header() {
             Business
           </NavigationMenuLink>
         </NavigationMenuItem>
-        {userTypes.councillor ? councillorMenu() : null}
-        {userTypes.moderator ? moderatorMenu() : null}
+        {userTypes?.councillor ? councillorMenu() : null}
+        {userTypes?.moderator ? moderatorMenu() : null}
       </NavigationMenuList>
     </NavigationMenu>
   );

@@ -9,11 +9,13 @@ export default function BusinessSubsystem() {
           <BriefcaseBusiness className="w-14 h-14" />
         </div>
         <h1 className="text-3xl font-bold mb-2">
-          Welcome to Business Subsystem
+          Welcome to the Business Subsystem
         </h1>
-        <p className="text-muted-foreground text-center mt-3 text-lg mb-10">
+        <p className="text-muted-foreground text-center mt-3 text-lg mb-10 md:max-w-[450px]">
           This is the business subsystem. It is responsible for handling
-          business related operations.
+          business related operations such as creating, deleting and viewing
+          businesses, showing orders created by customers via the customer
+          subsystem, and managing the menu of the business.
         </p>
 
         <ul className="flex flex-col gap-y-2">

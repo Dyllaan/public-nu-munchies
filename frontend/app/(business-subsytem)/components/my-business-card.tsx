@@ -121,6 +121,13 @@ export const MyBusinessCard: FC<{ business: IBusiness }> = ({ business }) => {
         >
           Manage Items
         </Link>
+        <Button
+          className="flex gap-x-2 w-full bg-gray-200 border-2 border-gray-300 text-black mt-3 hover:bg-gray-200 text-sm py-4"
+          onClick={() => setDeleteDialogOpen(true)}
+        >
+          <TrashIcon className="w-5 h-5" />
+          Delete Business
+        </Button>
         {!business?.verified && (
           <Button
             className="w-full bg-transparent border-2 border-gray-300 text-black mt-3 hover:bg-gray-200 text-sm bg-gray-200"

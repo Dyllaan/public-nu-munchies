@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
 
 import "../css/NutritionForm.css";
+import { IoIosNutrition } from "react-icons/io";
 
 
 
@@ -99,6 +100,8 @@ const NutritionForm: React.FC = () => {
               Save Nutrition
             </Button>
           </form>
+          
+          <a href="http://localhost:3000/displayNutrition" className="text-center pt-5 underline">View All Nutritions</a>
       </div>
     </section>
   );

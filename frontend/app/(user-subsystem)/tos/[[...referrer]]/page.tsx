@@ -6,37 +6,36 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { useRouter, useSearchParams } from 'next/navigation';
-import RedirectTo from "../components/RedirectTo";
+import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Suspense } from "react";
 /**
  * The TOS is produced by ChatGPT as a placeholder as I am not a lawyer and want to simulate a real UX
  */
-export default function TOS() {
-  const searchParams = useSearchParams();
-    const referrer = searchParams.get("referrer");
-
-    function canReturn() {
-      switch (referrer) {
-        case "login":
-        case "register":
-          return true;
-        default:
-          return false;
-      }
+export default function TOS({params}: {params: {referrer: string} }) {
+  const { referrer } = params;
+  function canReturn() {
+    switch (referrer) {
+      case "login":
+      case "register":
+        return true;
+      default:
+        return false;
     }
+  }
 
-    const returnTo = () => {
-        if (canReturn()) {
-            return (
-              <Link className="" href={`/${referrer}`}>
-                <Button>Return to {referrer}
-                </Button>
-              </Link>
-            );
-        }
-      };
+  const returnTo = () => {
+      if (canReturn()) {
+        return (
+          <Link className="" href={`/${referrer}`}>
+            <Button>Return to {referrer}
+            </Button>
+          </Link>
+        );
+    }
+  };
+
   return (
     <main className="flex flex-col items-center gap-2 mx-4">
         <div className="flex flex-col gap-2">

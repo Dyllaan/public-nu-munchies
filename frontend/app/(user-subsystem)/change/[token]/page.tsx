@@ -6,31 +6,28 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
-import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsystem";
-import GoogleSignIn from "../components/GoogleLogin";
-import requireAuth from "../components/requireAuth";
+import { useUserSubsystem } from "../../../../hooks/user-subsystem/use-user-subsystem";
+import GoogleSignIn from "../../components/GoogleLogin";
+import requireAuth from "../../components/requireAuth";
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import Loading from "../components/Loading";
-import messages from "../components/validating_messages.json";
+import { useEffect, Suspense } from 'react';
+import LoadingInPage from '../../components/LoadingInPage';
 
-// Define the changePassword form schema using zod
 const changePasswordFormSchema = z.object({
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
   passwordConfirmation: z.string().min(6, { message: "Password confirmation must be at least 6 characters" }),
 }).refine((data) => data.password === data.passwordConfirmation, { message: "Passwords must match", path: ["passwordConfirmation"] });
 
-// Type inference for the changePassword form data
 type ChangePasswordFormInput = z.infer<typeof changePasswordFormSchema>;
-
-// Updated to accept a token parameter
-function ChangePasswordPage() {
+/**
+ * @author Louis Figes W21017657
+ * @generated Github Copilot was used in the creation of this code.
+ */
+function ChangePasswordPage({params}: {params: {token: string} }) {
+    const { token } = params;
     const { changePassword } = useUserSubsystem();
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const token = searchParams.get("token");
 
   useEffect(() => {
     const validateToken = async () => {
@@ -59,16 +56,14 @@ function ChangePasswordPage() {
   };
 
   return (
-    <>
-      <div className="m-2">
-        <h2>
-          Remembered it?
-          <Link href="/login" className="underline m-1"> {/* Changed to direct users to the login page */}
-            Login here
-          </Link>
-        </h2>
-      </div>
-      <Form {...form}>
+      <><div className="m-2">
+      <h2>
+        Remembered it?
+        <Link href="/login" className="underline m-1">
+          Login here
+        </Link>
+      </h2>
+    </div><Form {...form}>
         <form onSubmit={form.handleSubmit(handleChangePassword)}>
           <Card className="py-4 md:max-w-[550px]">
             <CardHeader>
@@ -82,7 +77,7 @@ function ChangePasswordPage() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Password" {...field}/>
+                      <Input type="password" placeholder="Password" {...field} />
                     </FormControl>
                     <FormMessage className="text-xs" />
                   </FormItem>
@@ -105,11 +100,8 @@ function ChangePasswordPage() {
             </CardContent>
           </Card>
         </form>
-      </Form>
-      <GoogleSignIn />
-    </>
+      </Form><GoogleSignIn /></>
   );      
 }
 
-// Updated to pass the token as a prop to the component
 export default requireAuth(ChangePasswordPage, false);

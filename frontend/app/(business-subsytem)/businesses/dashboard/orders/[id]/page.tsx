@@ -21,7 +21,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-export const BusinessOrdersPage: FC<{ params: { id: string } }> = ({
+const BusinessOrdersPage: FC<{ params: { id: string } }> = ({
   params: { id },
 }) => {
   const { getBusinessOrders } = useBusinessApi();
@@ -58,7 +58,6 @@ export const BusinessOrdersPage: FC<{ params: { id: string } }> = ({
     </div>
   );
 };
-export default BusinessOrdersPage;
 
 const TblComponent = ({
   data,
@@ -158,3 +157,5 @@ const Breadcrumbs = ({ id }: { id: string }) => {
     </Breadcrumb>
   );
 };
+
+export default BusinessOrdersPage;

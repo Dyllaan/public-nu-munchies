@@ -65,19 +65,20 @@ function Items() {
     <>
       <SearchBar />
       <Categories />
-      <div className="grid-cols-{4}">
-        <div className="">
+        
           {items.data?.map((value, key) => (
             <div key={key} className="border border-grey-200 rounded-md my-4" onClick={() => handleClick(value)}>
               <div className="pb-3 ">
-                <p className="font-bold text-red-500 text-lg">{value.item_name}</p>
-                <div className="flex relative items-center">
+                <p className="font-bold flex text-red-500 text-lg">{value.item_name}</p>
+                <div className="flex items-center">
+                
+                
                   <p>{value.business_name}</p>
                   
                   <StarIcon color='red' className="ml-1" radius='full'/>
-                  <p className="pr-1">{value.average_rating}</p>
+                  <p>{value.average_rating}</p>
                 </div>
-                <p className="text-sm text-gray-500">{value.address_city} <span className="text-black">|</span> {value.address_postcode}</p>
+                <p className="text-sm text-gray-500 flex">{value.address_city} <span className="text-black"> | </span> {value.address_postcode}</p>
               </div>
 
               <div className="flex relative text-sm items-center">
@@ -95,8 +96,7 @@ function Items() {
               </div>
             </div>
           ))}
-        </div>
-      </div>
+      
     </>
   );
 }

@@ -64,7 +64,7 @@ function ReviewForm(props:any) {
             <div className='border rounded'>
             <form className="border-gray-500 m-2 text-md" onSubmit={handleSubmit}>
                 <Label className="text-lg" htmlFor="title">Title</Label>
-                <Input type="text" id="title" className="block mb-5 w-fill" name="title" value={formData.title} onChange={handleChange} />
+                <Input type="text" id="title" className="block mb-5 w-fill" placeholder="type here..." name="title" value={formData.title} onChange={handleChange} />
                 <Label htmlFor="rating">What would you rate this business?</Label><br />
             
                 <select id="rating" className="mb-5"name="rating" value={formData.rating} onChange={handleChange}>
@@ -76,7 +76,7 @@ function ReviewForm(props:any) {
                 </select>
                 <br />
                 <Label htmlFor="review">Give us your opinion!</Label><br />
-                <Textarea id="review" className="mb-5 w-fill" name="review_details" value={formData.review_details} onChange={handleChange}>{formData.review_details}</Textarea>
+                <Textarea id="review" placeholder="type here..." className="mb-5 w-fill" name="review_details" value={formData.review_details} onChange={handleChange}>{formData.review_details}</Textarea>
 
                 <Button className="w-full bg-white border border-black text-black hover:bg-black hover:text-white" type="submit">Submit</Button>
             </form>

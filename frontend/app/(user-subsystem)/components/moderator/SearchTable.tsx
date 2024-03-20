@@ -39,20 +39,19 @@ useEffect(() => {
 }, [search]);
 
 useEffect(() => {
-  let newEndpoint = `${endpoint}?page=${page}`;
-
-  // Append the verified parameter based on its state (true, false, or omit if not present)
-  if (verified !== null) {
-    newEndpoint += `&verified=${verified}`;
-  }
-
-  if (debouncedSearch.trim() !== '') {
-    newEndpoint += `&search=${debouncedSearch}`;
-  }
-
-  setEndpoint(newEndpoint);
-  reloadData();
-}, [page, debouncedSearch, verified]);
+    let newEndpoint = `${endpoint}`;
+    if (debouncedSearch) {
+        setPage(1);
+        newEndpoint += `?page=${page}`;
+        newEndpoint += `&search=${debouncedSearch}`;
+        if (verified) {
+            newEndpoint += `&verified=${verified}`;
+        }
+    } else {
+        newEndpoint += `?page=${page}`;
+    }
+    setEndpoint(newEndpoint);
+}, [debouncedSearch, verified, page]);
 
 useEffect(() => {
   // Here, 'verified' can be true, false, or null.

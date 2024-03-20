@@ -8,19 +8,19 @@
 
 namespace App\Endpoints\UserSubSystem\Mod;
 
-use App\Classes\UserSubSystem\Mod\ModeratorEndpoint;
+use App\Classes\UserSubSystem\UserAddonEndpoint;
 use App\Classes\UserSubSystem\Helpers\SearchHelper;
 
-class SearchUsers extends ModeratorEndpoint
+class SearchUsers extends UserAddonEndpoint
 {
 
     public function __construct()
     {
-        parent::__construct('GET', 'users');
+        parent::__construct('GET', 'users', 'moderator');
         $this->setRequiresAuth(true);
         $this->getAttributes()->addAllowedInts(['page']);
         $this->getAttributes()->addAllowedStrings(['search']);
-        $this->getAttributes()->addAllowedBools(['verified']);
+        $this->getAttributes()->addAllowedBools(['verified', 'banned']);
     }
 
     private function handle($request) 
@@ -28,8 +28,21 @@ class SearchUsers extends ModeratorEndpoint
         $searchFields = ['users.first_name', 'users.last_name', 'users.email'];
         $searchConditions = SearchHelper::searchConditionBuilder($request, $searchFields);
         
-        //$verifiedCondition = SearchHelper::addBoolAndConvertToIntCondition($request, 'verified', 'users');
-        return SearchHelper::buildConditions($request, [$searchConditions]);
+        $allCons[] = $searchConditions;
+
+        if($request->hasAttribute('verified')) {
+            $verified = ($request->getAttribute('verified') == 'true' ? 1 : 0);
+            $veriCon = 'verified'. '='. $verified;
+            $allCons[] = $veriCon;
+        }
+
+        if($request->hasAttribute('banned')) {
+            $banned = ($request->getAttribute('banned') == 'true' ? 1 : 0);
+            $banCon = 'banned'. '='. $banned;
+            $allCons[] = $banCon;
+        }
+        
+        return SearchHelper::buildConditions($request, $allCons);
     }
 
 

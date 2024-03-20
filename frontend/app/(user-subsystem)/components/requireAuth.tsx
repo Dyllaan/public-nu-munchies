@@ -3,6 +3,7 @@ import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 import LoadingInPage from './LoadingInPage';
 import RedirectTo from "./RedirectTo";
 import Verify from "./Verify";
+import BannedScreen from "./BannedScreen";
 
 export default function requireAuth(ChildComponents: any, pageNeedsAuth: boolean = true) {
     const RequireAuthComponent = (props: any) => {
@@ -15,6 +16,9 @@ export default function requireAuth(ChildComponents: any, pageNeedsAuth: boolean
              * Allowed has to be first as if the IP isnt allowed the user
              * info wont be sent by the server
              */
+            if(user.banned) {
+                return <BannedScreen />;
+            }
             if(!user.allowed) {
                 return <Verify type="ip_verification" />;
             } else if(!user.verified) {

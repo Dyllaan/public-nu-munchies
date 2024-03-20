@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-// Define the atom type
+
 export interface UserState {
   firstName: string | undefined;
   lastName: string | undefined;
@@ -7,6 +7,7 @@ export interface UserState {
   verified: boolean;
   created_at?: string;
   allowed?: boolean;
+  banned?: boolean;
 }
 export const userAtom = atom<UserState>({
   firstName: undefined,
@@ -14,5 +15,6 @@ export const userAtom = atom<UserState>({
   email: undefined,
   verified: false,
   created_at: undefined,
-  allowed: false
+  allowed: false,
+  banned: false
 });

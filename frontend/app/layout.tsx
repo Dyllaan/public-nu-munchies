@@ -5,7 +5,6 @@ import AuthProvider from "./(user-subsystem)/components/AuthProvider";
 import { Toaster } from "@/components/ui/sonner";
 import Header from "./layout-components/Header";
 import React from "react";
-import Animator from "./layout-components/Animator";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,9 +23,8 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <AuthProvider>
-            <div>
-              <Animator>{children}</Animator>
-            </div>
+            <Header />
+            <div className="m-2">{children}</div>
             <Toaster />
           </AuthProvider>
         </body>

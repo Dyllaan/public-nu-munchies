@@ -13,6 +13,9 @@ import {
 import { Toggle } from "@/components/ui/toggle";
 import LoadingInPage from '../LoadingInPage';
 import { PersonIcon } from '@radix-ui/react-icons'
+import RemoveBusiness from './RemoveBusiness';
+import { Button } from '@/components/ui/button';
+import useModerator from '@/hooks/user-subsystem/use-moderator';
 
 /**
  * 
@@ -28,12 +31,9 @@ export default function SearchBusiness()  {
   const [page, setPage] = useState(1);
   const endpoint = `moderator/businesses`;
   const { data, setEndpoint, reloadData, loading } = useFetchData(endpoint);
-  const [verified, setVerified] = useState(false);
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    setCount(data.length);
-  }, [data]);
+  const [verified, setVerified] = useState<boolean | null>(false);
+  const [showClearVerified, setShowClearVerified] = useState(false);
+  const { sendingRequest } = useModerator();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -45,20 +45,23 @@ export default function SearchBusiness()  {
   }, [search]);
 
   useEffect(() => {
-    let newEndpoint = `${endpoint}`;
-    if (debouncedSearch) {
-      setPage(1);
-      newEndpoint += `?page=${page}`;
-      newEndpoint += `&search=${debouncedSearch}`;
-      if (verified) {
-        newEndpoint += `&verified=${verified}`;
-      }
-    } else {
-      newEndpoint += `?page=${page}`;
+    let newEndpoint = `${endpoint}?page=${page}`;
+  
+    if (verified !== null) {
+      newEndpoint += `&verified=${verified}`;
     }
+  
+    if (debouncedSearch.trim() !== '') {
+      newEndpoint += `&search=${debouncedSearch}`;
+    }
+  
     setEndpoint(newEndpoint);
     reloadData();
-  }, [endpoint, page, debouncedSearch, verified]);
+  }, [page, debouncedSearch, verified]);
+
+  useEffect(() => {
+    setShowClearVerified(verified !== null);
+  }, [verified]);
 
   const endOfData = (!loading && data.length === 0);
 
@@ -77,10 +80,14 @@ export default function SearchBusiness()  {
   const handleSearchChange = (event:any) => {
     setSearch(event.target.value);
   };
-
-  const handleVerifiedChange = (event:any) => {
-    setVerified(event.target.checked);
-  }
+  const clearVerified = () => {
+    setVerified(null);
+  };
+  
+  const handleVerifiedChange = (newPressedState: boolean) => {
+    setVerified(newPressedState);
+  };  
+  
 
   function renderItems(data:any) {
     return data.map((business:any, index:any) => (
@@ -90,26 +97,50 @@ export default function SearchBusiness()  {
         <TableCell>{business.business_email}</TableCell>
         <TableCell>{business.business_phone}</TableCell>
         <TableCell>{business.business_verification ? "Verified" : "Not Verified"}</TableCell>
-        <TableCell className="text-right">{business.created_at}</TableCell>
+        <TableCell>
+          {new Date(business.created_at).toLocaleDateString()}
+        </TableCell>
+        <TableCell className="text-right">
+          <RemoveBusiness business={business} reloadData={reloadData}  />
+        </TableCell>
       </TableRow>
     ));
   }
   
   return (
-    <div className="m-2 w-fit">
-      <div className="flex flex-row">
+    <div className="m-2 w-full">
+      <div className="flex flex-row gap-2">
+        <div className="">
+          <p>Page</p>
+          <p>{page}</p>
+        </div>
+        <Button onClick={reloadData} variant="outline"> Refresh</Button>
+        <Button variant="outline" onClick={nextPage}>Next</Button>
+        <Button variant="outline" onClick={backPage}>Back</Button>
         <Input placeholder="Search for a user" onChange={handleSearchChange}></Input>
-        <Toggle onChange={handleSearchChange} aria-label="Toggle italic">
+        <Toggle 
+          defaultPressed={verified || false} // Convert null to false
+          onPressedChange={handleVerifiedChange} 
+          disabled={loading}
+        >
           <PersonIcon />
-          Verified
-        </Toggle>
+            Verified
+          </Toggle>
+          {showClearVerified && (
+            <button onClick={clearVerified} className="p-2 border-2 rounded-md">
+              Clear
+            </button>
+          )}
         </div>
         {loading && 
         <div className="items-center text-center">
-          <LoadingInPage />
+          <LoadingInPage message="Loading Businesses..." />
         </div>}
-            <Table className="w-fit">
-            <TableCaption>Found {count} businesses.</TableCaption>
+        {sendingRequest &&
+        <div className="items-center text-center">
+          <LoadingInPage message="Sending..." />
+        </div>}
+            <Table className="w-full">
       <TableHeader>
         <TableRow>
           <TableHead className="">Name</TableHead>
@@ -117,10 +148,12 @@ export default function SearchBusiness()  {
           <TableHead>Email</TableHead>
           <TableHead>Phone</TableHead>
           <TableHead>Verification</TableHead>
-          <TableHead className="text-right">Created</TableHead>
+          <TableHead>Created</TableHead>
+          <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
+      {endOfData && <TableRow><TableCell colSpan={6} className="text-center">No Businesses Found!</TableCell></TableRow>}
         {data && data.length > 0 && renderItems(data)}
       </TableBody>
     </Table>

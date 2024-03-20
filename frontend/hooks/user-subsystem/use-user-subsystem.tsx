@@ -8,7 +8,7 @@ import * as api from './api';
 import { toast } from "sonner";
 import { set } from "react-hook-form";
 import RedirectTo from "@/app/(user-subsystem)/components/RedirectTo";
-import { json } from "stream/consumers";
+import { userTypesAtom } from "@/stores/user-types";
 
 /**
  * @author Louis Figes
@@ -19,16 +19,20 @@ export const oAuthAtom = atom(false);
 
 export const useUserSubsystem = () => {
   const [user, setUser] = useAtom(userAtom);
+  const [userTypes, setUserTypes] = useAtom(userTypesAtom);
   const [loading, setLoadingState] = useAtom(loadingAtom);
   const [logged, setLoggedState] = useAtom(loggedAtom);
   const [requestLoading, setRequestLoading ] = useState(false);
   const [isOAuth, setIsOAuth] = useAtom(oAuthAtom);
   const router = useRouter();
   
-
-  const setUserState = ({ first_name, last_name, email, verified, created_at, allowed}: { first_name: string; last_name: string; email: string; verified: boolean; created_at: string, allowed: boolean}) => {
-    setUser({ firstName: first_name, lastName: last_name, email, verified, created_at, allowed});
+  const setUserState = ({ first_name, last_name, email, verified, created_at, allowed, banned}: { first_name: string; last_name: string; email: string; verified: boolean; created_at: string, allowed: boolean, banned:boolean}) => {
+    setUser({ firstName: first_name, lastName: last_name, email, verified, created_at, allowed, banned});
   };
+
+  const setTypes = ({moderator, councillor}: {moderator: boolean, councillor: boolean}) => {
+    setUserTypes({moderator, councillor});
+  }
 
   const setLoading = (state:boolean) => {
     setLoadingState((loading) => state);
@@ -57,6 +61,7 @@ export const useUserSubsystem = () => {
       const response = await api.get("user", localStorage.getItem("token"));
       if(response.success) {
         setUserState(response.data.data.user);
+        setTypes(response.data.data.types);
         setLoading(false);
         setLogged(true);
         checkForOAuth(response);
@@ -81,6 +86,7 @@ export const useUserSubsystem = () => {
       if (response.success) {
         localStorage.setItem("token", response.data.data.jwt);
         setUserState(response.data.data.user);
+        setTypes(response.data.data.types);
         setLogged(true);
         router.replace("/profile");
         setLoading(false);
@@ -109,6 +115,7 @@ export const useUserSubsystem = () => {
       if (response.success) {
         localStorage.setItem("token", response.data.data.jwt);
         setUserState(response.data.data.user);
+        setTypes(response.data.data.types);
         setLogged(true);
         router.replace("/profile");
         setLoading(false);
@@ -135,6 +142,7 @@ export const useUserSubsystem = () => {
       const response = await api.put("user/edit", jsonData, localStorage.getItem("token"));
       if (response.success) {
         setUserState(response.data.data.user);
+        setTypes(response.data.data.types);
         setLoading(false);
         localStorage.setItem("token", response.data.data.jwt);
         setRequestLoading(false);
@@ -163,6 +171,7 @@ export const useUserSubsystem = () => {
       const response = await api.post("user/verify-email-token", otpData, localStorage.getItem("token"));
       if (response.success) {
         setUserState(response.data.data.user);
+        setTypes(response.data.data.types);
         toast.success(response.data.message);
       } else {
         toast.error(response.data.data.message);
@@ -235,6 +244,7 @@ export const useUserSubsystem = () => {
     try {
       const response = await axios.post(redirectUri, data);
       setUserState(response.data.data.user);
+      setTypes(response.data.data.types);
       localStorage.setItem("token", response.data.data.jwt);
       setLogged(true);
       setOAuth(true);
@@ -250,7 +260,8 @@ export const useUserSubsystem = () => {
  
   function logout() {
     localStorage.removeItem("token");
-    setUserState({ first_name: "", last_name: "", email: "", verified: false, created_at: "", allowed: false});
+    setUserState({ first_name: "", last_name: "", email: "", verified: false, created_at: "", allowed: false, banned: false});
+    setTypes({moderator: false, councillor: false});
     setLogged(false);
     setLoading(false);
     setOAuth(false);
@@ -273,6 +284,7 @@ export const useUserSubsystem = () => {
     loading,
     user,
     isOAuth,
+    userTypes,
   };
 };
 

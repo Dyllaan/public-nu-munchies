@@ -8,15 +8,15 @@
 
 namespace App\Endpoints\UserSubSystem\Mod;
 
-use App\Classes\UserSubSystem\Mod\ModeratorEndpoint;
+use App\Classes\UserSubSystem\UserAddonEndpoint;
 use App\Classes\UserSubSystem\Helpers\SearchHelper;
 
-class SearchBusiness extends ModeratorEndpoint
+class SearchBusiness extends UserAddonEndpoint
 {
 
     public function __construct()
     {
-        parent::__construct('GET', 'businesses');
+        parent::__construct('GET', 'businesses', 'moderator');
         $this->setRequiresAuth(true);
         $this->getAttributes()->addAllowedInts(['page']);
         $this->getAttributes()->addAllowedStrings(['search']);
@@ -27,6 +27,12 @@ class SearchBusiness extends ModeratorEndpoint
     {
         $searchFields = ['business_name', 'business_description', 'business_email', 'business_phone'];
         $searchConditions = SearchHelper::searchConditionBuilder($request, $searchFields);
+        
+        if($request->hasAttribute('verified')) {
+            $verified = $request->getAttribute('verified');
+            $veriCon = 'business_verification'. '='. $verified;
+            return SearchHelper::buildConditions($request, [$searchConditions, $veriCon]);
+        }
         return SearchHelper::buildConditions($request, [$searchConditions]);
     }
 

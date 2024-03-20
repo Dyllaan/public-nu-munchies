@@ -1,34 +1,26 @@
 <?php
 
-namespace App\Classes\UserSubSystem\Mod;
+namespace App\Classes\UserSubSystem;
 
 use App\Classes\UserSubSystem\User;
 use Core\Database\CrudModel;
 
-class Moderator extends CrudModel
+abstract class UserAddon extends CrudModel
 {
     private \AppConfig $appConfigInstance;
     private $user;
 
-    public function __construct($db)
+    public function __construct($db, $table)
     {
         parent::__construct($db);
         $this->appConfigInstance = new \AppConfig();
-        $this->setTable('moderator_users');
+        $this->setTable($table);
     }
 
-    public function isModerator()
+    public function is()
     {
         $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["user_id = '" . $this->getUser()->getId() . "'"])->execute();
         return count($data) > 0;
-    }
-
-    public function searchUsers($offset, $conditions = [], $limit = 10) {
-        $data = $this->getDb()->createSelect()->cols("*")
-        ->from($this->getUser()->getTable())
-        ->where($conditions)->limit($limit)->
-        offset($offset)->execute();
-        return $data;
     }
 
     public function setUser($user)
@@ -40,6 +32,4 @@ class Moderator extends CrudModel
     {
         return $this->user;
     }
-
-
 }

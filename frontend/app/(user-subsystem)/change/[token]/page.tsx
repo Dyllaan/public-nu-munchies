@@ -8,11 +8,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useUserSubsystem } from "../../../../hooks/user-subsystem/use-user-subsystem";
-import GoogleSignIn from "../../components/GoogleLogin";
-import requireAuth from "../../components/requireAuth";
+import GoogleSignIn from "../../components/auth/GoogleLogin";
+import requireAuth from "../../components/auth/requireAuth";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
-import LoadingInPage from '../../components/LoadingInPage';
+import LoadingInPage from '../../components/reusable/LoadingInPage';
 
 const changePasswordFormSchema = z.object({
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),

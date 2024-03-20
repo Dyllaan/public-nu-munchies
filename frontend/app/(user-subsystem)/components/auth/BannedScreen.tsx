@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { EnvelopeOpenIcon } from "@radix-ui/react-icons";
 import { Input } from "@/components/ui/input";
-import LoadingInPage from "./LoadingInPage";
+import LoadingInPage from "../reusable/LoadingInPage";
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 
 /**

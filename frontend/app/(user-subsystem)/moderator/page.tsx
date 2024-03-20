@@ -1,5 +1,5 @@
 "use client";
-import requireType from '../components/requireType';
+import requireType from '../components/auth/requireType';
 import {
   Accordion,
   AccordionContent,

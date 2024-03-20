@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner'; // Assuming 'sonner' is a typo for a toast notification library like 'react-toastify'
 import { z } from 'zod';
-import useUserSubsystem from '../../../hooks/user-subsystem/use-user-subsystem';
+import useUserSubsystem from '../../../../hooks/user-subsystem/use-user-subsystem';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { validateName } from './Validation';
-import LoadingInPage from './LoadingInPage';
+import { validateName } from '../Validation';
+import LoadingInPage from '../reusable/LoadingInPage';
 import {
     Card,
     CardContent,
@@ -15,8 +15,7 @@ import {
     CardTitle,
   } from "@/components/ui/card";
 import { Label } from '@/components/ui/label';
-import { Separator } from '@radix-ui/react-select';
-import { get } from 'http';
+import ChangeEmail from './email/ChangeEmail';
 
 export default function EditProfile() {
   const { editUser, user, requestLoading } = useUserSubsystem();

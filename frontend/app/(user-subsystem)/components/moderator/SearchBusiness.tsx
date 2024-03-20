@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Toggle } from "@/components/ui/toggle";
-import LoadingInPage from '../LoadingInPage';
+import LoadingInPage from '../reusable/LoadingInPage';
 import { PersonIcon } from '@radix-ui/react-icons'
 import RemoveBusiness from './RemoveBusiness';
 import { Button } from '@/components/ui/button';
@@ -124,8 +124,8 @@ export default function SearchBusiness()  {
           disabled={loading}
         >
           <PersonIcon />
-            Verified
-          </Toggle>
+          Verified
+        </Toggle>
           {showClearVerified && (
             <button onClick={clearVerified} className="p-2 border-2 rounded-md">
               Clear

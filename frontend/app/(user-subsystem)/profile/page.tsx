@@ -1,10 +1,12 @@
 "use client";
 
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
-import EditProfile from "@/app/(user-subsystem)/components/EditProfile";
-import requireAuth from "../components/requireAuth";
-import GoogleEditProfile from "@/app/(user-subsystem)/components/GoogleEditProfile";
-import OrderHistory from "../components/OrderHistory";
+import ProfileEmail from "../components/profile/email/ProfileEmail";
+import requireAuth from "../components/auth/requireAuth";
+import GoogleEditProfile from "@/app/(user-subsystem)/components/profile/GoogleEditProfile";
+import OrderHistory from "../components/profile/OrderHistory";
+import EditProfile from "../components/profile/EditProfile";
+import ProfilePassword from "../components/profile/password/ProfilePassword";
 
 function Profile() {
   const { user, logout, isOAuth } = useUserSubsystem();
@@ -21,12 +23,13 @@ function Profile() {
         Welcome to Profile Page {user.firstName} !
       </h1>
         <h2>Joined: {dateString}</h2>
-        <button onClick={logout} className="btn">
-          Logout
-        </button>
         <div className="flex flex-col lg:flex-row gap-4 mx-auto p-4">
-     {isOAuth ? <GoogleEditProfile /> :  <EditProfile />}
-     <OrderHistory />
+          {isOAuth ? <GoogleEditProfile /> :  <EditProfile /> }
+          {!isOAuth && <ProfileEmail />}
+        </div>
+        <div className="flex flex-col lg:flex-row gap-4 mx-auto p-4">
+          <OrderHistory />
+          <ProfilePassword />
       </div>
     </main>
   );

@@ -1,8 +1,8 @@
 "use client";
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
-import LoadingInPage from './LoadingInPage';
-import RedirectTo from "./RedirectTo";
-import Verify from "./Verify";
+import LoadingInPage from '../reusable/LoadingInPage';
+import RedirectTo from "../reusable/RedirectTo";
+import Verify from "../Verify";
 import BannedScreen from "./BannedScreen";
 
 export default function requireAuth(ChildComponents: any, pageNeedsAuth: boolean = true) {

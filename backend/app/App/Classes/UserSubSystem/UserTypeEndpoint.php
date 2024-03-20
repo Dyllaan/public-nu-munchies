@@ -10,7 +10,7 @@ use App\Classes\UserSubSystem\UserTypes\Moderator;
  * 
  */
 
-abstract class UserAddonEndpoint extends Endpoint
+abstract class UserTypeEndpoint extends Endpoint
 {
     private $userAddon;
     private $type;
@@ -27,11 +27,11 @@ abstract class UserAddonEndpoint extends Endpoint
         $this->createAndCheck();
     }
 
-    public function getUserAddon() {
+    public function getUserType() {
         return $this->userAddon;
     }
 
-    public function setUserAddon($userAddon) {
+    public function setUserType($userAddon) {
         $this->userAddon = $userAddon;
     }
 
@@ -53,8 +53,8 @@ abstract class UserAddonEndpoint extends Endpoint
                 return false;
         }
 
-        $this->getUserAddon()->setUser($this->getUser());
-        if (!$this->getUserAddon()->is()) {
+        $this->getUserType()->setUser($this->getUser());
+        if (!$this->getUserType()->is()) {
             $this->setResponse(403, 'You do not have permission to access this resource');
             return false;
         }
@@ -62,6 +62,6 @@ abstract class UserAddonEndpoint extends Endpoint
     }
 
     public function getModerator() {
-        return $this->getUserAddon();
+        return $this->getUserType();
     }
 }

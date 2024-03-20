@@ -15,7 +15,7 @@ class EditUser extends SubEndpoint
     public function __construct() 
     {
         parent::__construct('PUT', 'edit');
-        $this->getAttributes()->addAllowedStrings(['first_name', 'last_name', 'email', 'password']);
+        $this->getAttributes()->addAllowedStrings(['first_name', 'last_name']);
         $this->setRequiresAuth(true);
     }
 
@@ -31,19 +31,11 @@ class EditUser extends SubEndpoint
         if($request->hasAttribute('first_name')) {
             $changeFlag = true;
             $this->getUser()->setFirstName($request->getAttribute('first_name'));
-        } 
+        }
         if($request->hasAttribute('last_name')) {
             $changeFlag = true;
             $this->getUser()->setLastName($request->getAttribute('last_name'));
         } 
-        if($request->hasAttribute('email')) {
-            $changeFlag = true;
-            $this->getUser()->setEmail($request->getAttribute('email'));
-        } 
-        if($request->hasAttribute('password')) {
-            $changeFlag = true;
-            $this->getUser()->setPassword($request->getAttribute('password'));
-        }
 
         if($changeFlag) {
             $this->getUser()->update();

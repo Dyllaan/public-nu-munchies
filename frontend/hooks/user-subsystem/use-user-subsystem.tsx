@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import * as api from './api'; 
 import { toast } from "sonner";
 import { set } from "react-hook-form";
-import RedirectTo from "@/app/(user-subsystem)/components/RedirectTo";
+import RedirectTo from "@/app/(user-subsystem)/components/reusable/RedirectTo";
 import { userTypesAtom } from "@/stores/user-types";
 
 /**
@@ -200,6 +200,44 @@ export const useUserSubsystem = () => {
     setRequestLoading(false);
   }
 
+  const requestEmailChange = async (new_email:string) => {
+    setRequestLoading(true);
+    try {
+      let endpoint = "user/resend-email?type=change_email&new_email=" + new_email;
+      const response = await api.get(endpoint, localStorage.getItem("token"));
+      if (response.success) {
+        toast.success("Email sent!");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      return error.response.data.message;
+    }
+    setRequestLoading(false);
+  }
+
+  const requestPasswordChange = async (new_password:string) => {
+    setRequestLoading(true);
+    try {
+      let endpoint = "user/send-password-change";
+      const form = new FormData();
+      form.append("new_password", new_password);
+      const response = await api.post(endpoint, form, localStorage.getItem("token"));
+      if (response.success) {
+        setRequestLoading(false);
+        toast.success("Email sent!");
+      } else {
+        setRequestLoading(false);
+        toast.error(response.data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      return error.response.data.message;
+    }
+    setRequestLoading(false);
+  }
+
   const requestPasswordReset = async (email:string) => {
     setRequestLoading(true);
     const data = new FormData();
@@ -279,6 +317,8 @@ export const useUserSubsystem = () => {
     requestPasswordReset,
     changePassword,
     checkToken,
+    requestEmailChange,
+    requestPasswordChange,
     requestLoading,
     logged,
     loading,

@@ -17,12 +17,6 @@ abstract class UserAddon extends CrudModel
         $this->setTable($table);
     }
 
-    public function is()
-    {
-        $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["user_id = '" . $this->getUser()->getId() . "'"])->execute();
-        return count($data) > 0;
-    }
-
     public function setUser($user)
     {
         $this->user = $user;

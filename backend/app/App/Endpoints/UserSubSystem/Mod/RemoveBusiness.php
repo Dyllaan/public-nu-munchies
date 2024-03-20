@@ -8,10 +8,10 @@
 
 namespace App\Endpoints\UserSubSystem\Mod;
 
-use App\Classes\UserSubSystem\UserAddonEndpoint;
+use App\Classes\UserSubSystem\UserTypeEndpoint;
 use App\Classes\UserSubSystem\Helpers\SearchHelper;
 
-class RemoveBusiness extends UserAddonEndpoint
+class RemoveBusiness extends UserTypeEndpoint
 {
 
     public function __construct()

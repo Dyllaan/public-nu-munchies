@@ -20,6 +20,7 @@ use App\Endpoints\UFIntegration\AddNutrition;
 use App\Endpoints\UserSubSystem\UserEndpoint;
 use App\Endpoints\UFIntegration\AddCat;
 use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
+use App\Endpoints\BusinessSubsystem\BItemEndpoint;
 use App\Endpoints\UserSubSystem\OAuthCallback;
 use App\Endpoints\UserSubSystem\ForgotPassword;
 use App\Endpoints\UserSubSystem\ResetPassword;

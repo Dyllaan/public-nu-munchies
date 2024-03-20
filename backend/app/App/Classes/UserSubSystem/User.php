@@ -254,7 +254,8 @@ class User extends CrudModel implements CrudInterface
                     $id = intval($id);
                     $this->setId($id);
                     $this->getIPHandler()->addIP($_SERVER['REMOTE_ADDR']);
-                    return $this->sendVerificationEmail();
+
+                    return $this->getEmailHandler()->sendEmailToken('email_verification');
                 } else {
                     $this->getDb()->rollBack();
                     $this->setResponse(400, "User could not be saved");
@@ -385,6 +386,7 @@ class User extends CrudModel implements CrudInterface
                 'ip' => $_SERVER['REMOTE_ADDR'],
                 'banned' => boolval($this->getBannedHandler()->isBanned())
             ];
+            $user['types'] = $this->getUserTypes();
         } else {
             $user['user'] = [
                 'id' => $this->getId(),

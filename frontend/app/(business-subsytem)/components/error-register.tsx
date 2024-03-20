@@ -9,8 +9,9 @@ export const ErrorRegister = () => {
         Something went wrong with your registration
       </h1>
       <p className="text-muted-foreground text-center mt-3">
-        Unfortunately we couldn't register your business. Please try again later
-        or contact support.
+        {
+          "Unfortunately we couldn't register your business. Please try again later or contact support."
+        }
       </p>
       <Link
         href="/"

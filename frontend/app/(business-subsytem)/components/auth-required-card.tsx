@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { TriangleAlert } from "lucide-react";
 import Link from "next/link";
 
@@ -10,8 +9,9 @@ export const AuthRequiredCard = () => {
         You need to be logged in to register a business
       </h1>
       <p className="text-muted-foreground text-center mt-3">
-        Please log in to register a business. If you don't have an account, you
-        can create one for free.
+        {
+          "Please log in to register a business. If you don't have an account, you can create one for free."
+        }
       </p>
       <Link
         href="/login"

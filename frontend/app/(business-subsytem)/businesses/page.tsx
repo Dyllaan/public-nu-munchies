@@ -23,9 +23,6 @@ export interface BusinessResponse {
 export default async function BusinessesPage() {
   return (
     <main>
-      <h1>Businesses</h1>
-      <p>List of businesses</p>
-
       <div className="px-[10%] mt-10">
         <h1 className="text-3xl mb-3 font-bold">List of Businesses</h1>
         <p className="text-muted-foreground">

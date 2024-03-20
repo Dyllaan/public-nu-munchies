@@ -110,7 +110,7 @@ export default function Header() {
             className={navigationMenuTriggerStyle()}
             href="/business"
           >
-            Business Subsystem
+            Business
           </NavigationMenuLink>
         </NavigationMenuItem>
         {userTypes.councillor ? councillorMenu() : null}

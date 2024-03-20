@@ -110,7 +110,6 @@ abstract class Entity extends CrudModel implements CrudInterface
     private function _checkSavable()
     {
         foreach ($this->getPropertyMap() as $column => $property) {
-            var_dump($column);
             if (!isset($this->{$column}) && $column != static::getIdColumnName()) {
                 if (strpos($column, "_optional") !== false) {
                     continue;
@@ -136,12 +135,13 @@ abstract class Entity extends CrudModel implements CrudInterface
         }
     }
 
-    private function _getPropertyMap(): array
+    protected function _getPropertyMap(): array
     {
         $mappedProperties = [];
         foreach ($this->propertyColumnMap as $property => $column) {
             if (property_exists($this, $property)) {
-                $mappedProperties[$column] = $this->{$property};
+                if (!str_contains($property, "_hidden"))
+                    $mappedProperties[$column] = $this->{$property};
             } else {
                 $this->setResponse(400, "Property " . $property . " does not exist in " . static::getEntityName());
             }
@@ -156,12 +156,15 @@ abstract class Entity extends CrudModel implements CrudInterface
             if (property_exists($this, $property)) {
                 if (str_contains($property, "_optional")) {
                     $newProperty = str_replace("_optional", "", $property);
-                    $properties[$newProperty] = $this->{$property};
-                } else {
+                    if (!str_contains($newProperty, "_hidden")) {
+                        $properties[$newProperty] = $this->{$property};
+                    }
+                } else if (!str_contains($property, "_hidden")) {
                     $properties[$property] = $this->{$property};
                 }
             }
         }
+
         return $properties;
     }
 
@@ -179,7 +182,7 @@ abstract class Entity extends CrudModel implements CrudInterface
         }
     }
 
-    private function _checkForId()
+    protected function _checkForId()
     {
         if (!$this->id) {
             $this->setResponse(400, "ID is required, define it in the object");
@@ -187,7 +190,7 @@ abstract class Entity extends CrudModel implements CrudInterface
     }
 
 
-    private function _checkIfIdExists()
+    protected function _checkIfIdExists()
     {
         if (!$this->exists()) {
             $this->setResponse(404, "No " . static::getEntityName() . " found with ID " . $this->id);

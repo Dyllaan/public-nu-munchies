@@ -2,16 +2,33 @@
 
 namespace App\Endpoints\BusinessSubsystem;
 
-use App\Classes\Business;
+use App\Classes\BusinessSubsystem\Business;
+use App\Endpoints\BusinessSubsystem\Subendpoints\CreateBusiness;
+use App\Endpoints\BusinessSubsystem\Subendpoints\CreateItem;
+use App\Endpoints\BusinessSubsystem\Subendpoints\DeleteBusiness;
+use App\Endpoints\BusinessSubsystem\Subendpoints\ForceVerifyBusiness;
+use App\Endpoints\BusinessSubsystem\Subendpoints\GetBusinessItems;
+use App\Endpoints\BusinessSubsystem\Subendpoints\GetBusinessOrders;
+use App\Endpoints\BusinessSubsystem\Subendpoints\MyBusinesses;
+use App\Endpoints\BusinessSubsystem\Subendpoints\UpdateBusiness;
+use App\Endpoints\BusinessSubsystem\Subendpoints\DeleteItem;
 use Core\Endpoint\Endpoint;
 
 class BusinessEndpoint extends Endpoint
 {
-
     public function __construct()
     {
         parent::__construct('GET', 'business');
         $this->getAttributes()->addAllowedInts(['id']);
+        $this->addSubEndpoint(new CreateBusiness());
+        $this->addSubEndpoint(new UpdateBusiness());
+        $this->addSubEndpoint(new MyBusinesses());
+        $this->addSubEndpoint(new DeleteBusiness());
+        $this->addSubEndpoint(new GetBusinessItems());
+        $this->addSubEndpoint(new ForceVerifyBusiness());
+        $this->addSubEndpoint(new GetBusinessOrders());
+        $this->addSubEndpoint(new DeleteItem());
+        $this->addSubEndpoint(new CreateItem());
     }
 
     public function process($request)
@@ -22,14 +39,14 @@ class BusinessEndpoint extends Endpoint
 
         $business = new Business($this->getDb());
 
-        $data = [];
-        if ($id) {
+
+        if (isset($id)) {
             $business->id = $id;
-            $data = $business->getById();
+            $this->setResponse(200, $business->getById());
         } else {
-            $data = $business->get();
+            $this->setResponse(200, $business->get());
         }
 
-        $this->setResponse(200, $data);
+        $this->setResponse(0, $business->get());
     }
 }

@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,26 +11,34 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem"
-import NavLink from "./NavLink"
-import NavButton from "./NavButton"
+} from "@/components/ui/navigation-menu";
+import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
+import NavLink from "./NavLink";
+import NavButton from "./NavButton";
 
 export default function Header() {
-  const { user, logout, logged, userTypes } = useUserSubsystem()
+  const { user, logout, logged, userTypes } = useUserSubsystem();
 
   function loggedMenu() {
     return (
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>{user.firstName}</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                <NavLink title="Profile" href="/profile" description="View and edit your profile" />
-                <NavButton title="Logout" onClick={logout} description="View and edit your profile" />
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-    )
+      <NavigationMenuItem>
+        <NavigationMenuTrigger>{user.firstName}</NavigationMenuTrigger>
+        <NavigationMenuContent>
+          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+            <NavLink
+              title="Profile"
+              href="/profile"
+              description="View and edit your profile"
+            />
+            <NavButton
+              title="Logout"
+              onClick={logout}
+              description="View and edit your profile"
+            />
+          </ul>
+        </NavigationMenuContent>
+      </NavigationMenuItem>
+    );
   }
 
   function guestMenu() {
@@ -39,12 +47,20 @@ export default function Header() {
         <NavigationMenuTrigger>Guest</NavigationMenuTrigger>
         <NavigationMenuContent>
           <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-            <NavLink title="Login" href="/login" description="Log in to your account" />
-            <NavLink title="Register" href="/register" description="Create a new account" />
+            <NavLink
+              title="Login"
+              href="/login"
+              description="Log in to your account"
+            />
+            <NavLink
+              title="Register"
+              href="/register"
+              description="Create a new account"
+            />
           </ul>
         </NavigationMenuContent>
       </NavigationMenuItem>
-    )
+    );
   }
 
   function councillorMenu() {
@@ -56,7 +72,7 @@ export default function Header() {
           </NavigationMenuLink>
         </Link>
       </NavigationMenuItem>
-    )
+    );
   }
 
   function moderatorMenu() {
@@ -68,13 +84,13 @@ export default function Header() {
           </NavigationMenuLink>
         </Link>
       </NavigationMenuItem>
-    )
+    );
   }
 
   return (
     <NavigationMenu>
       <NavigationMenuList>
-      <NavigationMenuItem>
+        <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Home
@@ -89,11 +105,19 @@ export default function Header() {
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink
+            className={navigationMenuTriggerStyle()}
+            href="/business"
+          >
+            Business Subsystem
+          </NavigationMenuLink>
+        </NavigationMenuItem>
         {userTypes.councillor ? councillorMenu() : null}
         {userTypes.moderator ? moderatorMenu() : null}
       </NavigationMenuList>
     </NavigationMenu>
-  )
+  );
 }
 
 const ListItem = React.forwardRef<
@@ -118,6 +142,6 @@ const ListItem = React.forwardRef<
         </a>
       </NavigationMenuLink>
     </li>
-  )
-})
-ListItem.displayName = "ListItem"
+  );
+});
+ListItem.displayName = "ListItem";

@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { atom, useAtom } from "jotai";
 import { useRouter } from 'next/navigation';
 import { ClockIcon } from '@radix-ui/react-icons';
+import Categories from '@/app/(food-subsystem)/components/Category';
+import SearchBar from '@/app/(food-subsystem)/components/SearchBar';
 
 
 interface Item {
@@ -46,6 +48,8 @@ function Items() {
 
   return (
     <>
+      <SearchBar />
+      <Categories />
       <div className="grid-cols-{4}">
         {items.data?.map((value, key) => (
           <div key={key} className="relative mb-2 my-2 bg-[#eaeaea] rounded px-10" onClick={() => handleClick(value)}>

@@ -4,6 +4,7 @@ namespace App\Endpoints\BusinessSubsystem;
 
 use App\Classes\BusinessSubsystem\Business;
 use App\Endpoints\BusinessSubsystem\Subendpoints\CreateBusiness;
+use App\Endpoints\BusinessSubsystem\Subendpoints\CreateItem;
 use App\Endpoints\BusinessSubsystem\Subendpoints\DeleteBusiness;
 use App\Endpoints\BusinessSubsystem\Subendpoints\ForceVerifyBusiness;
 use App\Endpoints\BusinessSubsystem\Subendpoints\GetBusinessItems;
@@ -27,6 +28,7 @@ class BusinessEndpoint extends Endpoint
         $this->addSubEndpoint(new ForceVerifyBusiness());
         $this->addSubEndpoint(new GetBusinessOrders());
         $this->addSubEndpoint(new DeleteItem());
+        $this->addSubEndpoint(new CreateItem());
     }
 
     public function process($request)

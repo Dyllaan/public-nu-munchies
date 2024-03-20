@@ -41,14 +41,13 @@ class DeleteItem extends SubEndpoint
         }
         $requiredBusinessId = $res['business_id'];
 
-        foreach ($businessesUser as $business) {
-            if ($business['id'] == $requiredBusinessId) {
-                $res = $item->delete();
-                $this->setResponse(200, $res);
-                return;
-            }
+        if (array_search($requiredBusinessId, array_column($businessesUser, 'id')) === false) {
+            $this->setResponse(401, "You are not allowed to delete this item");
+            return;
         }
 
-        $this->setResponse(401, "You are not allowed to delete this item");
+        $res = $item->delete();
+
+        $this->setResponse(200, $res);
     }
 }

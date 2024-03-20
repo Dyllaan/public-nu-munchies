@@ -8,4 +8,5 @@ export enum Endpoints {
   businessOrders = "business/orders",
   deleteBusiness = "business/delete",
   deleteItems = "business/itemsdelete",
+  createItem = "business/itemscreate",
 }

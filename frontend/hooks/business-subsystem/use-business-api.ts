@@ -1,6 +1,5 @@
 import { registerFormSchema } from "@/app/(business-subsytem)/utils/register-formschema";
 import { Endpoints } from "@/config/endpoints";
-import { mainConfig } from "@/config/main";
 import { getHeaders, sendRequest } from "@/lib/send-request";
 import { z } from "zod";
 
@@ -84,8 +83,19 @@ export const useBusinessApi = () => {
     return res;
   };
 
+  const createItem = async (data: any) => {
+    const res = await sendRequest(Endpoints.createItem, "POST", {
+      name: data.name,
+      price: data.price,
+      collection: data.collection,
+      business_id: data.business_id,
+    });
+    return res;
+  };
+
   return {
     createBusiness,
+    createItem,
     getBusinesses,
     getBusiness,
     getMyBusinesses,

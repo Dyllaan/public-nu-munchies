@@ -102,7 +102,7 @@ const RegisterBusinessForm = ({
       data = {
         ...data,
         businessPhoneNumber: data?.businessPhoneNumber?.length
-          ? `+44${data.businessPhoneNumber}`
+          ? `+44 ${data.businessPhoneNumber}`
           : "",
       };
       const res = await createBusiness(data);

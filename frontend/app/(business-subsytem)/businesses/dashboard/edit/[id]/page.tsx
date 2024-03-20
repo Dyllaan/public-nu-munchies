@@ -1,6 +1,6 @@
 "use client";
 import { useBusinessApi } from "@/hooks/business-subsystem/use-business-api";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 
 import {
   Table,
@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,34 +19,70 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import useSWR, { mutate } from "swr";
+import useSWR, { useSWRConfig } from "swr";
+
 import { Button } from "@/components/ui/button";
 import { FilePlusIcon } from "lucide-react";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { CreateItemDialog } from "@/app/(business-subsytem)/components/create-item-dialog";
 
 export const BusinessItemsPage: FC<{ params: { id: string } }> = ({
   params: { id },
 }) => {
+  const [items, setItems] = useState<any[]>([]);
   const { getItems } = useBusinessApi();
   const { data, isLoading } = useSWR(`/api/business/items?id=${id}`, () =>
     getItems(id)
   );
+
+  useEffect(() => {
+    if (data?.status === "success") {
+      setItems(data.message);
+    }
+  });
+
+  const { mutate } = useSWRConfig();
+
+  const [createItemDialogOpen, setCreateItemDialogOpen] = useState(false);
 
   return (
     <div className="mt-32 px-[10%] pb-10">
       <Breadcrumbs id={id} />
       <div className="flex justify-between items-center flex-wrap">
         <h1 className="text-3xl font-semibold mb-2">Items of Business {id}</h1>
-        <Button className="bg-black text-white px-3 py-1 rounded-md flex gap-x-2">
+        <Button
+          className="bg-black text-white px-3 py-1 rounded-md flex gap-x-2"
+          onClick={() => setCreateItemDialogOpen(true)}
+        >
           <FilePlusIcon className="w-4 h-4 font-bold" />
           Create Item
         </Button>
+
+        {createItemDialogOpen && (
+          <Dialog open={createItemDialogOpen}>
+            <DialogTrigger asChild></DialogTrigger>
+            <CreateItemDialog
+              open={createItemDialogOpen}
+              businessId={id}
+              mutate={mutate}
+              closeDialog={() => {
+                setCreateItemDialogOpen(false);
+              }}
+            />
+          </Dialog>
+        )}
       </div>
       <div>
         <hr className="my-5" />
         {data?.status === "error" ? (
           <div className="text-red-500">Error: {data.message}</div>
         ) : (
-          <TblComponent data={data} isLoading={isLoading} mutate={mutate} />
+          <TblComponent
+            data={items}
+            isLoading={isLoading}
+            mutate={mutate}
+            businessId={id}
+          />
         )}
       </div>
     </div>
@@ -57,21 +94,18 @@ export default BusinessItemsPage;
 const TblComponent = ({
   data,
   isLoading,
+  businessId,
   mutate,
 }: {
   data: any;
   isLoading: boolean;
   mutate: (key: string) => void;
+  businessId: string;
 }) => {
   const { deleteItem: delItemApi } = useBusinessApi();
   const deleteItem = (id: string) => {
     delItemApi(id).then((res) => {
-      if (res.status === "success") {
-        console.log("Item deleted");
-        mutate(`/api/business/items?id=${data.id}`);
-      } else {
-        console.log("Item not deleted");
-      }
+      mutate(`/api/business/items?id=${businessId}`);
     });
   };
   return (
@@ -95,14 +129,14 @@ const TblComponent = ({
             </TableCell>
           </TableRow>
         )}
-        {data?.message.length === 0 && (
+        {data?.length === 0 && !isLoading && (
           <TableRow>
             <TableCell colSpan={8} className="text-center">
               No items found
             </TableCell>
           </TableRow>
         )}
-        {data?.message?.map((item: any) => (
+        {data?.map((item: any) => (
           <TableRow key={item.id}>
             <TableCell>{item.id}</TableCell>
             <TableCell>
@@ -119,12 +153,9 @@ const TblComponent = ({
                 item.collection.substring(0, 19) + "Z"
               ).toLocaleString()}
             </TableCell>
-            <TableCell>{item.category.name}</TableCell>
+            <TableCell>{item.category?.name}</TableCell>
 
             <TableCell className="flex gap-x-2">
-              <button className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600">
-                Edit
-              </button>
               <button
                 className="bg-red-500 text-white px-2 py-1 rounded-md ml-2 hover:bg-red-600"
                 onClick={() => deleteItem(item.id)}

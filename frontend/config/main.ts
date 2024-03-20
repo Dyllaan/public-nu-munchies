@@ -1,3 +1,3 @@
 export const mainConfig = {
-  origin: "http://localhost:8080",
+  origin: "https://backend.nu-munchies.xyz",
 };

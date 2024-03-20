@@ -26,7 +26,7 @@ import { FilePlusIcon } from "lucide-react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CreateItemDialog } from "@/app/(business-subsytem)/components/create-item-dialog";
 
-export const BusinessItemsPage: FC<{ params: { id: string } }> = ({
+const BusinessItemsPage: FC<{ params: { id: string } }> = ({
   params: { id },
 }) => {
   const [items, setItems] = useState<any[]>([]);
@@ -193,3 +193,4 @@ const Breadcrumbs = ({ id }: { id: string }) => {
     </Breadcrumb>
   );
 };
+export default BusinessItemsPage;

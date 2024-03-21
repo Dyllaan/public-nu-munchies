@@ -266,12 +266,13 @@ export const useUserSubsystem = () => {
     setLogged(false);
     setLoading(false);
     setOAuth(false);
+    setAuthStatus(false, false);
     router.replace("/");
   }
 
-  const setAuthStatus = (loading: boolean, logged: boolean) => {
+  const setAuthStatus = (loading: boolean, logged?: boolean) => {
     setLoading(loading);
-    setLogged(logged);
+    setLogged(logged ?? false);
   };
 
   function initFromLocalStorage() {
@@ -281,14 +282,6 @@ export const useUserSubsystem = () => {
       setUserState(JSON.parse(user));
       setAuthStatus(false, true);
     }
-  }
-
-  function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUserState({ first_name: "", last_name: "", email: "" });
-    setAuthStatus(false, false);
-    router.replace("/");
   }
 
   return {

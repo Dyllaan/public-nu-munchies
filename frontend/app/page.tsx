@@ -1,18 +1,15 @@
+'use client'
 import Header from "./layout-components/Header";
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { RocketIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import Items from './(ub-subsystem)/components/Items'
 
-/**
- * @author Louis Figes W21017657
- * @description The home page of the app
- * @credit https://ui.shadcn.com/docs/components/typography
- */
-export default function Home() {
+ function Home() {
   return (
     <div className="text-center">
-      <Header />
+      
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
         NU-MUNCHIES
       </h1>
@@ -24,3 +21,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home

@@ -42,7 +42,7 @@ switch ($event->type) {
             $session = $event_json->data->object;
             $customer_email = $session->customer_email;
 
-            $url = 'http://localhost:8080/insertorder';
+            $url = 'https://backend.nu-munchies.xyz/insertorder';
             $data = array('business_id' => $paymentIntent->metadata['business_id'],
                             'user_id' => $this->getUser()->getId(),
                             'item_id' => $paymentIntent->metadata['item_id']);
@@ -54,7 +54,7 @@ switch ($event->type) {
             $response = curl_exec($ch);
             curl_close($ch);
 
-            $url = 'http://localhost:8080/itemreserve';
+            $url = 'https://backend.nu-munchies.xyz/itemreserve';
             $data = array('item_id' => $paymentIntent->metadata['item_id']);
             $ch = curl_init($url);
             curl_setopt($ch,CURLOPT_POST, 1);

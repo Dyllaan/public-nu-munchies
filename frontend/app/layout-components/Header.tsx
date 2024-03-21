@@ -99,18 +99,20 @@ export default function Header() {
         </NavigationMenuItem>
         {logged ? loggedMenu() : guestMenu()}
         <NavigationMenuItem>
+
           <Link href="/about" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               About
             </NavigationMenuLink>
           </Link>
+          
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink
             className={navigationMenuTriggerStyle()}
             href="/business"
           >
-            Business Subsystem
+            Business
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>

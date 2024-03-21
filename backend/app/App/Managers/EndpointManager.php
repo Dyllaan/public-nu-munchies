@@ -20,6 +20,7 @@ use App\Endpoints\UFIntegration\AddNutrition;
 use App\Endpoints\UserSubSystem\UserEndpoint;
 use App\Endpoints\UFIntegration\AddCat;
 use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
+use App\Endpoints\BusinessSubsystem\BItemEndpoint;
 use App\Endpoints\UserSubSystem\OAuthCallback;
 use App\Endpoints\UserSubSystem\ForgotPassword;
 use App\Endpoints\UserSubSystem\ResetPassword;
@@ -28,7 +29,6 @@ use App\Endpoints\UserSubSystem\Councillor\IsCouncillor;
 use App\Endpoints\Search;
 use Core\Manager;
 use Core\HTTP\Classes\Request;
-use App\Endpoints\UBIntegration\ItemUpload;
 use App\Endpoints\UBIntegration\ItemReserve;
 use App\Endpoints\UBIntegration\OrderCancel;
 use App\Endpoints\UBIntegration\OrderCollect;
@@ -86,7 +86,6 @@ class EndpointManager extends Manager
             
  
         //$this->addEndpoint(new UserEndpoint());
-        $this->addEndpoint(new ItemUpload());
         $this->addEndpoint(new ItemReserve());
         $this->addEndpoint(new OrderCancel());
         $this->addEndpoint(new InsertOrder());

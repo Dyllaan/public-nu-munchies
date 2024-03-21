@@ -1,5 +1,6 @@
 import { useBusinessApi } from "@/hooks/business-subsystem/use-business-api";
 import { Suspense } from "react";
+import { unstable_noStore as noStore } from 'next/cache';
 
 import Link from "next/link";
 import { mainConfig } from "@/config/main";
@@ -21,6 +22,7 @@ export interface BusinessResponse {
 }
 
 export default async function BusinessesPage() {
+  noStore()
   return (
     <main>
       <div className="px-[10%] mt-10">

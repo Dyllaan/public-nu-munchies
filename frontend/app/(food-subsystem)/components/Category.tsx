@@ -1,8 +1,8 @@
-import { useState } from 'react';
+    import { useState } from 'react';
 import { atom, useAtom } from "jotai";
 import { useRouter } from 'next/navigation';
 import useFetchData from '@/hooks/user-subsystem/useFetchData';
-import LoadingInPage from '@/app/(user-subsystem)/components/LoadingInPage';
+import LoadingInPage from '@/app/(user-subsystem)/components/reusable/LoadingInPage';
 
 import "../css/Category.css";
 

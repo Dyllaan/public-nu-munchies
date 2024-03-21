@@ -99,11 +99,13 @@ export default function Header() {
         </NavigationMenuItem>
         {logged ? loggedMenu() : guestMenu()}
         <NavigationMenuItem>
+
           <Link href="/about" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               About
             </NavigationMenuLink>
           </Link>
+          
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink
@@ -113,8 +115,8 @@ export default function Header() {
             Business
           </NavigationMenuLink>
         </NavigationMenuItem>
-        {userTypes.councillor ? councillorMenu() : null}
-        {userTypes.moderator ? moderatorMenu() : null}
+        {userTypes?.councillor ? councillorMenu() : null}
+        {userTypes?.moderator ? moderatorMenu() : null}
       </NavigationMenuList>
     </NavigationMenu>
   );

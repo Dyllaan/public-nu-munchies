@@ -8,23 +8,41 @@ import { selectedItemAtom } from './Items';
 import { useAtom } from "jotai";
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import ReviewForm from './ReviewForm'
+import ReviewForm from './ReviewForm';
 import DisplayReviews from './DisplayReviews'
 import { Button } from "@/components/ui/button"
 import Nutritions from '@/app/(food-subsystem)/components/NutritionDisplay';
+import { SelectItem } from '@radix-ui/react-select';
+import { ClockIcon } from '@radix-ui/react-icons';
+import { StarIcon } from '@radix-ui/react-icons';
+import useUserSubsystem from '@/hooks/user-subsystem/use-user-subsystem';
+import Link from 'next/link';
 
 
 function Checkout() {
   //fetch the checkout url from the checkoutItem endpoint with the props.id as a parameter.
   const [selectedItem] = useAtom(selectedItemAtom);
   const router = useRouter();
+  const { user, logged } = useUserSubsystem();
+  const today = new Date();
+  const todaysDate = String(today.getDate());
+
   const fetchData = async () => {
-    const res = await fetch(`http://localhost:8080/checkoutItem?item_id=${selectedItem.id}`);
+    const res = await fetch(`https://backend.nu-munchies.xyz/checkoutItem?item_id=${selectedItem.id}`);
     return res.json();
   };
 
+  useEffect(() => {
+    if (selectedItem.id === undefined) {
+      router.replace("/");
+    }
+  }, [selectedItem.id, router]);
 
-  useEffect(() => { if (selectedItem.id == undefined) { router.replace("/") } })
+  if (!logged) {
+    return (
+      <Link href="/login">Please login before checking out an item!</Link>
+    );
+  }
 
 
   //when the button is clicked, run this function - check if the respone has data, then redirect the user to the checkout_url.
@@ -41,19 +59,57 @@ function Checkout() {
   //return the item details as well as a checkout button. When pressed, call handleClick
   return (
     <>
-      <ReviewForm business_id={selectedItem.business_id} />
-      <p className="font-bold">{selectedItem.item_name}</p>
-      <p>Price: £{selectedItem.item_price}</p>
-      <p>Expiry: {selectedItem.item_expiry}</p>
-      <p>Collection Time: {selectedItem.collect_time}</p>
-      
-      
-      <Button onClick={handleClick}>checkout</Button>
 
+      <h1 className="font-bold text-3xl text-red-500">{selectedItem.item_name}</h1>
+
+      <div className="flex relative items-center">
+        <p >{selectedItem.business_name}</p>
+        <StarIcon color='red' className="ml-1" />
+        <p className="mr-2">{selectedItem.average_rating}</p>
+
+      </div>
+
+
+      <div className="flex space-x-2 sm:flex-row sm:flex-wrap sm:space-x-2">
+        <p>{selectedItem.address_line1} <span className="text-black">|</span></p>
+        <p className="text-gray-500">{selectedItem.address_city} <span className="text-black">|</span></p>
+        <p className="text-gray-500">{selectedItem.address_postcode}</p>
+      </div>
+      <p>{selectedItem.business_description}</p>
+
+      <p>{selectedItem.item_expiry}</p>
+      <div className="flex relative items-center mb-2">
+        <ClockIcon />
+        {selectedItem.collect_date !== todaysDate ? (
+          <>
+            <p className="ml-1">Collection: {selectedItem.collect_time} (tomorrow)</p>
+          </>
+        ) : (
+          <>
+            <p className="ml-1">Collection: {selectedItem.collect_time}</p>
+          </>
+        )}
+      </div>
+
+      <div>
+      <h3 className="font-semibold">Nutrition</h3>
+      <p> Weight - {selectedItem.weight}g</p>
+      <p>Calories - {selectedItem.calories}cal</p>
+      <p>Protein - {selectedItem.protein}g</p>
+      <p>Fat - {selectedItem.fat}g</p>
+      <p>Salt - {selectedItem.salt}g</p>
+      <p>Item Quantity - {selectedItem.quantity}</p>
+
+      </div>
+
+      <Button onClick={handleClick} className="mb-5 mt-5 sm:w-full">Checkout (£{selectedItem.item_price})</Button>
+
+      <br></br>
+      <h2 className="font-semibold text-xl">Reviews</h2>
+      <p>See what people think about {selectedItem.business_name}...</p>
+      <ReviewForm className="mt-2" business_id={selectedItem.business_id} />
       <DisplayReviews business_id={selectedItem.business_id} />
-      <Nutritions item_id={selectedItem.id}/>
     </>
   );
 }
-
-export default Checkout;
+export default Checkout

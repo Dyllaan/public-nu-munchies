@@ -1,22 +1,24 @@
 "use client"
 import { useState, useEffect } from 'react';
+import { StarIcon } from '@radix-ui/react-icons';
 
 interface Review {
-    title?: string,
-    rating?: number,
-    review_details?: string,
-    first_name?: string,
-    last_name?: string
+  title?: string,
+  rating?: number,
+  review_details?: string,
+  first_name?: string,
+  last_name?: string
+  id?: number
 }
 
 function DisplayReviews(props:any) {
-    const [reviews, setReviews] = useState<{ data: Review[] }>({
-    data: []
+  const [reviews, setReviews] = useState<{ data:{ id:Review[] }}>({
+    data:{id: []}
   });
 
 
-    const fetchData = async () => {
-    const res = await fetch(`http://localhost:8080/getreviews?business_id=${props.business_id}`);
+  const fetchData = async () => {
+    const res = await fetch(`https://backend.nu-munchies.xyz/getreviews?business_id=${props.business_id}`);
     return res.json()
   }
 
@@ -29,22 +31,28 @@ function DisplayReviews(props:any) {
     });
   }, []);
 
-    return (
-        <>
-            <div className="grid-cols-{4}">
-                <div className="bg-[#eaeaea] my-2 rounded">
-                    {reviews.data.id?.map((value, key) => (
-                        <div key={key} className="mb-2">
-                            <p className="font-bold">{value.title}</p>
-                            <p>rating: £{value.rating}</p>
-                            <p>details: {value.review_details}</p>
-                            <p>by: {value.first_name}</p>
-                        </div>
-                    ))}
-                </div>
+  return (
+    <>
+      <div className="grid-cols-{4}">
+        <div className="my-2">
+          {reviews.data.id?.map((value:any, key:any) => (
+            <div key={key} className="border rounded my-2">
+            
+              
+              <div className="flex relative  items-center">
+              
+              <p className="font-bold text-lg pr-2">{value.title}</p>
+              <StarIcon color="red" />
+                <p>{value.rating}/5</p>  
+              </div>
+              <p>{value.first_name} {value.last_name}</p>
+              <p>{value.review_details}</p>
             </div>
-        </>
-    )
+          ))}
+        </div>
+      </div>
+    </>
+  )
 }
 
 export default DisplayReviews;

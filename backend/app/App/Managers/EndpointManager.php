@@ -39,7 +39,6 @@ use App\Endpoints\UBIntegration\Webhook;
 use Core\ClientErrorException;
 use App\Endpoints\UBIntegration\GetItems;
 use App\Endpoints\UBIntegration\GetReviews;
-use App\Endpoints\BusinessSubsystem\BItemEndpoint;
 
 class EndpointManager extends Manager
 {

@@ -11,7 +11,7 @@ class EditCat extends SubEndpoint
     {
         parent::__construct('PUT', 'editcategory');
         $this->getAttributes()->addRequiredInts(['cat_id']);
-        $this->getAttributes()->addAllowedStrings(['cat_name', 'cat_image']);
+        $this->getAttributes()->addAllowedStrings(['cat_name']);
     }
 
     public function process($request)
@@ -41,10 +41,6 @@ class EditCat extends SubEndpoint
         if ($request->hasAttribute('cat_name')) {
             $changeFlag = true;
             $cat->setCatName($request->getAttribute('cat_name'));
-        }
-        if ($request->hasAttribute('cat_image')) {
-            $changeFlag = true;
-            $cat->setCatImage($request->getAttribute('cat_image'));
         }
 
         if ($changeFlag) {

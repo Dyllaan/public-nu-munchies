@@ -3,6 +3,7 @@ import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 import requireAuth from "../components/auth/requireAuth";
 import UserProfile from "../components/profile/UserProfile";
 import TabbedProfile from "../components/moderator/TabbedProfile";
+import OAuthProfile from "../components/profile/OAuthProfile";
 
 function Profile() {
   const { user, logout, isOAuth, userTypes } = useUserSubsystem();
@@ -19,7 +20,9 @@ function Profile() {
         Welcome to Profile Page {user.firstName} !
       </h1>
         <h2>Joined: {dateString}</h2>
-        {userTypes.moderator ? <TabbedProfile /> : <UserProfile />}
+        {userTypes.moderator ? <TabbedProfile /> : (
+          isOAuth ? <OAuthProfile /> : <UserProfile />
+        )}
     </main>
   );
 }

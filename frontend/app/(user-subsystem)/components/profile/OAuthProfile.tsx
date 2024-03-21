@@ -7,9 +7,8 @@ import GoogleEditProfile from "@/app/(user-subsystem)/components/profile/GoogleE
 import OrderHistory from "./OrderHistory";
 import EditProfile from "./EditProfile";
 import ProfilePassword from "../profile/password/ProfilePassword";
-import Moderator from "../moderator/Moderator";
 
-function UserProfile() {
+function OAuthProfile() {
   const { user} = useUserSubsystem();
 
   let dateString = '';
@@ -19,16 +18,13 @@ function UserProfile() {
   }
 
   return (
-    <>
-      <div className="flex flex-col lg:flex-row gap-4 mx-auto p-4">
-        <EditProfile />
-        <ProfileEmail />
-      </div>
-      <div className="flex flex-col lg:flex-row gap-4 mx-auto p-4">
+    <div>
+      <div className="flex flex-col gap-4 mx-auto p-4">
+        <GoogleEditProfile />
         <OrderHistory />
         <ProfilePassword />
       </div>
-    </>
+    </div>
   );
 }
-export default UserProfile;
+export default OAuthProfile;

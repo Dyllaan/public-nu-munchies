@@ -20,7 +20,7 @@ import UserProfile from "../profile/UserProfile"
 
 export default function TabbedProfile() {
   return (
-    <Tabs defaultValue="account" className="w-full">
+    <Tabs defaultValue="user" className="w-full">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="user">User</TabsTrigger>
         <TabsTrigger value="moderator">Moderator</TabsTrigger>

@@ -10,7 +10,13 @@ export default function requireAuth(ChildComponents: any, pageNeedsAuth: boolean
         const { loading, logged, user, checkToken } = useUserSubsystem();
         
         if(loading) {
-            return <LoadingInPage />;
+            return (
+            <div className="flex flex-col min-h-[85vh] justify-center align-center">
+                <div className="mx-auto my-auto">
+                    <LoadingInPage />;
+                </div>
+            </div>
+            );
         } else if(!loading && logged) {
             /**
              * Allowed has to be first as if the IP isnt allowed the user

@@ -269,7 +269,7 @@ export const useUserSubsystem = () => {
     router.replace("/");
   }
 
-  const setAuthStatus = (loading: boolean, logged: boolean) => {
+  const setAuthStatus = (loading: boolean, logged?: boolean) => {
     setLoading(loading);
     setLogged(logged);
   };

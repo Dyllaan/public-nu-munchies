@@ -516,15 +516,6 @@ class User extends CrudModel implements CrudInterface
         return $this->getFirstName() . " " . $this->getLastName();
     }
 
-    public function doesExist()
-    {
-        return $this->exists;
-    }
-
-    public function setExists($exists) {
-        $this->exists = $exists;
-    }
-
     public function getCreatedAt()
     {
         return $this->createdAt;

@@ -73,9 +73,6 @@ class OAuthUser extends User
 
     public function exists()
     {
-        if($this->doesExist()) {
-            return $this->doesExist();
-        }
         if ($this->getEmail() != null) {
             $data = $this->getFromEmail();
             if($data != null) {
@@ -110,7 +107,6 @@ class OAuthUser extends User
         $this->setEmail($data['email']);
         $this->getVerifiedHandler()->setVerified($data['verified']);
         $this->setCreatedAt($data['created_at']);
-        $this->setExists(true);
     }
 
 

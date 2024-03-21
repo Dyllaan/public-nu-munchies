@@ -16,10 +16,14 @@ const config = {
       screens: {
         "2xl": "1400px",
       },
+      
     },
     extend: {
       backgroundColor: {
         'custom': '#687387',
+      },
+      scale: {
+        '1025': '1.025',
       },
       colors: {
         border: "hsl(var(--border))",

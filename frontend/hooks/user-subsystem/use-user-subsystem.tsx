@@ -272,7 +272,7 @@ export const useUserSubsystem = () => {
 
   const setAuthStatus = (loading: boolean, logged?: boolean) => {
     setLoading(loading);
-    setLogged(logged);
+    setLogged(logged ?? false);
   };
 
   function initFromLocalStorage() {

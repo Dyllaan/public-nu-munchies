@@ -1,5 +1,4 @@
 "use-client";
-const BASE2_URL = 'https://backend.nu-munchies.xyz/';
 const BASE_URL = 'https://backend.nu-munchies.xyz/';
 
 async function handleResponse(response:any) {

@@ -1,8 +1,8 @@
-import { useState } from 'react';
+    import { useState } from 'react';
 import { atom, useAtom } from "jotai";
 import { useRouter } from 'next/navigation';
 import useFetchData from '@/hooks/user-subsystem/useFetchData';
-import LoadingInPage from '@/app/(user-subsystem)/components/LoadingInPage';
+import LoadingInPage from '@/app/(user-subsystem)/components/reusable/LoadingInPage';
 
 import "../css/Category.css";
 
@@ -30,18 +30,20 @@ function Categories() {
     }
 
     return (
-        <section className="hero">
-            <h1 className="title" onClick={handleTitleClick}>Categories</h1>
-            {showCategories && (
-                <div className="grid grid-cols-3 gap-20">
-                {data.map((value: any, key) => (
-                    <div key={key} className="bg-gray-200 p-4 rounded cursor-pointer" onClick={() => handleClick(value)}>
-                        <p className="font-bold">{value.cat_name}</p>
+        <>
+            <section className="hero">
+                <h1 className="title" onClick={handleTitleClick}>Categories</h1>
+                {showCategories && (
+                    <div className="grid grid-cols-3 gap-20">
+                    {data.map((value: any, key) => (
+                        <div key={key} className="bg-gray-200 p-4 rounded cursor-pointer" onClick={() => handleClick(value)}>
+                            <p className="font-bold">{value.cat_name}</p>
+                        </div>
+                    ))}
                     </div>
-                ))}
-                </div>
-            )}
-        </section>
+                )}
+            </section>
+        </>
     )
 }
 

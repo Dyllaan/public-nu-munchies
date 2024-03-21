@@ -60,10 +60,9 @@
         public function save()
         {
             $catData = [
-                'cat_name' => $this->getCatName(),
-                'cat_image' => $this->getCatImage()
+                'cat_name' => $this->getCatName()
             ];
-            $cat_id = $this->getDb()->createInsert()->into('categories')->cols('cat_name, cat_image')->values([$this->getCatName(), $this->getCatImage()])->execute();                
+            $cat_id = $this->getDb()->createInsert()->into('categories')->cols('cat_name')->values([$this->getCatName()])->execute();                
             
             if($cat_id != null)
             {
@@ -77,8 +76,7 @@
         {
             $errors = [];
             $checkFields = [
-                'CatName' => ['value' => $this->getCatName(), 'min' => 3, 'max' => 30, 'message' => 'cat_name'],
-                'CatImage' => ['value' => $this->getCatImage(), 'min' => 3, 'max' => 30, 'message' => 'cat_image']
+                'CatName' => ['value' => $this->getCatName(), 'min' => 3, 'max' => 30, 'message' => 'cat_name']
 
             ];
 
@@ -90,10 +88,7 @@
                 } elseif ($field === 'CatName' && (strlen($data['value']) < $data['min'] || strlen($data['value']) > $data['max']))
                 {
                     $errors[] = "{$data['message']} must be between {$data['min']} and {$data['max']} characters";
-                } elseif ($field === 'CatImage' && (strlen($data['value']) < $data['min'] || strlen($data['value']) > $data['max']))
-                {
-                    $errors[] = "Invalid {$data['message']}";
-                }
+                } 
                  elseif (strlen($data['value']) > $data['max'])
                 {
                     $errors[] = "{$data['message']} must be less than {$data['max']} characters";
@@ -117,7 +112,6 @@
             {
                 $catData = $data[0];
                 $this->setCatName($catData['cat_name']);
-                $this->setCatImage($catData['cat_image']);
             }
         }
         public function update()
@@ -126,15 +120,14 @@
             {
                 $this->setResponse(400, "Category does not Exists");
             }
-            $data = $this->getDb()->createSelect()->cols("cat_name, cat_image")->from($this->getTable())->where(["cat_id = ".$this->cat_id])->execute();
+            $data = $this->getDb()->createSelect()->cols("cat_name")->from($this->getTable())->where(["cat_id = ".$this->cat_id])->execute();
             
             if(count($data) == 0)
             {
                 $this->setResponse(400, "Category does not Exist");
             } 
             $changed = array_filter([
-                'cat_name' => $this->getCatName() !== $data[0]['cat_name'] ? $this->getCatName() : null,
-                'cat_image' => $this->getCatImage() !== $data[0]['cat_image'] ? $this->getCatImage() : null
+                'cat_name' => $this->getCatName() !== $data[0]['cat_name'] ? $this->getCatName() : null
             ]);
             if(empty($changed))
             {
@@ -155,13 +148,11 @@
         public function toArray()
         {
             $cat['categories'] = [
-                'cat_name' => $this->getCatName(),
-                'cat_image' => $this->getCatImage()
+                'cat_name' => $this->getCatName()
             ];
-            $jwt = $this->generateJWT($this->getId(), 1);
-            $cat['jwt'] = $jwt;
             return $cat;
         }
+        /*
         public function generateJWT($id, $providerId)
         {
             $secretKey = $this->appConfigInstance->get('JWT_SECRET');
@@ -179,6 +170,7 @@
                 $jwt = JWT::encode($payload, $secretKey, 'HS256');
                 return $jwt;
         }
+        */
         public function getCatId(){
             return $this->cat_id;
         }
@@ -193,14 +185,6 @@
         public function setCatName($cat_name)
         {
             $this->cat_name = $cat_name;
-        }
-        public function getCatImage()
-        {
-            return $this->cat_image;
-        }
-        public function setCatImage($cat_image)
-        {
-            $this->cat_image = $cat_image;
         }
     }
 ?>

@@ -1,5 +1,5 @@
 "use-client";
-const BASE_URL = 'https://nu-munchies.xyz/'
+const BASE_URL = 'https://backend.nu-munchies.xyz/'
 
 async function handleResponse(response:any) {
     const contentType = response.headers.get("content-type");

@@ -19,7 +19,7 @@ function OAuthProfile() {
 
   return (
     <div>
-      <div className="flex flex-col gap-4 mx-auto p-4">
+      <div className="flex flex-col gap-4 mx-auto p-4 items-center">
         <GoogleEditProfile />
         <OrderHistory />
         <ProfilePassword />

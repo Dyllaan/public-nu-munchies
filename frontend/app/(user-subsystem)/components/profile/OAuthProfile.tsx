@@ -1,11 +1,8 @@
 "use client";
 
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
-import ProfileEmail from "./email/ProfileEmail";
-import requireAuth from "../auth/requireAuth";
 import GoogleEditProfile from "@/app/(user-subsystem)/components/profile/GoogleEditProfile";
-import OrderHistory from "./OrderHistory";
-import EditProfile from "./EditProfile";
+import ProfileDelete from "./delete/ProfileDelete";
 import ProfilePassword from "../profile/password/ProfilePassword";
 
 function OAuthProfile() {
@@ -21,7 +18,7 @@ function OAuthProfile() {
     <div>
       <div className="flex flex-col gap-4 mx-auto p-4 items-center">
         <GoogleEditProfile />
-        <OrderHistory />
+        <ProfileDelete />
         <ProfilePassword />
       </div>
     </div>

@@ -184,6 +184,27 @@ export const useUserSubsystem = () => {
     setRequestLoading(false);
   }
 
+  const checkDeleteCode = async (code: string) => {
+    setRequestLoading(true);
+    const otpData = new FormData();
+    otpData.append("token", code);
+    otpData.append("type", "delete_account");
+    try {
+      const response = await api.post("user/verify-email-token", otpData, localStorage.getItem("token"));
+      if (response.success) {
+        localStorage.removeItem("token");
+        logout();
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.data.message);
+      }
+    } catch (error: any) {
+      const responseString = "Failed to verify your email, please retry."
+      toast.error(responseString);
+    }
+    setRequestLoading(false);
+  }
+
   const requestNewCode = async (type: string) => {
     setRequestLoading(true);
     try {
@@ -335,6 +356,7 @@ export const useUserSubsystem = () => {
     checkToken,
     requestEmailChange,
     requestPasswordChange,
+    checkDeleteCode,
     requestLoading,
     logged,
     loading,

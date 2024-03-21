@@ -7,9 +7,8 @@ import {
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
-  } from "@/components/ui/drawer"
+  } from "@/components/ui/drawer";
 import NavLink from '../NavLink';
-import NavButton from '../NavButton';
 import { Button } from '@/components/ui/button';
 /**
  * @author Louis Figes W21017657

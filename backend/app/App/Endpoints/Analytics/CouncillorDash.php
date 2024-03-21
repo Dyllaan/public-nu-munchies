@@ -1,9 +1,7 @@
 <?php
 
-/**
-* Displays the business' ranking amongst the other business' rankings
- * @author Jake McCarthy w20043974
- */
+// This is the endpoint for the councilor's dashboard where
+// business and user rankings are displayed so they can be contacted for rewards
 
 namespace App\Endpoints\Analytics;
 
@@ -11,17 +9,16 @@ use App\Classes\Analytics;
 use Core\Endpoint\SubEndpoint\SubEndpoint;
 
 
-class BusinessRankings extends SubEndpoint
+class CouncillorDash extends SubEndpoint
 {
+
     //call:
-    // - business' rank number (for top and highlight)
-    // - business' name (for highlight)
-    // - all business names
-    // - each business' total points
+    // - list of user rankings
+    // - list of business rankings
 
     public function __construct()
     {
-        parent::__construct('GET', 'business-rankings');
+        parent::__construct('GET', 'councillor-dash');
         $this->setRequiresAuth(true);
 
     }
@@ -33,6 +30,7 @@ class BusinessRankings extends SubEndpoint
         $analytics = new Analytics($this->getDb(), $this->getUser());
 
         // Assuming there is a respondJson method available
-        $this->setResponse(200, "User Rewards stats retrieved", $analytics->getBusinessRankings());
+        $this->setResponse(200, "Councillor stats retrieved", $analytics->councillorView());
     }
+
 }

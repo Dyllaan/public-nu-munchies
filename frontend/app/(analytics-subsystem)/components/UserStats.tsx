@@ -63,15 +63,13 @@ const headers = {
         <TableCell>{user.total_points}</TableCell>
       </TableRow>
             ))}
-          </TableBody>
-          <TableFooter>
             <TableRow>
-              <TableCell colSpan={3}>Your Rank:</TableCell>
+            <TableCell >Your Rank:</TableCell>
               <TableCell >{items.data.userRank.rank}</TableCell>
               <TableCell >{items.data.userRank.first_name} {items.data.userRank.last_name}</TableCell>
               <TableCell >{items.data.userRank.total_points}</TableCell>
             </TableRow>
-          </TableFooter>
+            </TableBody>
         </Table>
 
         <div>You've Accumulated {items.data.userPoints} Points! See Your Rewards > </div>

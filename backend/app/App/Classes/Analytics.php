@@ -44,7 +44,16 @@ class Analytics extends CrudModel {
 
         $db = $this->getDb();
     
-        return $db->createSelect()->cols("*")->from("businesses")->join("users_businesses", "businesses.id = users_businesses.business_id")->where(["users_businesses.user_id = " . $this->getUser()->getId() ])->execute();
+        $userId = $this->getUser()->getId();
+    
+        $query = $db->createSelect()
+                    ->cols("businesses.id")
+                    ->from("businesses")
+                    ->join("users_businesses", "businesses.id = users_businesses.business_id")
+                    ->where(["users_businesses.user_id = $userId"])
+                    ->execute();
+    
+        return $query[0]["id"];
     }
 
     public function getFirstUserName() {
@@ -167,8 +176,9 @@ class Analytics extends CrudModel {
 
         $db = $this->getDb();
 
-        $moneyMade = $db->createSelect()->cols("orders.item_id, SUM(items.item_price) AS total_money_made")->from("orders")->join("items","orders.item_id = items.id")
-        ->where(["business_id = " . $this->getBusinessId() ])->execute();
+        $moneyMade = $db->createSelect()->cols("SUM(item_price) AS total_money_made")->from("items")
+        ->where(["business_id = " . $this->getBusinessId() ])
+        ->execute();
         return $moneyMade[0]['total_money_made'];
     }
 
@@ -295,18 +305,20 @@ class Analytics extends CrudModel {
     public function getOrdersStats(){
         $db = $this->getDb();
 
-        $orderItems = $db->createSelect()->cols("orders.id, items.item_name, items.created_at")->from("items")->join("orders","items.id = orders.items_id")->where(["user_id = " . $this->getUser()->getId() ])->execute();
+        $orderItems = $db->createSelect()->cols("orders.id, items.item_name, items.created_at, items.item_price")->from("items")->join("orders","items.id = orders.items_id")->where(["user_id = " . $this->getUser()->getId() ])->execute();
         $relatedBusiness = $db->createSelect()->cols("orders.business_id, businesses.business_name")->from("businesses")->join('orders', 'businesses.id = orders.business_id')->where(["user_id = " . $this->getUser()->getId() ])->execute();
-        $wastePrevented = $db->createSelect()->cols("food_waste_prevented")->from("user_analytics")->join('orders', 'businesses.id = orders.business_id')->where(["user_id = " . $this->getUser()->getId() ])->execute();
+        $wastePrevented = $db->createSelect()->cols("food_waste_prevented")->from("user_analytics")->join('orders', 'user_analytics.order_id = orders.id')->where(["orders.user_id = " . $this->getUser()->getId() ])->execute();
         
         $userOrderData = [];
 
-        foreach ($orderItems as $order) {
+        foreach ($orderItems as $index => $order) {
             $orderData = array(
-                'business_name' => $relatedBusiness[0]['business_name'],
+                'business_name' => $relatedBusiness[$index]['business_name'],
                 'order_number' => $order['id'],
                 'item_name' => $order['item_name'],
+                'price' => $order['item_price'],
                 'purchaseDate' => $order['created_at'],
+                'wastePrevented' => $wastePrevented[$index]['food_waste_prevented'],
             );
             array_push($userOrderData, $orderData);
         }
@@ -390,7 +402,7 @@ class Analytics extends CrudModel {
     public function getBusinessRank(){
         $db = $this->getDb();
 
-        $businessPoints = $db->createSelect()->cols("businesses.business_name, SUM(business_analytics.points) AS total_points")->from("businesses")->join("business_analytics", "businesses.id = businesses_analytics.business_id")
+        $businessPoints = $db->createSelect()->cols("businesses.business_name, SUM(business_analytics.points) AS total_points")->from("businesses")->join("business_analytics", "businesses.id = business_analytics.business_id")
         ->where(["business_id = " . $this->getBusinessId() ])
         ->groupBy("businesses.id")
         ->execute();
@@ -447,20 +459,21 @@ class Analytics extends CrudModel {
     public function businessOrderStats(){
         $db = $this->getDb();
 
-        $orderItems = $db->createSelect()->cols("orders.id, items.item_name, items.created_at")->from("items")->join("orders","items.id = orders.items_id")->where(["business_id = " . $this->getBusinessId() ])->execute();
-        $relatedCustomers = $db->createSelect()->cols("orders.user_id, users.first_name, users.last_name")->from("users")->join('orders', 'users.id = orders.user_id')->where(["business_id = " . $this->getBusinessId() ])->execute();
-        $wastePrevented = $db->createSelect()->cols("food_waste_prevented")->from("business_analytics")->join('orders', 'users.id = orders.user_id')->where(["business_id = " . $this->getBusinessId()])->execute();
+        $orderItems = $db->createSelect()->cols("orders.id, items.item_name, items.created_at, items.item_price")->from("items")->join("orders","items.id = orders.items_id")->where(["orders.business_id = " . $this->getBusinessId() ])->execute();
+        $relatedCustomers = $db->createSelect()->cols("orders.user_id, users.first_name, users.last_name")->from("users")->join('orders', 'users.id = orders.user_id')->where(["orders.business_id = " . $this->getBusinessId() ])->execute();
+        $wastePrevented = $db->createSelect()->cols("food_waste_prevented")->from("business_analytics")->join('orders', 'business_analytics.order_id = orders.id')->where(["orders.business_id = " . $this->getBusinessId()])->execute();
         
         $businessOrderData = [];
 
-        foreach ($orderItems as $order) {
+        foreach ($orderItems as $index => $order) {
             $orderData = array(
-                'first_name' => $relatedCustomers[0]['first_name'],
-                'last_name' => $relatedCustomers[0]['last_name'],
+                'customerFirstName' => $relatedCustomers[$index]['first_name'],
+                'customerLastName' => $relatedCustomers[$index]['last_name'],
                 'order_number' => $order['id'],
                 'item_name' => $order['item_name'],
+                'moneyMade' => $order['item_price'],
                 'purchaseDate' => $order['created_at'],
-                'wastePrevented' => $wastePrevented['wastePrevented'],
+                'wastePrevented' => $wastePrevented[$index]['food_waste_prevented'],
             );
             array_push($businessOrderData, $orderData);
         }
@@ -470,20 +483,30 @@ class Analytics extends CrudModel {
 
 
     public function moneyMadeStats()
-    {
-        $db = $this->getDb();
+{
+    $db = $this->getDb();
 
-        $moneyStats = $db->createSelect()->cols("orders.item_id, orders.order_id, items.item_price, items.item_name")->from("orders")->join("items","orders.item_id = items.id")
-        ->where(["business_id = " . $this->getBusinessId() ])->execute();
+    $moneyStats = $db->createSelect()->cols("orders.id, items.item_price, items.item_name")->from("orders")->join("items","orders.items_id = items.id")
+    ->where(["orders.business_id = " . $this->getBusinessId() ])->
+    execute();
 
-        $moneyData = array(
-            'order_number' => $moneyStats[0]['order_id'],,
-            'item_name' => $moneyStats[0]['item_name'],
-            'item_price' => $moneyStats[0]['item_price'],
+    $statsData = [];
+
+    foreach ($moneyStats as $stats) {
+        $moneyStatsData = array(
+            'order_number' => $stats['id'],
+            'item_name' => $stats['item_name'],
+            'item_price' => $stats['item_price'],
         );
 
-        return $moneyData;
+        array_push($statsData, $moneyStatsData);
     }
+
+    return [
+        'totalMoneyMade' => $this->getMoneyMade(),
+        'statsData' => $statsData
+    ];
+}
 
     public function userStats(){
         return [
@@ -515,7 +538,7 @@ class Analytics extends CrudModel {
 
     }
 
-    public function councilorView(){
+    public function councillorView(){
         return [
             'userList'=> $this->userList(),
             'businessList'=> $this->businessList(),
@@ -524,13 +547,13 @@ class Analytics extends CrudModel {
 
     public function businessStats(){
         return [
-            'userFirstName' => $this->getBusinessName(),
+            'usersName' => $this->getBusinessName(),
             'preventedWaste' => $this->totalBusinessFoodWastePrevented(),
-            'ordersPlaced' => $this->getOrdersReceived(),
+            'ordersReceived' => $this->getOrdersReceived(),
             'totalMoneyMade' => $this->getMoneyMade(),
-            'userRank' => $this->getBusinessRank(),
+            'yourRank' => $this->getBusinessRank(),
             'topRanks' => $this->getBusinessRankings(),
-            'userPoints' => $this->getBusinessPoints()
+            'businessPoints' => $this->getBusinessPoints()
         ];
     }
 

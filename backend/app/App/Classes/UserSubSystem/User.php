@@ -378,6 +378,7 @@ class User extends CrudModel implements CrudInterface
     public function toArray($useJwt = true)
     {
         //is allowed
+        $user['types'] = $this->getUserTypes();
         if(!$this->getIPHandler()->isIPAllowed()) {
             $user['user'] = [
                 'email' => $this->getEmail(),

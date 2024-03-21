@@ -34,6 +34,6 @@ class BusinessStats extends SubEndpoint
         $analytics = new Analytics($this->getDb(), $this->getUser());
 
         // Assuming there is a respondJson method available
-        $this->setResponse(200, "Councilor stats retrieved", $analytics->businessStats());
+        $this->setResponse(200, "Business stats retrieved", $analytics->businessStats());
     }
 }

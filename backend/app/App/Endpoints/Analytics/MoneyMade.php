@@ -32,6 +32,6 @@ class MoneyMade extends SubEndpoint
         $analytics = new Analytics($this->getDb(), $this->getUser());
 
         // Assuming there is a respondJson method available
-        $this->setResponse(200, "Business Helped stats retrieved", $analytics->businessMoney());
+        $this->setResponse(200, "Business Money stats retrieved", $analytics->moneyMadeStats());
     }
 }

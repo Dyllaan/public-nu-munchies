@@ -33,6 +33,6 @@ class BusinessRewards extends SubEndpoint
         $analytics = new Analytics($this->getDb(), $this->getUser());
 
         // Assuming there is a respondJson method available
-        $this->setResponse(200, "User Rewards stats retrieved", $analytics->getBusinessRewards());
+        $this->setResponse(200, "Business Rewards stats retrieved", $analytics->getBusinessRewards());
     }
 }

@@ -43,30 +43,29 @@ const headers = {
         <div>
   
           <div>
-            Total Businesses helped: 
-             {orders.data.totalWaste}kg
+            Total Businesses helped: {help.data.totalHelped}
           </div>
         
         <Table>
           <TableCaption>A list of your total businesses helped</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Business Name</TableHead>
-              <TableHead>Number of Purchases:</TableHead>
+              <TableHead className="w-[100px]">Name Of Business:</TableHead>
+              <TableHead>Total Number of Purchases:</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-    {orders.data.orderStats.map((order) => (
-      <TableRow key={order.order_number}>
-        <TableCell className="font-medium">{order.business_name}</TableCell>
-        <TableCell>{order.number}</TableCell>
+    {help.data.businessesHelped.map((helps) => (
+      <TableRow key={helps.purchase_amount}>
+        <TableCell className="font-medium">{helps.business_name}</TableCell>
+        <TableCell>{helps.purchase_amount}</TableCell>
       </TableRow>
             ))}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TableCell colSpan={3}>Total Businesses Helped</TableCell>
-              <TableCell className="text-right">{orders.data.totalOrders}</TableCell>
+              <TableCell className="text-right">{help.data.totalHelped}</TableCell>
             </TableRow>
           </TableFooter>
         </Table>

@@ -1,14 +1,13 @@
 import { FC } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { Alert } from "@/components/ui/alert";
 import { AlertOctagonIcon } from "lucide-react";
 import Link from "next/link";
 
 export const BusinessDetailSkeleton: FC<{ error?: boolean }> = ({ error }) => {
   return (
     <>
-      <div className="relative h-[400px] w-full mt-20">
+      <div className="relative h-[400px] w-full mt-4">
         <div
           className={cn(
             "z-10 absolute inset-0 w-full h-full bg-gray-700 bg-opacity-50 flex flex-col justify-end p-10 rounded-lg",

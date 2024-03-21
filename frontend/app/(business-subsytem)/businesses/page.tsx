@@ -1,6 +1,6 @@
 import { useBusinessApi } from "@/hooks/business-subsystem/use-business-api";
 import { Suspense } from "react";
-import { unstable_noStore as noStore } from 'next/cache';
+import { unstable_noStore as noStore } from "next/cache";
 
 import Link from "next/link";
 import { mainConfig } from "@/config/main";
@@ -22,10 +22,10 @@ export interface BusinessResponse {
 }
 
 export default async function BusinessesPage() {
-  noStore()
+  noStore();
   return (
     <main>
-      <div className="px-[10%] mt-10">
+      <div className="px-[10%] mt-4">
         <h1 className="text-3xl mb-3 font-bold">List of Businesses</h1>
         <p className="text-muted-foreground">
           Here you can find a list of businesses registered with NU Munchies

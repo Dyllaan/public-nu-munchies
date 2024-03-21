@@ -10,25 +10,25 @@ import { StarIcon } from '@radix-ui/react-icons';
 
 interface Item {
   id?: number
-  business_id?: number
-  item_name?: string
-  item_price?: number
-  item_expiry?: string
-  collect_time?: string
-  collect_date?: string
-  average_rating?: string
-  business_name?: string
-  address_line1?: string
-  address_postcode?: string
-  address_city?: string
-  business_description?: string
-  weight: number
-  calories: number
-  protein: number
-  carbs: number
-  fat: number
-  salt: number
-  quantity: number
+  business_id?: number | undefined;
+  item_name?: string | undefined;
+  item_price?: number | undefined;
+  item_expiry?: string | undefined;
+  collect_time?: string | undefined;
+  collect_date?: string | undefined;
+  average_rating?: string | undefined;
+  business_name?: string | undefined;
+  address_line1?: string | undefined;
+  address_postcode?: string | undefined;
+  address_city?: string | undefined;
+  business_description?: string | undefined;
+  weight: number | undefined;
+  calories: number | undefined;
+  protein: number | undefined;
+  carbs: number | undefined;
+  fat: number | undefined;
+  salt: number | undefined;
+  quantity: number | undefined;
 }
 
 function Items() {
@@ -100,5 +100,7 @@ function Items() {
     </>
   );
 }
+
 export const selectedItemAtom = atom<Item>({ id: undefined, item_name: undefined, item_price: undefined, item_expiry: undefined, average_rating: undefined,collect_time: undefined, collect_date: undefined, business_name: undefined, address_line1: undefined, address_postcode: undefined, address_city: undefined, business_description: undefined, weight: undefined, calories: undefined, protein: undefined, carbs:undefined, fat: undefined, salt:undefined, quantity: undefined});
+
 export default Items;

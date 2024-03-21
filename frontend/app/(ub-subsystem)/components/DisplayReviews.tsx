@@ -8,11 +8,12 @@ interface Review {
   review_details?: string,
   first_name?: string,
   last_name?: string
+  id?: number
 }
 
 function DisplayReviews(props:any) {
-  const [reviews, setReviews] = useState<{ data: Review[] }>({
-    data: []
+  const [reviews, setReviews] = useState<{ data:{ id:Review[] }}>({
+    data:{id: []}
   });
 
 

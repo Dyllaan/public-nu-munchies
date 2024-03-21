@@ -8,7 +8,7 @@ import { selectedItemAtom } from './Items';
 import { useAtom } from "jotai";
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import ReviewForm from './ReviewForm'
+import ReviewForm from './ReviewForm';
 import DisplayReviews from './DisplayReviews'
 import { Button } from "@/components/ui/button"
 import Nutritions from '@/app/(food-subsystem)/components/NutritionDisplay';

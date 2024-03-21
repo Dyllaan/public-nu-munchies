@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Toggle } from "@/components/ui/toggle";
-import LoadingInPage from '../LoadingInPage';
+import LoadingInPage from '../reusable/LoadingInPage';
 import { PersonIcon } from '@radix-ui/react-icons'
 import BanUser from './BanUser';
 import { Button } from '@/components/ui/button';

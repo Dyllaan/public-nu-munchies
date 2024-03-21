@@ -21,6 +21,7 @@ class EmailToken extends CrudModel
     private $user;
     private $type;
     private $ip;
+    private $email;
 
     public function __construct($db, $type = 'email_verification')
     {
@@ -30,48 +31,72 @@ class EmailToken extends CrudModel
         $this->setTable('used_email_tokens');
     }
   
-public function sendEmail()
-{
-    $jwt = $this->generateEmailToken();
+    public function sendEmail($newEmail = null)
+    {
+        $jwt = $this->generateEmailToken($newEmail);
 
-    switch ($this->getType()) {
-        case 'password_reset':
-            $subject = "NU Munchies Password Reset";
-            $link = "http://localhost:3000/change?token=" . $jwt;
-            // Using HTML elements to style the content
-            $content = "<html>
-                            <body>
-                                <h1>Password Reset Request</h1>
-                                <p>Please click the link below to reset your password. This link will expire in 10 minutes.</p>
-                                <a href='" . $link . "'>Reset Password</a>
-                            </body>
-                        </html>";
-            break;
-        case 'email_verification':
-            $subject = "NU Munchies Email Verification";
-            // Using HTML elements to style the content
-            $content = "<html>
-                            <body>
-                                <h1>Email Verification</h1>
-                                <p>Enter this code on the verification page: <strong>" . $jwt . "</strong></p>
-                                <p>This code will expire in 10 minutes.</p>
-                            </body>
-                        </html>";
-            break;
-        case 'ip_verification':
-            $subject = "NU Munchies IP Verification";
-            // Using HTML elements to style the content
-            $content = "<html>
-                            <body>
-                                <h1>IP Verification</h1>
-                                <p>Enter this code when you log in: <strong>" . $jwt . "</strong></p>
-                                <p>This code will expire in 10 minutes.</p>
-                            </body>
-                        </html>";
-                        break;
-        default:
-            $this->setResponse(400, 'Invalid type');
-    }
+        switch ($this->getType()) {
+            case 'password_reset':
+                $subject = "NU Munchies Password Reset";
+                $link = "http://localhost:3000/change?token=" . $jwt;
+                // Using HTML elements to style the content
+                $content = "<html>
+                                <body>
+                                    <h1>Password Reset Request</h1>
+                                    <p>Please click the link below to reset your password. This link will expire in 10 minutes.</p>
+                                    <a href='" . $link . "'>Reset Password</a>
+                                    <p>This code will expire in 10 minutes.</p>
+                                </body>
+                            </html>";
+                break;
+            case 'email_verification':
+                $subject = "NU Munchies Email Verification";
+                // Using HTML elements to style the content
+                $content = "<html>
+                                <body>
+                                    <h1>Email Verification</h1>
+                                    <p>Enter this code on the verification page: <strong>" . $jwt . "</strong></p>
+                                    <p>This code will expire in 10 minutes.</p>
+                                </body>
+                            </html>";
+                break;
+            case 'ip_verification':
+                $subject = "NU Munchies IP Verification";
+                // Using HTML elements to style the content
+                $content = "<html>
+                                <body>
+                                    <h1>IP Verification</h1>
+                                    <p>Enter this code when you log in: <strong>" . $jwt . "</strong></p>
+                                    <p>This code will expire in 10 minutes.</p>
+                                </body>
+                            </html>";
+                            break;
+            case 'change_email':
+                $subject = "NU Munchies Email Change";
+                // Using HTML elements to style the content
+                $content = "<html>
+                                <body>
+                                    <h1>Email Change Request</h1>
+                                    <p>Enter this code on your profile page
+                                    to permit your email change to <br><strong>". $newEmail ."</strong><br> ". $jwt ."</a>
+                                    <p>This code will expire in 10 minutes.</p>
+                                </body>
+                            </html>";
+                break;
+            case 'change_password':
+                $subject = "NU Munchies Password Change";
+                // Using HTML elements to style the content
+                $content = "<html>
+                                <body>
+                                    <h1>Password Change Request</h1>
+                                    <p>Enter this code on your profile page to change your password: <strong>" . $jwt . "</strong></p>
+                                    <p>This code will expire in 10 minutes.</p>
+                                </body>
+                            </html>";
+                break;
+            default:
+                $this->setResponse(400, 'Invalid type');
+        }
 
 
         $email = EmailFactory::createEmail(
@@ -81,6 +106,8 @@ public function sendEmail()
             $content
         );
         $email->sendEmail();
+        
+        return $jwt;
     }
     
     public function validate($jwt)
@@ -97,6 +124,10 @@ public function sendEmail()
             
             if($decodedJWT->type == 'ip_verification') {
                 $this->setIP($decodedJWT->ip);
+            }
+
+            if($decodedJWT->type == 'change_email') {
+                $this->email = $decodedJWT->email;
             }
 
             if($decodedJWT->id !== $this->getUser()->getId() && $this->getType() !== "password_reset") {
@@ -129,7 +160,7 @@ public function sendEmail()
         }
     }
 
-    public function generateEmailToken()
+    public function generateEmailToken($email = null)
     {
         $secretKey = $this->appConfigInstance->get('EMAIL_JWT_SECRET');
 
@@ -146,38 +177,45 @@ public function sendEmail()
         if($this->getType() === 'ip_verification') {
             $payload['ip'] = $_SERVER['REMOTE_ADDR'];
         }
+        if($this->getType() === 'change_email' && $email !== null) {
+            $payload['email'] = $email;
+        }
 
         $jwt = JWT::encode($payload, $secretKey, 'HS256');
         return $jwt;
+    }
+    
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     public function getType()
     {
         return $this->type;
     }
-    
 
-  public function setType($type)
-  {
-    $this->type = $type;
-  }
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
 
-  public function getIP()
-  {
-    return $this->ip;
-  }
+    public function getIP()
+    {
+        return $this->ip;
+    }
 
     public function setIP($ip)
     {
         $this->ip = $ip;
     }
 
-  public function getUser() {
-    return $this->user;
-  }
+    public function getUser() {
+        return $this->user;
+    }
 
-  public function setUser($user)
-  {
-    $this->user = $user;
-  }
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
 }

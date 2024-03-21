@@ -16,9 +16,9 @@ import { z } from "zod";
 // User subsystem
 import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsystem";
 
-import GoogleSignIn from "../components/GoogleLogin";
+import GoogleSignIn from "../components/auth/GoogleLogin";
 
-import requireAuth from "../components/requireAuth";
+import requireAuth from "../components/auth/requireAuth";
 
 // Define the login form schema using zod
 const loginFormSchema = z.object({

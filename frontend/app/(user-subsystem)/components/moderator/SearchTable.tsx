@@ -2,7 +2,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { Toggle } from "@/components/ui/toggle";
 import { Input } from '@/components/ui/input';
 import useFetchData from '@/hooks/user-subsystem/useFetchData';
-import LoadingInPage from '../LoadingInPage';
+import LoadingInPage from '../reusable/LoadingInPage';
 import { PersonIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';

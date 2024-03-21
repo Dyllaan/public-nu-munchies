@@ -13,13 +13,12 @@ import { toast } from "sonner";
 // zod library for schema validation
 import { z } from "zod";
 
-import requireAuth from "../components/requireAuth";
-
 // User subsystem
 import { useUserSubsystem } from "../../../hooks/user-subsystem/use-user-subsystem";
 
-import GoogleSignIn from "../components/GoogleLogin";
+import GoogleSignIn from "../components/auth/GoogleLogin";
 
+import requireAuth from "../components/auth/requireAuth";
 import AgreementFooter from "../components/AgreementFooter";
 
 // Define the login form schema using zod

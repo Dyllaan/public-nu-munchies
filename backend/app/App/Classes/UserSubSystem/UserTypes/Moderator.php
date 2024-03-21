@@ -3,10 +3,10 @@
 namespace App\Classes\UserSubSystem\UserTypes;
 
 use App\Classes\UserSubSystem\User;
-use App\Classes\UserSubSystem\UserAddon;
+use App\Classes\UserSubSystem\UserType;
 use App\Classes\Business;
 
-class Moderator extends UserAddon
+class Moderator extends UserType
 {
     private \AppConfig $appConfigInstance;
 

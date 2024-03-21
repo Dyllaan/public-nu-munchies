@@ -1,13 +1,13 @@
 "use client";
-import requireType from '../components/requireType';
+import requireType from '../auth/requireType';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import SearchUsers from '../components/moderator/SearchUsers';
-import SearchBusiness from '../components/moderator/SearchBusiness';
+import SearchUsers from './SearchUsers';
+import SearchBusiness from './SearchBusiness';
 
 function Moderator() {
   return (

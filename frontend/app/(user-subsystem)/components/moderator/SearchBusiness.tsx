@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Toggle } from "@/components/ui/toggle";
-import LoadingInPage from '../LoadingInPage';
+import LoadingInPage from '../reusable/LoadingInPage';
 import { PersonIcon } from '@radix-ui/react-icons'
 import RemoveBusiness from './RemoveBusiness';
 import { Button } from '@/components/ui/button';
@@ -117,15 +117,15 @@ export default function SearchBusiness()  {
         <Button onClick={reloadData} variant="outline"> Refresh</Button>
         <Button variant="outline" onClick={nextPage}>Next</Button>
         <Button variant="outline" onClick={backPage}>Back</Button>
-        <Input placeholder="Search for a user" onChange={handleSearchChange}></Input>
+        <Input placeholder="Search for a business" onChange={handleSearchChange}></Input>
         <Toggle 
-          defaultPressed={verified || false} // Convert null to false
+          defaultPressed={verified || false}
           onPressedChange={handleVerifiedChange} 
           disabled={loading}
         >
           <PersonIcon />
-            Verified
-          </Toggle>
+          Verified
+        </Toggle>
           {showClearVerified && (
             <button onClick={clearVerified} className="p-2 border-2 rounded-md">
               Clear

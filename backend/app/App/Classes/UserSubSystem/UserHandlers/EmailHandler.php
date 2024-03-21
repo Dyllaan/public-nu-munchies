@@ -4,6 +4,8 @@ namespace App\Classes\UserSubSystem\UserHandlers;
 
 use App\Classes\UserSubSystem\EmailToken;
 use App\Classes\UserSubSystem\UserHelper;
+use App\Classes\UserSubSystem\User;
+use App\Classes\UserSubSystem\PasswordChange;
 
 class EmailHandler extends UserHelper
 {
@@ -16,7 +18,23 @@ class EmailHandler extends UserHelper
         $this->setUser($user);
     }
 
-    public function sendEmailToken($type)
+    /**
+     * Has to be created to allow for email changes as the current logic
+     * isnt secure or built to handle this.
+     */
+    public function changeEmail($newEmail) {
+        $user = new User($this->getDb());
+        $user->setEmail($newEmail);
+        if($user->doesUserExistAtEmail($newEmail)) {
+            $this->setResponse(400, 'Email already in use');
+            return;
+        } else {
+            $this->sendEmailToken('change_email', $newEmail);
+        }
+    }
+
+
+    public function sendEmailToken($type, $newEmail = null, $newPassword = null)
     {
         if(!$this->getUser()->exists()) {
             return;
@@ -29,10 +47,27 @@ class EmailHandler extends UserHelper
             return;
         }
 
+        if($type === 'change_email') {
+            $user = new User($this->getDb());
+            $user->setEmail($newEmail);
+            if($user->exists()) {
+                $this->setResponse(400, 'Email already in use');
+                return;
+            }
+        }
+
+
         $emailToken = new EmailToken($this->getDb(), $type);
         $emailToken->setUser($this->getUser());
         try {
-            $emailToken->sendEmail();
+            $jwt = $emailToken->sendEmail($newEmail);
+            if($type === 'change_password') {
+                $password = new PasswordChange($this->getDb());
+                $password->setUser($this->getUser());
+                $password->setToken($jwt);
+                $password->setPassword($newPassword);
+                $password->insertRequest();
+            }
             return true;
         } catch (\Exception $e) {
             $this->setResponse(400, 'Error sending email', ['error' => $e->getMessage()]);
@@ -62,6 +97,31 @@ class EmailHandler extends UserHelper
             case 'ip_verification':
                 if($emailToken->validate($token)) {
                     $this->getUser()->getIPHandler()->addIP($emailToken->getIP());
+                    return true;
+                } else {
+                    $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');
+                }
+                break;
+            case 'change_email':
+                if($emailToken->validate($token)) {
+                    $this->getUser()->setEmail($emailToken->getEmail());
+                    $this->getUser()->update(false);
+                    $this->getUser()->getVerifiedHandler()->verifyUser(0, false);
+                    $this->getUser()->getEmailHandler()->sendEmailToken('email_verification');
+                    return true;
+                } else {
+                    $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');
+                }
+                break;
+            case 'change_password':
+                if($emailToken->validate($token)) {
+                    $passwordChange = new PasswordChange($this->getDb());
+                    $passwordChange->setUser($this->getUser());
+                    if(!$passwordChange->getFromToken($token)) {
+                        $this->setResponse(400, 'Password reset failed');
+                        return;
+                    }
+                    $passwordChange->changePassword();
                     return true;
                 } else {
                     $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');

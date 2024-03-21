@@ -8,9 +8,9 @@
 
 namespace App\Endpoints\UserSubSystem\Councillor;
 
-use App\Classes\UserSubSystem\UserAddonEndpoint;
+use App\Classes\UserSubSystem\UserTypeEndpoint;
 
-class IsCouncillor extends UserAddonEndpoint
+class IsCouncillor extends UserTypeEndpoint
 {
 
     public function __construct()
@@ -22,7 +22,7 @@ class IsCouncillor extends UserAddonEndpoint
     public function process($request)
     {
         parent::process($request);
-        if($this->getUserAddon()->is()) {
+        if($this->getUserType()->is()) {
             $this->setResponse(200, "User is a " . $this->getType());
         } else {
             $this->setResponse(401, "User is a " . $this->getType());

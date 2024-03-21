@@ -15,17 +15,19 @@ class VerifiedHandler extends UserHelper {
         $this->setTable("users");
     }
 
-    public function verifyUser($verified = 1) {
+    public function verifyUser($verified = 1, $respond = true) {
         if(!$this->getUser()->exists()) {
             $this->setResponse(400, "User does not exist");
         }
-        if($this->isVerified()) {
+        if($verified == 1 && $this->isVerified()) {
             $this->setResponse(400, "User is already verified");
         }
         $this->getUser()->get();
         $this->getDb()->createUpdate()->table($this->getTable())->set(['verified' => $verified])->where(["id = '" . $this->getUser()->getId() . "'"])->execute();
-        $this->setVerified(1);
-        $this->setResponse(200, "Verified User", $this->getUser()->toArray());
+        $this->setVerified($verified);
+        if($respond) {
+            $this->setResponse(200, "Verified User", $this->getUser()->toArray());
+        }
     }
 
     public function isVerified()

@@ -8,13 +8,13 @@
 
 namespace App\Endpoints\UserSubSystem\Mod;
 
-use App\Classes\UserSubSystem\UserAddonEndpoint;
+use App\Classes\UserSubSystem\UserTypeEndpoint;
 use App\Endpoints\UserSubSystem\Mod\SearchUsers;
 use App\Endpoints\UserSubSystem\Mod\SearchBusiness;
 use App\Endpoints\UserSubSystem\Mod\Ban;
 use App\Endpoints\UserSubSystem\Mod\RemoveBusiness;
 
-class IsMod extends UserAddonEndpoint
+class IsMod extends UserTypeEndpoint
 {
 
     public function __construct()

@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Toggle } from "@/components/ui/toggle";
-import LoadingInPage from './LoadingInPage';
+import LoadingInPage from '../reusable/LoadingInPage';
 import { PersonIcon } from '@radix-ui/react-icons';
 import {
   Accordion,
@@ -36,7 +36,7 @@ export default function OrderHistory() {
   const count = data ? data.length : 0; // Define count based on the data length
 
   return (
-    <Card className="hover-scale">
+    <Card className="hover-scale w-[45vw]">
       <CardHeader>
         <CardTitle>Order History</CardTitle>
         <CardDescription>

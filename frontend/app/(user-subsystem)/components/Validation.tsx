@@ -24,12 +24,15 @@ export const validateNameLength = (name:any) => {
     }
     return true;
 }
-  
+
+/**
+ * https://www.rfc-editor.org/rfc/rfc2822#section-3.4.1
+ * RFC 2822 specifies valid email addresses
+ * @author https://regexr.com/2rhq7
+ */
 export const validateEmail = (email:any) => {
-    if (email.length > 4 && !email.includes('@') || !email.includes('.')) {
-        return false;
-    }
-    return true;
+    var re = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+    return re.test(email);
 }
 
 export const validatePassword = (password:any) => {

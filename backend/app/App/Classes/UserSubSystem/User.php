@@ -26,7 +26,6 @@ class User extends CrudModel implements CrudInterface
     private $email;
     private $password;
     private $token;
-    private $exists;
     private $createdAt;
 
     private $emailHandler;
@@ -99,15 +98,14 @@ class User extends CrudModel implements CrudInterface
         return $data;
     }
 
-    public function changePassword($newPassword, $jwt)
-    {
+    public function changePassword($newPassword, $jwt) {
         //validate email token
-        if ($this->getEmailHandler()->verifyEmailToken($jwt, 'password_reset')) {
+        if($this->getEmailHandler()->verifyEmailToken($jwt, 'password_reset')){
             //hash password
             $password = password_hash($newPassword, PASSWORD_BCRYPT);
             try {
                 $this->getDb()->createUpdate()->table('passwords')
-                    ->set(['password' => $password])->where(["user_id = '" . $this->getId() . "'"])->execute();
+                ->set(['password' => $password])->where(["user_id = '" . $this->getId() . "'"])->execute();
                 $this->get();
                 $this->setResponse(200, 'Password changed successfully', $this->toArray());
             } catch (\Exception $e) {
@@ -119,7 +117,7 @@ class User extends CrudModel implements CrudInterface
 
     public function exists()
     {
-        if ($this->exists) {
+        if($this->exists) {
             return $this->exists;
         }
         if ($this->getEmail() != null) {
@@ -127,9 +125,10 @@ class User extends CrudModel implements CrudInterface
                 return true;
             }
         } elseif ($this->getId() != null) {
-            if ($this->doesUserExistAtId($this->getId())) {
+            if($this->doesUserExistAtId($this->getId())) {
                 return true;
             }
+            return false;
         }
         return false;
     }
@@ -316,48 +315,38 @@ class User extends CrudModel implements CrudInterface
             $this->getBannedHandler()->setBanned($data['banned']);
         }
     }
-
+    
     public function update()
     {
-        if (!$this->exists()) {
-            $this->setResponse(400, "User does not exist");
+        if(!$this->exists()) {
+            $this->setResponse(400, "User does not exist1");
         }
-        // TODO: lets create constants of the table name and columns and then just reference them here so it is not hardcoded
-        $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["id = '" . $this->getId() . "'"])->execute();
+        $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["id = '".$this->getId()."'"])->execute();
         if (count($data) == 0) {
-            $this->setResponse(400, "User does not exist");
+            $this->setResponse(400, "User does not exist2");
         } else {
             $changed = [];
-            // TODO: i am wondering if we can make this if statement bit more cleaner
-            if ($this->getFirstName() != $data[0]['first_name']) {
+            if($this->getFirstName() != $data[0]['first_name']) {
                 $changed['first_name'] = $this->getFirstName();
             }
-            if ($this->getLastName() != $data[0]['last_name']) {
+            if($this->getLastName() != $data[0]['last_name']) {
                 $changed['last_name'] = $this->getLastName();
             }
-            if ($this->getEmail() != $data[0]['email']) {
+            if($this->getEmail() != $data[0]['email']) {
                 $changed['email'] = $this->getEmail();
-            }
-            if ($this->getPassword() != null) {
-                $this->setResponse(400, "Password cannot be updated by this method");
             }
             if($this->getBannedHandler()->isBanned() != $data[0]['banned']) {
                 $changed['banned'] = $this->getBannedHandler()->isBanned();
             }
-
-            if ($changed != []) {
-                $this->getDb()->beginTransaction();
-                try {
-                    $this->getDb()->createUpdate()->table($this->getTable())->set($changed)->where(["
-                    id = '" . $this->getId() . "'"])->execute();
-                    $this->getDb()->commit();
-                    return ['message' => "User updated"];
-                } catch (\Exception $e) {
-                    $this->getDb()->rollBack();
-                    $this->setResponse(500, "An error occurred: " . $e->getMessage());
+            if($changed != []) {
+                $this->getDb()->createUpdate()->table('users')->set($changed)->where(["id = '".$this->getId()."'"])->execute();
+                if($respond) {
+                    return $this->setResponse(200, "User updated", $this->toArray());
                 }
             } else {
-                return ['message' => "No changes"];
+                if($respond) {
+                    return $this->setResponse(400, "No changes");
+                }
             }
         }
     }
@@ -390,7 +379,6 @@ class User extends CrudModel implements CrudInterface
                 'ip' => $_SERVER['REMOTE_ADDR'],
                 'banned' => boolval($this->getBannedHandler()->isBanned())
             ];
-            $user['types'] = $this->getUserTypes();
         } else {
             $user['user'] = [
                 'id' => $this->getId(),
@@ -403,8 +391,10 @@ class User extends CrudModel implements CrudInterface
                 'ip' => $_SERVER['REMOTE_ADDR'],
                 'banned' => boolval($this->getBannedHandler()->isBanned())
             ];
-            $user['types'] = $this->getUserTypes();
         }
+
+        $user['types'] = $this->getUserTypes();
+        
         //hardcoded provider id not good
         if ($useJwt) {
             $jwt = $this->generateJWT($this->getId(), 1);
@@ -531,8 +521,7 @@ class User extends CrudModel implements CrudInterface
         return $this->exists;
     }
 
-    public function setExists($exists)
-    {
+    public function setExists($exists) {
         $this->exists = $exists;
     }
 

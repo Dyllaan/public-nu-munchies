@@ -23,12 +23,16 @@ class VerifyEmailToken extends SubEndpoint
         /** 
          * Only allow supported verification types
         */
-        if($request->getAttribute('type') !== 'email_verification' && $request->getAttribute('type') !== 'ip_verification') {
-            $this->setResponse(400, 'Invalid verification type');
+        $allowed =['email_verification', 'ip_verification',
+         'password_reset', 'change_email',
+        'change_password'];
+        if(!in_array($request->getAttribute('type'), $allowed)) {
+            $this->setResponse(400, 'Invalid type', ['supported'=> $allowed]);
             return;
         }
 
         $this->getUser()->get();
+
         if($this->getUser()->getEmailHandler()->verifyEmailToken($request->getAttribute('token'), $request->getAttribute('type'))) {
             $this->setResponse(200, 'This token has been verified', $this->getUser()->toArray());
         } else {

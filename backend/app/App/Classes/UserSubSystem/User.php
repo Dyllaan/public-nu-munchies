@@ -117,9 +117,6 @@ class User extends CrudModel implements CrudInterface
 
     public function exists()
     {
-        if($this->exists) {
-            return $this->exists;
-        }
         if ($this->getEmail() != null) {
             if ($this->doesUserExistAtEmail($this->getEmail())) {
                 return true;
@@ -514,15 +511,6 @@ class User extends CrudModel implements CrudInterface
     public function getName()
     {
         return $this->getFirstName() . " " . $this->getLastName();
-    }
-
-    public function doesExist()
-    {
-        return $this->exists;
-    }
-
-    public function setExists($exists) {
-        $this->exists = $exists;
     }
 
     public function getCreatedAt()

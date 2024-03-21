@@ -127,6 +127,14 @@ class EmailHandler extends UserHelper
                     $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');
                 }
                 break;
+            case 'delete_account':
+                if($emailToken->validate($token)) {
+                    $this->getUser()->delete();
+                    return true;
+                } else {
+                    $this->setResponse(400, 'Your OTP is either invalid or expired. Please request a new one.');
+                }
+                break;
         }
     }
 

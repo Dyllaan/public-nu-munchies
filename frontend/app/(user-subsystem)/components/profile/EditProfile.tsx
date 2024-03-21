@@ -122,7 +122,7 @@ useEffect(() => {
   }
 
   return (
-    <Card className="hover-scale w-full lg:w-[45vw]">
+    <Card className="hover-scale w-full">
       <CardHeader>
         <CardTitle>Edit Profile</CardTitle>
         <CardDescription>

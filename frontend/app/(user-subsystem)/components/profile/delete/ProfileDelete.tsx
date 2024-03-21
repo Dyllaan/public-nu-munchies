@@ -2,21 +2,24 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Card,
-    CardContent,
-    CardDescription,
     CardFooter,
-    CardHeader,
-    CardTitle,
   } from "@/components/ui/card";
-import VerifyInPage from '../VerifyInPage';
-import ChangePassword from './ChangePassword';
-import { Toggle } from '@/components/ui/toggle';
+import VerifyDelete from './VerifyDelete';
+import DeleteAccount from './DeleteAccount';
+import useUserSubsystem from '@/hooks/user-subsystem/use-user-subsystem';
+import LoadingInPage from '../../reusable/LoadingInPage';
 
-export default function ProfilePassword() {
+export default function ProfileDelete() {
     const [ sent, setSent ] = useState(false);
+    const { requestLoading } = useUserSubsystem();
+
+    if(requestLoading) {
+        return <LoadingInPage />;
+    }
+
     return (
         <Card className="hover-scale w-full">
-            {sent ? <VerifyInPage type="change_password" /> : <ChangePassword setSent={setSent} />}
+            {sent ? <VerifyDelete /> : <DeleteAccount setSent={setSent} />}
             <CardFooter>
                 <div className="mx-auto flex flex-col gap-2">
                     {sent ? 
@@ -24,15 +27,15 @@ export default function ProfilePassword() {
                         <>
                             <p>Not received a code?</p>
                             <Button variant="outline" onClick={() => setSent(false)}>
-                                Change Password
+                                Delete User
                             </Button>
                         </>
                     ) : 
                     (
                         <>
                             <p>Already got a code?</p>
-                            <Button variant="outline" onClick={() => setSent(true)}>
-                                Verify your password change
+                            <Button variant="destructive" onClick={() => setSent(true)}>
+                                Delete your account
                             </Button>
                         </>
                     

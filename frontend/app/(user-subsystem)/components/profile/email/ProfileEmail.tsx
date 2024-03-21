@@ -18,7 +18,7 @@ export default function ProfileEmail() {
     }
 
     return (
-        <Card className="hover-scale w-full lg:w-[45vw]">
+        <Card className="hover-scale w-full">
             {sent ? <VerifyInPage type="change_email" /> : <ChangeEmail setSent={setSent} />}
             <CardFooter>
                 <div className="mx-auto flex flex-col gap-2">

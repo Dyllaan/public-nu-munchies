@@ -8,8 +8,8 @@ import OrderHistory from "./OrderHistory";
 import EditProfile from "./EditProfile";
 import ProfilePassword from "../profile/password/ProfilePassword";
 
-function UserProfile() {
-  const { user, logout, isOAuth, userTypes } = useUserSubsystem();
+function OAuthProfile() {
+  const { user} = useUserSubsystem();
 
   let dateString = '';
   if (user.created_at) {
@@ -19,15 +19,12 @@ function UserProfile() {
 
   return (
     <div>
-      <div className="flex flex-col lg:flex-row gap-4 mx-auto p-4">
-        <EditProfile />
-        <ProfileEmail />
-      </div>
-      <div className="flex flex-col lg:flex-row gap-4 mx-auto p-4">
-          <OrderHistory />
-          <ProfilePassword />
+      <div className="flex flex-col gap-4 mx-auto p-4">
+            <GoogleEditProfile />
+            <OrderHistory />
+            <ProfilePassword />
       </div>
     </div>
   );
 }
-export default UserProfile;
+export default OAuthProfile;

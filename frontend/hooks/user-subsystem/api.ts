@@ -1,5 +1,5 @@
 "use-client";
-const BASE_URL = 'http://localhost:8080/';
+const BASE_URL = 'https://nu-munchies.xyz/'
 
 async function handleResponse(response:any) {
     const contentType = response.headers.get("content-type");

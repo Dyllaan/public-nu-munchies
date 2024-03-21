@@ -117,9 +117,6 @@ class User extends CrudModel implements CrudInterface
 
     public function exists()
     {
-        if($this->exists) {
-            return $this->exists;
-        }
         if ($this->getEmail() != null) {
             if ($this->doesUserExistAtEmail($this->getEmail())) {
                 return true;

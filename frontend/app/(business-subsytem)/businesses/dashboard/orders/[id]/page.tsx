@@ -35,7 +35,7 @@ const BusinessOrdersPage: FC<{ params: { id: string } }> = ({
     mutate(`/api/business/orders?id=${id}`);
   };
   return (
-    <div className="mt-32 px-[10%] pb-10">
+    <div className="mt-4 px-[10%] pb-10">
       <Breadcrumbs id={id} />
       <div className="flex justify-between items-center flex-wrap">
         <h1 className="text-3xl font-semibold mb-2">Orders of Business {id}</h1>

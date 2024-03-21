@@ -1,14 +1,12 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { atom, useAtom } from "jotai";
 import { useRouter } from 'next/navigation';
 import LoadingInPage from '@/app/(user-subsystem)/components/LoadingInPage';
 import useFetchData from '@/hooks/user-subsystem/useFetchData';
-import { useRoute } from '@react-navigation/native';
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,

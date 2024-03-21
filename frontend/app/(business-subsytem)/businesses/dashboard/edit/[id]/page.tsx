@@ -47,7 +47,9 @@ const BusinessItemsPage: FC<{ params: { id: string } }> = ({
     }
     if (businesses.loadedMyBusinesses?.length) {
       if (
-        businesses.loadedMyBusinesses.find((b) => b.id === id) === undefined
+        businesses.loadedMyBusinesses.find(
+          (b) => Number(b.id) === Number(id)
+        ) === undefined
       ) {
         router.replace("/businesses/dashboard");
       }

@@ -28,7 +28,7 @@ function Checkout() {
   const todaysDate = String(today.getDate());
 
   const fetchData = async () => {
-    const res = await fetch(`http://localhost:8080/checkoutItem?item_id=${selectedItem.id}`);
+    const res = await fetch(`https://backend.nu-munchies.xyz/checkoutItem?item_id=${selectedItem.id}`);
     return res.json();
   };
 

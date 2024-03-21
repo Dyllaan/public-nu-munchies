@@ -41,7 +41,7 @@ function Items() {
   const todaysDate = String(today.getDate());
 
   const fetchData = async () => {
-    const res = await fetch("http://localhost:8080/getitems")
+    const res = await fetch("https://backend.nu-munchies.xyz/getitems")
     return res.json()
   }
 

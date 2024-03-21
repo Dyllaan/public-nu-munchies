@@ -37,7 +37,7 @@ function ReviewForm(props: any) {
         console.log("submitted");
         console.log(formData);
         try {
-            const response = await fetch('http://localhost:8080/insertreview', {
+            const response = await fetch('https://backend.nu-munchies.xyz/insertreview', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -18,7 +18,7 @@ function DisplayReviews(props:any) {
 
 
   const fetchData = async () => {
-    const res = await fetch(`http://localhost:8080/getreviews?business_id=${props.business_id}`);
+    const res = await fetch(`https://backend.nu-munchies.xyz/getreviews?business_id=${props.business_id}`);
     return res.json()
   }
 

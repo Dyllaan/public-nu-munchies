@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import LoadingInPage from '@/app/(user-subsystem)/components/LoadingInPage';
+import LoadingInPage from '@/app/(user-subsystem)/components/reusable/LoadingInPage';
 import useFetchData from '@/hooks/user-subsystem/useFetchData';
 import {
     Table,

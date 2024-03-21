@@ -17,7 +17,7 @@
         public function __construct()
         {
             parent::__construct('POST', 'addcategory');
-            $this->getAttributes()->addRequiredStrings(['cat_name', 'cat_image']);
+            $this->getAttributes()->addRequiredStrings(['cat_name']);
         }
 
         public function process($request)
@@ -25,7 +25,6 @@
             parent::process($request);
             $cat = new Category($this->getDb());
             $cat->setCatName($request->getAttribute('cat_name'));
-            $cat->setCatImage($request->getAttribute('cat_image'));
             $cat->save();
             $this->setResponse(200, 'Category Created', $cat->toArray());
         }

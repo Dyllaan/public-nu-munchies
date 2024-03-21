@@ -115,8 +115,15 @@ export default function Header() {
             Business
           </NavigationMenuLink>
         </NavigationMenuItem>
-        {userTypes?.councillor ? councillorMenu() : null}
-        {userTypes?.moderator ? moderatorMenu() : null}
+        <NavigationMenuItem>
+          <Link href="/logNutritions" legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Nutritions
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+        {userTypes.councillor ? councillorMenu() : null}
+        {userTypes.moderator ? moderatorMenu() : null}
       </NavigationMenuList>
     </NavigationMenu>
   );

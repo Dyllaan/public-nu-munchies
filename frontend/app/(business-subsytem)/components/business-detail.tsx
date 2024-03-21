@@ -17,7 +17,7 @@ export const BusinessDetail: FC<{ id: string }> = async ({ id }) => {
 
   return (
     <>
-      <div className="relative h-[400px] w-full mt-20">
+      <div className="relative h-[400px] w-full mt-4">
         <div className="z-10 absolute inset-0 w-full h-full bg-black bg-opacity-50 flex flex-col justify-end p-10 rounded-lg">
           <h1 className="text-white text-3xl font-semibold">{business.name}</h1>
           <p className="text-white text-lg">{business.description}</p>

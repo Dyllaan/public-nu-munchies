@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function BusinessSubsystem() {
   return (
-    <div className="text-center flex flex-col justify-center items-center min-h-screen px-5 md:px-10">
+    <div className="text-center flex flex-col justify-center items-center min-h-screen px-5 md:px-10 md:-mt-20">
       <div className="border-2 border-gray-200 p-20 rounded-md bg-white w-max flex flex-col items-center shadow-md max-w-full">
         <div className="bg-gray-200 p-6 rounded-full mb-6 w-max">
           <BriefcaseBusiness className="w-14 h-14" />

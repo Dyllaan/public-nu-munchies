@@ -75,15 +75,14 @@ class EndpointManager extends Manager
         $this->addEndpoint(new AddCat());
         $this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new BusinessEndpoint());
-        $this->addEndpoint(new BItemEndpoint());
         $this->addEndpoint(new OAuthCallback());
         $this->addEndpoint(new ForgotPassword());
         $this->addEndpoint(new ResetPassword());
         $this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new IsMod());
         $this->addEndpoint(new Search());
-            
- 
+
+
         //$this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new ItemReserve());
         $this->addEndpoint(new OrderCancel());
@@ -94,7 +93,6 @@ class EndpointManager extends Manager
         $this->addEndpoint(new InsertReview());
         $this->addEndpoint(new GetReviews());
         $this->addEndpoint(new OrderCollect());
-
     }
 
     public function addEndpoint($endpoint)

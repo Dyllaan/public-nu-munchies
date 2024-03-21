@@ -20,16 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <React.StrictMode>
-    <html lang="en">
-      <body className={inter.className}>
-      <AuthProvider>
-        <div className="m-2">        
-            {children}
-        </div>
-        <Toaster />
-      </AuthProvider>
-      </body>
-    </html>
+      <html lang="en">
+        <body className={inter.className}>
+          <AuthProvider>
+            <div>{children}</div>
+            <Toaster />
+          </AuthProvider>
+        </body>
+      </html>
     </React.StrictMode>
   );
 }

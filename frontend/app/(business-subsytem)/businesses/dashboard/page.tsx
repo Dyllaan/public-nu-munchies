@@ -9,7 +9,6 @@ import { useEffect } from "react";
 
 import useSWR from "swr";
 import Link from "next/link";
-import { DeleteDialog } from "../../components/delete-dialog";
 
 export default function BusinessSubsystem() {
   // use "cache" - what was fetched via provider
@@ -35,7 +34,7 @@ export default function BusinessSubsystem() {
   }, [data]);
 
   return (
-    <div className="mt-20 px-5 md:px-[10%]">
+    <div className="mt-4 px-5 md:px-[10%]">
       <h1 className="text-3xl font-bold">Business Dashboard</h1>
       <h2 className="uppercase font-bold text-muted-foreground text-lg mt-4">
         My Businesses

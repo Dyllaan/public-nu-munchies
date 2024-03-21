@@ -39,6 +39,7 @@ use App\Endpoints\UBIntegration\Webhook;
 use Core\ClientErrorException;
 use App\Endpoints\UBIntegration\GetItems;
 use App\Endpoints\UBIntegration\GetReviews;
+use App\Endpoints\UserSubSystem\IP\AllIPs;
 
 class EndpointManager extends Manager
 {
@@ -73,6 +74,9 @@ class EndpointManager extends Manager
         $this->addEndpoint(new GetCat());
         $this->addEndpoint(new AddNutrition());
         $this->addEndpoint(new AddCat());
+        /**
+         * Users subsystem
+         */
         $this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new BusinessEndpoint());
         $this->addEndpoint(new OAuthCallback());
@@ -80,10 +84,10 @@ class EndpointManager extends Manager
         $this->addEndpoint(new ResetPassword());
         $this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new IsMod());
+        $this->addEndpoint(new AllIPs());
         $this->addEndpoint(new Search());
 
 
-        //$this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new ItemReserve());
         $this->addEndpoint(new OrderCancel());
         $this->addEndpoint(new InsertOrder());

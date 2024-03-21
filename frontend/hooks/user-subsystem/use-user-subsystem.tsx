@@ -329,6 +329,27 @@ export const useUserSubsystem = () => {
     router.replace("/");
   }
 
+  const removeIP = async (ip:string) => {
+    const data = new FormData();
+    data.append("ip", ip);
+    setRequestLoading(true);
+    try {
+      const response = await api.post("ip/remove", data, localStorage.getItem("token"));
+      if (response.success) {
+        toast.success(response.data.message);
+        setRequestLoading(false);
+        return true;
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      return error.response.data.message;
+    }
+    setRequestLoading(false);
+    return false;
+  }
+
   const setAuthStatus = (loading: boolean, logged?: boolean) => {
     setLoading(loading);
     setLogged(logged ?? false);
@@ -357,6 +378,7 @@ export const useUserSubsystem = () => {
     requestEmailChange,
     requestPasswordChange,
     checkDeleteCode,
+    removeIP,
     requestLoading,
     logged,
     loading,

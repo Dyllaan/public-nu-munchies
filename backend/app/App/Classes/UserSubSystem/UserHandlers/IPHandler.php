@@ -4,7 +4,9 @@ namespace App\Classes\UserSubSystem\UserHandlers;
 
 use App\Classes\UserSubSystem\UserHelper;
 use App\Classes\UserSubSystem\UserIP;
-
+/**
+ * @author Louis Figes W21017657
+ */
 class IPHandler extends UserHelper {
     
     public function __construct($db, $user)
@@ -30,6 +32,18 @@ class IPHandler extends UserHelper {
             $this->getUser()->getEmailHandler()->sendEmailToken('ip_verification');
             return false;
         }
+    }
+
+    public function getAll() {
+        $ip = new UserIP($this->getDb());
+        $ip->setUser($this->getUser());
+        return $ip->getAll();
+    }
+
+    public function removeIP($ipAddr) {
+        $ip = new UserIP($this->getDb());
+        $ip->setUser($this->getUser());
+        return $ip->removeIP($ipAddr);
     }
 
     public function isAllowed() {

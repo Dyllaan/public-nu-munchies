@@ -11,7 +11,7 @@ import Moderator from "../moderator/Moderator";
 import ProfileDelete from "./delete/ProfileDelete";
 
 function UserProfile() {
-  const { user} = useUserSubsystem();
+  const { user, isOAuth} = useUserSubsystem();
 
   let dateString = '';
   if (user.created_at) {
@@ -21,10 +21,12 @@ function UserProfile() {
 
   return (
     <>
+      {isOAuth ? <GoogleEditProfile /> : (
       <div className="flex flex-col lg:flex-row gap-4 mx-auto p-4">
         <EditProfile />
         <ProfileEmail />
       </div>
+      )}
       <div className="flex flex-col lg:flex-row gap-4 mx-auto p-4">
         <ProfileDelete />
         <ProfilePassword />

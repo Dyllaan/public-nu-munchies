@@ -40,6 +40,26 @@ class UserIP extends CrudModel
     
     }
 
+    public function getAll() {
+        $data = $this->getDb()->createSelect()->
+        cols("*")->from($this->getTable())->
+        where(["user_id = '" . $this->getUser()->getId() . "'"])->execute();
+        return $data;
+    }
+
+    public function removeIP($ipAddr) {
+        $ipAddr = strval($ipAddr);
+        if($this->isAllowed($ipAddr)) {
+            $this->getDb()->createDelete()->from($this->getTable())->
+                where(["user_id = '" . $this->getUser()->getId() . "'",
+                "ip_address = '" . $ipAddr . "'"])->execute();
+            return true;
+        } else {
+            return false;
+        }
+        return false;
+    }
+
     public function getUser()
     {
         return $this->user;

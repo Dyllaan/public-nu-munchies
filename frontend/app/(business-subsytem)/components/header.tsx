@@ -11,30 +11,42 @@ import {
 } from "@/components/ui/navigation-menu";
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 import { UserState } from "@/stores/auth";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { MenuIcon } from "lucide-react";
 
 export default function Header() {
   const { user } = useUserSubsystem();
 
   return (
-    <div className="static top-0 right-0 !w-full py-4 px-[10%] bg-white z-20">
-      <NavigationMenu className="flex md:justify-between md:items-center md:flex-row flex-col !max-w-full !static">
+    <div className="static top-0 right-0 !w-full py-4 px-5 md:px-[10%] bg-white z-20">
+      <NavigationMenu className="flex justify-between items-center  !max-w-full !static">
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink
               className={cn(
                 navigationMenuTriggerStyle(),
-                "md:block hidden",
                 "!bg-transparent px-0 hover:text-blue-600"
               )}
               href="/business"
             >
-              NU Munchies - Business Subsystem
+              NU Munchies
+              <span className="hidden md:inline"> - Business Subsystem</span>
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
-        <NavigationMenuList className="flex items-start md:items-center gap-1 max-w-full md:flex-row flex-col">
+        <NavigationMenuList className="md:flex hidden items-center gap-1 max-w-full md:flex-row flex-col">
           {LoggedInMenu(user)}
         </NavigationMenuList>
+        <Sheet>
+          <SheetTrigger className="md:hidden">
+            <MenuIcon />
+          </SheetTrigger>
+          <SheetContent className="w-full max-w-full md:hidden">
+            <NavigationMenuList className="flex flex-col items-center gap-2 md:hidden mt-10">
+              {LoggedInMenu(user)}
+            </NavigationMenuList>
+          </SheetContent>
+        </Sheet>
       </NavigationMenu>
     </div>
   );
@@ -61,6 +73,7 @@ const LoggedInMenu = (user: UserState) => {
           className={cn(
             navigationMenuTriggerStyle(),
             "bg-transparent hover:bg-transparent",
+            "md:hidden lg:inline",
             "hover:text-blue-600",
             "focus:bg-transparent focus:text-blue-600"
           )}
@@ -75,6 +88,7 @@ const LoggedInMenu = (user: UserState) => {
             navigationMenuTriggerStyle(),
             "bg-transparent hover:bg-transparent",
             "hover:text-blue-600",
+            "md:hidden lg:inline",
             "focus:bg-transparent focus:text-blue-600"
           )}
           href="/business/create"
@@ -85,10 +99,9 @@ const LoggedInMenu = (user: UserState) => {
       <NavigationMenuItem className="relative">
         <NavigationMenuLink
           className={cn(
-            navigationMenuTriggerStyle(),
-            "bg-transparent hover:bg-transparent",
-            "hover:text-blue-600",
-            "focus:bg-transparent focus:text-blue-600"
+            "bg-gray-100 hover:bg-transparent rounded-lg !py-2 text-sm px-3 font-semibold",
+            "hover:bg-gray-200",
+            "focus:bg-gray-200"
           )}
           href="/"
         >

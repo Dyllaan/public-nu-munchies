@@ -11,10 +11,7 @@ export const WithBusinessLoader: FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const { getMyBusinesses } = useBusinessApi();
-  const { data, isLoading, error } = useSWR(
-    "/api/business/my",
-    getMyBusinesses
-  );
+  const { data } = useSWR("/api/business/my", getMyBusinesses);
 
   const [businesses, setBusinesses] = useAtom(businessesAtom);
 

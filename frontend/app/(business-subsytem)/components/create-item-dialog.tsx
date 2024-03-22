@@ -15,7 +15,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import {
   Select,
@@ -45,6 +44,7 @@ export const categoriesAtom = atom<ICategory[]>([]);
 
 type UserInput = z.infer<typeof itemFormSchema>;
 
+// form schema for creating a new item
 const itemFormSchema = z.object({
   name: z.string().min(3).max(255),
   price: z.string().min(1).max(255),
@@ -93,6 +93,7 @@ export const CreateItemDialog = ({
     defaultValues: {},
   });
 
+  // fetch categories on mount
   useEffect(() => {
     if (!categories.length) {
       getCategories().then((data) => {
@@ -108,6 +109,7 @@ export const CreateItemDialog = ({
     }
   }, []);
 
+  // form for creating a new item for a business
   return (
     <div
       className={cn(

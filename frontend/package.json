@@ -37,7 +37,7 @@
     "input-otp": "^1.0.1",
     "jotai": "^2.6.5",
     "lucide-react": "^0.356.0",
-    "million": "^3.0.6",
+    "million": "latest",
     "next": "latest",
     "next-auth": "^4.24.6",
     "next-themes": "^0.2.1",

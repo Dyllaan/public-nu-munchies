@@ -1,3 +1,3 @@
 export const mainConfig = {
-  origin: "https://backend.nu-munchies.xyz",
+  origin: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080",
 };

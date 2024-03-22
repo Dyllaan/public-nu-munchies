@@ -11,14 +11,11 @@ import useSWR from "swr";
 import Link from "next/link";
 
 export default function BusinessSubsystem() {
-  // use "cache" - what was fetched via provider
+  // use "cached" value from what was fetched via provider
   const [businesses, setBusinesses] = useAtom(businessesAtom);
 
   const { getMyBusinesses } = useBusinessApi();
-  const { data, isLoading, error } = useSWR(
-    "/api/business/my",
-    getMyBusinesses
-  );
+  const { data } = useSWR("/api/business/my", getMyBusinesses);
 
   // revalidating if the data count is different from the loaded businesses
   useEffect(() => {

@@ -10,9 +10,8 @@ import { cn } from "@/lib/utils";
 
 export const BusinessMenu: FC<{ businessId: string }> = ({ businessId }) => {
   const { getItems } = useBusinessApi();
-  const { data, isLoading, error } = useSWR(
-    "/api/business/items/" + businessId,
-    () => getItems(businessId)
+  const { data, isLoading } = useSWR("/api/business/items/" + businessId, () =>
+    getItems(businessId)
   );
 
   return (

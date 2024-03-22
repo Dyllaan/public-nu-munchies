@@ -33,14 +33,17 @@ const BusinessItemsPage: FC<{ params: { id: string } }> = ({
   params: { id },
 }) => {
   const router = useRouter();
-  const [items, setItems] = useState<any[]>([]);
   const { getItems } = useBusinessApi();
+
+  const [items, setItems] = useState<any[]>([]);
+
   const { data, isLoading } = useSWR(`/api/business/items?id=${id}`, () =>
     getItems(id)
   );
 
   const [businesses, setBusinesses] = useAtom(businessesAtom);
 
+  // fetching items and checking if user has access to the business
   useEffect(() => {
     if (data?.status === "success") {
       setItems(data.message);
@@ -56,12 +59,13 @@ const BusinessItemsPage: FC<{ params: { id: string } }> = ({
     }
   });
 
+  // this is used to refresh the items
   const { mutate } = useSWRConfig();
 
   const [createItemDialogOpen, setCreateItemDialogOpen] = useState(false);
 
   return (
-    <div className="mt-4 px-[10%] pb-10">
+    <div className="mt-4 px-5 md:px-[10%] pb-10">
       <Breadcrumbs id={id} />
       <div className="flex justify-between items-center flex-wrap">
         <h1 className="text-3xl font-semibold mb-2">Items of Business {id}</h1>

@@ -38,6 +38,14 @@ export const DeleteDialog = ({
         <div
           className="flex justify-center items-center h-screen w-screen fixed inset-0 z-50"
           onClick={() => onCancel()}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              onCancel();
+            }
+            if (e.key === "Enter") {
+              onSubmit(e);
+            }
+          }}
         >
           <Dialog open={open}>
             <DialogContent

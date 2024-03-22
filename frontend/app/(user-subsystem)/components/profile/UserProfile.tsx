@@ -4,7 +4,6 @@ import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 import ProfileEmail from "./email/ProfileEmail";
 import requireAuth from "../auth/requireAuth";
 import GoogleEditProfile from "@/app/(user-subsystem)/components/profile/GoogleEditProfile";
-import OrderHistory from "./delete/DeleteModal";
 import EditProfile from "./EditProfile";
 import ProfilePassword from "../profile/password/ProfilePassword";
 import Moderator from "../moderator/Moderator";

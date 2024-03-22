@@ -13,7 +13,7 @@ export default function BusinessPage({ params }: { params: { id: string } }) {
   const { id } = params;
 
   return (
-    <div className="px-[10%]">
+    <div className="px-5 md:px-[10%]">
       <Breadcrumbs id={id} />
       <Suspense fallback={<BusinessDetailSkeleton />}>
         <BusinessDetail id={id} />

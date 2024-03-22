@@ -23,7 +23,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <AuthProvider>
-            <div className="p-4">{children}</div>
+            <div>{children}</div>
             <Toaster />
           </AuthProvider>
         </body>

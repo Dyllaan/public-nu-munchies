@@ -34,6 +34,7 @@ const BusinessOrdersPage: FC<{ params: { id: string } }> = ({
   const refreshOrders = () => {
     mutate(`/api/business/orders?id=${id}`);
   };
+
   return (
     <div className="mt-4 px-[10%] pb-10">
       <Breadcrumbs id={id} />
@@ -52,7 +53,11 @@ const BusinessOrdersPage: FC<{ params: { id: string } }> = ({
         {data?.status === "error" ? (
           <div className="text-red-500">Error: {data.message}</div>
         ) : (
-          <TblComponent data={data} isLoading={isLoading} />
+          <TblComponent
+            data={data}
+            isLoading={isLoading}
+            refreshOrders={refreshOrders}
+          />
         )}
       </div>
     </div>
@@ -62,10 +67,22 @@ const BusinessOrdersPage: FC<{ params: { id: string } }> = ({
 const TblComponent = ({
   data,
   isLoading,
+  refreshOrders,
 }: {
   data: any;
   isLoading: boolean;
+  refreshOrders: () => void;
 }) => {
+  const { acceptOrder, declineOrder } = useBusinessApi();
+  const accept = (orderId: string) => {
+    acceptOrder(orderId);
+    refreshOrders();
+  };
+
+  const decline = (orderId: string) => {
+    declineOrder(orderId);
+    refreshOrders();
+  };
   return (
     <Table>
       <TableHeader>
@@ -120,10 +137,16 @@ const TblComponent = ({
               </span>
             </TableCell>
             <TableCell className="flex gap-x-2">
-              <button className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600">
+              <button
+                className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
+                onClick={() => decline(order.id)}
+              >
                 Cancel
               </button>
-              <button className="bg-green-500 text-white px-2 py-1 rounded-md ml-2 hover:bg-green-600">
+              <button
+                className="bg-green-500 text-white px-2 py-1 rounded-md ml-2 hover:bg-green-600"
+                onClick={() => accept(order.id)}
+              >
                 Accept
               </button>
             </TableCell>

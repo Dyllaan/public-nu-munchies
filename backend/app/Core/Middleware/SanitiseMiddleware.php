@@ -38,6 +38,7 @@ class SanitiseMiddleware
 
     private function isClean($input)
     {
+        $input = str_replace("'", '', $input);
         if ($this->sanitiseArray($input) !== $input) {
             throw new \Core\ClientErrorException(400, ['message' => 'Invalid characters in request']);
         }

@@ -8,34 +8,27 @@ import {
     DrawerTitle,
     DrawerTrigger,
   } from "@/components/ui/drawer";
-import NavLink from '../NavLink';
 import { Button } from '@/components/ui/button';
 /**
  * @author Louis Figes W21017657
  */
-export default function MobileGuestMenu() {
+export default function MobileRemoveIP({ip, removeIP} : {ip:any; removeIP:any;}) {
+  const created = new Date(ip.created_at).toLocaleDateString();
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant="ghost">Guest</Button>
+        <Button variant="ghost">{ip.ip_address}</Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
-            <DrawerTitle>Welcome</DrawerTitle>
-            <DrawerDescription className="underline italic">The start of something new.</DrawerDescription>
+            <DrawerTitle>{ip.ip_address}</DrawerTitle>
+            <DrawerDescription>
+              {created}
+            </DrawerDescription>
           </DrawerHeader>
-          <div className="p-4 pb-0 flex flex-col gap-2 items-center">
-            <NavLink
-              title="Login"
-              href="/login"
-              description="Log in to your account"
-            />
-            <NavLink
-              title="Register"
-              href="/register"
-              description="Create a new account"
-            />
+          <div className="p-4 pb-0 flex flex-col">
+            <Button onClick={() => removeIP(ip.ip_address)} variant="destructive">Remove</Button>
           </div>
           <DrawerFooter>
             <DrawerClose asChild>

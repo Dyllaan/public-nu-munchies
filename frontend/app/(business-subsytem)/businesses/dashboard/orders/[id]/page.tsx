@@ -20,6 +20,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { cn } from "@/lib/utils";
 
 const BusinessOrdersPage: FC<{ params: { id: string } }> = ({
   params: { id },
@@ -74,13 +75,13 @@ const TblComponent = ({
   refreshOrders: () => void;
 }) => {
   const { acceptOrder, declineOrder } = useBusinessApi();
-  const accept = async (orderId: string) => {
-    await acceptOrder(orderId);
+  const accept = (orderId: string) => {
+    acceptOrder(orderId);
     refreshOrders();
   };
 
-  const decline = async (orderId: string) => {
-    await declineOrder(orderId);
+  const decline = (orderId: string) => {
+    declineOrder(orderId);
     refreshOrders();
   };
   return (
@@ -116,7 +117,14 @@ const TblComponent = ({
           <TableRow key={order.id}>
             <TableCell>{order.id}</TableCell>
             <TableCell>
-              <span className="text-sm text-white bg-blue-500 px-2 py-1 rounded-md uppercase">
+              <span
+                className={cn(
+                  "text-sm text-white  px-2 py-1 rounded-md uppercase",
+                  order.status === "reserved" ? "bg-blue-500" : "",
+                  order.status === "accepted" ? "bg-green-500" : "",
+                  order.status === "declined" ? "bg-red-500" : ""
+                )}
+              >
                 {order.status}
               </span>
             </TableCell>
@@ -137,18 +145,23 @@ const TblComponent = ({
               </span>
             </TableCell>
             <TableCell className="flex gap-x-2">
-              <button
-                className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
-                onClick={() => decline(order.id)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-green-500 text-white px-2 py-1 rounded-md ml-2 hover:bg-green-600"
-                onClick={() => accept(order.id)}
-              >
-                Accept
-              </button>
+               
+              {order.status === "reserved" && (
+                <>
+                  <button
+                    className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
+                    onClick={() => decline(order.id)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="bg-green-500 text-white px-2 py-1 rounded-md ml-2 hover:bg-green-600"
+                    onClick={() => accept(order.id)}
+                  >
+                    Accept
+                  </button>
+                </>
+              )}
             </TableCell>
           </TableRow>
         ))}

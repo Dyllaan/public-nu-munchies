@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace App\Classes\BusinessSubsystem;
 
 use App\Classes\BusinessSubsystem\Item;
@@ -110,15 +108,17 @@ class Business extends Entity
         $formattedData = [];
         for ($i = 0; $i < count($data); $i++) {
             $this->_setProperties($data[$i]);
+
+            if ($this->address > 0) {
+                $address = new Address($this->getDb());
+                $address->id = $this->address;
+                $addressData = $address->getById();
+                unset($addressData['id']);
+                $formattedData[0]['address'] = $addressData;
+            }
+
             array_push($formattedData, $this->toArray());
             $formattedData[$i]['verified'] = $this->verified_optional_hidden ? true : false;
-        }
-        if ($this->address > 0) {
-            $address = new Address($this->getDb());
-            $address->id = $this->address;
-            $addressData = $address->getById();
-            unset($addressData['id']);
-            $formattedData[0]['address'] = $addressData;
         }
 
         return $formattedData;

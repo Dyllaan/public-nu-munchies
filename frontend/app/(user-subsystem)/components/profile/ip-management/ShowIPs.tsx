@@ -20,7 +20,8 @@ import {
 import RemoveIP from './RemoveIP';
 import useUserSubsystem from '@/hooks/user-subsystem/use-user-subsystem';
 import DesktopManageIP from './DesktopManageIP';
-import { useMobile } from '@/hooks/user-subsystem/use-mobile';
+import { BrowserView, MobileView } from "react-device-detect";
+
 import { MobileManageIP } from './mobile/MobileManageIP';
 
 /**
@@ -40,7 +41,6 @@ export default function ShowIPs()  {
     const endOfData = (!loading && data.length === 0);
     const [filteredData, setFilteredData] = useState(data);
     const { removeIP, requestLoading } = useUserSubsystem();
-    const { isMobile } = useMobile();
     
 
     const handleRemoval = async(ip:any) => {
@@ -98,12 +98,12 @@ export default function ShowIPs()  {
                     <div className="items-center text-center">
                     <LoadingInPage message="Sending..." />
                     </div>}
-                        {isMobile == true ? (
-                            <MobileManageIP filteredData={filteredData} loading={loading} handleRemoval={handleRemoval} />
-                           ) : (
+                        <BrowserView>
                             <DesktopManageIP filteredData={filteredData} loading={loading} handleRemoval={handleRemoval} />
-                            )
-                        }
+                        </BrowserView>
+                        <MobileView>
+                            <MobileManageIP filteredData={filteredData} loading={loading} handleRemoval={handleRemoval} />
+                        </MobileView>
             </CardContent>
         </Card>
     );

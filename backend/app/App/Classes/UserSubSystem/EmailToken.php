@@ -39,7 +39,6 @@ class EmailToken extends CrudModel
             case 'password_reset':
                 $subject = "NU Munchies Password Reset";
                 $link = "http://localhost:3000/change?token=" . $jwt;
-                // Using HTML elements to style the content
                 $content = "<html>
                                 <body>
                                     <h1>Password Reset Request</h1>
@@ -51,7 +50,6 @@ class EmailToken extends CrudModel
                 break;
             case 'email_verification':
                 $subject = "NU Munchies Email Verification";
-                // Using HTML elements to style the content
                 $content = "<html>
                                 <body>
                                     <h1>Email Verification</h1>
@@ -62,7 +60,6 @@ class EmailToken extends CrudModel
                 break;
             case 'ip_verification':
                 $subject = "NU Munchies IP Verification";
-                // Using HTML elements to style the content
                 $content = "<html>
                                 <body>
                                     <h1>IP Verification</h1>
@@ -73,7 +70,6 @@ class EmailToken extends CrudModel
                             break;
             case 'change_email':
                 $subject = "NU Munchies Email Change";
-                // Using HTML elements to style the content
                 $content = "<html>
                                 <body>
                                     <h1>Email Change Request</h1>
@@ -85,7 +81,6 @@ class EmailToken extends CrudModel
                 break;
             case 'change_password':
                 $subject = "NU Munchies Password Change";
-                // Using HTML elements to style the content
                 $content = "<html>
                                 <body>
                                     <h1>Password Change Request</h1>

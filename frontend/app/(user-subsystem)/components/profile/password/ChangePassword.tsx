@@ -22,7 +22,6 @@ export default function ChangePassword({setSent}: {setSent: (value: boolean) => 
   const [canSeePassword, setCanSeePassword] = useState(false);
   
   useEffect(() => {
-    console.log(requestLoading)
   }, [requestLoading])
 
   const getError = () => {

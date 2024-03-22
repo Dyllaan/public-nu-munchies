@@ -161,6 +161,7 @@ export const useUserSubsystem = () => {
       setRequestLoading(false);
       return error.response.data.message;
     }
+    setRequestLoading(false);
   }
 
   const checkCode = async (code: string, type:string) => {
@@ -384,7 +385,7 @@ export const useUserSubsystem = () => {
     loading,
     user,
     isOAuth,
-    userTypes
+    userTypes,
   };
 };
 

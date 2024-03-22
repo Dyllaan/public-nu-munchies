@@ -105,7 +105,7 @@ class EmailHandler extends UserHelper
             case 'change_email':
                 if($emailToken->validate($token)) {
                     $this->getUser()->setEmail($emailToken->getEmail());
-                    $this->getUser()->update(false);
+                    $this->getUser()->update(false, false);
                     $this->getUser()->getVerifiedHandler()->verifyUser(0, false);
                     $this->getUser()->getEmailHandler()->sendEmailToken('email_verification');
                     return true;

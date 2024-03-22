@@ -1,6 +1,6 @@
 "use client";
 import Header from "./layout-components/Header";
-
+import Items from './(ub-subsystem)/components/Items'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { RocketIcon } from "@radix-ui/react-icons";
 import Link from "next/link";

@@ -47,6 +47,14 @@ function ReviewForm(props: any) {
                 body: JSON.stringify(formData),
                 credentials: 'omit'
             })
+            .then(response => {
+                if (response.ok){
+                    setShowForm(false);
+                }
+                else{
+                    console.error("invalid form values!");
+                }
+            })
         } catch (error) {
             if (error instanceof Error) {
                 console.error('fetch operation failed!', error.message);
@@ -92,7 +100,7 @@ function ReviewForm(props: any) {
     return (
         <>
             <div onClick={handleClick} className="flex">
-                <p className="text-s">write a review</p>
+                <p className="text-s">write a review...</p>
                 <Pencil2Icon />
             </div>
             {showForm && reviewForm()}

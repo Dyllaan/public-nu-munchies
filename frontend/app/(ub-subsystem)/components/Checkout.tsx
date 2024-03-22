@@ -27,10 +27,28 @@ function Checkout() {
   const today = new Date();
   const todaysDate = String(today.getDate());
 
+
   const fetchData = async () => {
-    const res = await fetch(`https://backend.nu-munchies.xyz/checkoutItem?item_id=${selectedItem.id}`);
-    return res.json();
-  };
+    try {
+            const res = await fetch(`http://localhost:8080/checkoutItem?item_id=${selectedItem.id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`
+                },
+                credentials: 'omit'
+            })
+            return res.json();
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error('fetch operation failed!', error.message);
+            } else {
+
+                console.error('An unexpected error occurred:', String(error));
+            }
+        }
+        
+  }
 
   useEffect(() => {
     if (selectedItem.id === undefined) {
@@ -40,7 +58,7 @@ function Checkout() {
 
   if (!logged) {
     return (
-      <Link href="/login">Please login before checking out an item!</Link>
+      <Link className="underline" href="/login">Click here to login before proceeding to checkout!</Link>
     );
   }
 

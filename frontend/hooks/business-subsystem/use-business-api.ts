@@ -96,14 +96,14 @@ export const useBusinessApi = () => {
 
   const acceptOrder = async (orderId: string) => {
     const res = await sendRequest(Endpoints.acceptOrder, "POST", {
-      orderId,
+      id: orderId,
     });
     return res;
   };
 
   const declineOrder = async (orderId: string) => {
     const res = await sendRequest(Endpoints.declineOrder, "POST", {
-      orderId,
+      id: orderId,
     });
     return res;
   };

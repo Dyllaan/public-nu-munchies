@@ -19,6 +19,9 @@ import {
   } from "@/components/ui/card";
 import RemoveIP from './RemoveIP';
 import useUserSubsystem from '@/hooks/user-subsystem/use-user-subsystem';
+import DesktopManageIP from './DesktopManageIP';
+import { useMobile } from '@/hooks/user-subsystem/use-mobile';
+import { MobileManageIP } from './mobile/MobileManageIP';
 
 /**
  * 
@@ -37,6 +40,7 @@ export default function ShowIPs()  {
     const endOfData = (!loading && data.length === 0);
     const [filteredData, setFilteredData] = useState(data);
     const { removeIP, requestLoading } = useUserSubsystem();
+    const { isMobile } = useMobile();
     
 
     const handleRemoval = async(ip:any) => {
@@ -94,19 +98,12 @@ export default function ShowIPs()  {
                     <div className="items-center text-center">
                     <LoadingInPage message="Sending..." />
                     </div>}
-                    <Table className="w-full">
-                        <TableHeader>
-                            <TableRow>
-                            <TableHead className="">IP</TableHead>
-                            <TableHead className="">Added</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                        {endOfData && <TableRow><TableCell colSpan={3} className="text-center">No IP Addresses Found!</TableCell></TableRow>}
-                            {renderItems(filteredData)}
-                        </TableBody>
-                    </Table>
+                        {isMobile === true ? (
+                            <MobileManageIP filteredData={filteredData} loading={loading} handleRemoval={handleRemoval} />
+                           ) : (
+                            <DesktopManageIP filteredData={filteredData} loading={loading} handleRemoval={handleRemoval} />
+                            )
+                        }
             </CardContent>
         </Card>
     );

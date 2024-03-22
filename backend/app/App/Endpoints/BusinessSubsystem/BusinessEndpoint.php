@@ -3,12 +3,15 @@
 namespace App\Endpoints\BusinessSubsystem;
 
 use App\Classes\BusinessSubsystem\Business;
+use App\Endpoints\BusinessSubsystem\Subendpoints\AcceptOrder;
 use App\Endpoints\BusinessSubsystem\Subendpoints\CreateBusiness;
 use App\Endpoints\BusinessSubsystem\Subendpoints\CreateItem;
+use App\Endpoints\BusinessSubsystem\Subendpoints\DeclineOrder;
 use App\Endpoints\BusinessSubsystem\Subendpoints\DeleteBusiness;
 use App\Endpoints\BusinessSubsystem\Subendpoints\ForceVerifyBusiness;
 use App\Endpoints\BusinessSubsystem\Subendpoints\GetBusinessItems;
 use App\Endpoints\BusinessSubsystem\Subendpoints\GetBusinessOrders;
+use App\Endpoints\BusinessSubsystem\Subendpoints\GetCategories;
 use App\Endpoints\BusinessSubsystem\Subendpoints\MyBusinesses;
 use App\Endpoints\BusinessSubsystem\Subendpoints\UpdateBusiness;
 use App\Endpoints\BusinessSubsystem\Subendpoints\DeleteItem;
@@ -29,6 +32,9 @@ class BusinessEndpoint extends Endpoint
         $this->addSubEndpoint(new GetBusinessOrders());
         $this->addSubEndpoint(new DeleteItem());
         $this->addSubEndpoint(new CreateItem());
+        $this->addSubEndpoint(new GetCategories());
+        $this->addSubEndpoint(new AcceptOrder());
+        $this->addSubEndpoint(new DeclineOrder());
     }
 
     public function process($request)

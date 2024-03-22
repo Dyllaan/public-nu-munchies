@@ -17,21 +17,38 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { useBusinessApi } from "@/hooks/business-subsystem/use-business-api";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { PopoverTrigger } from "@radix-ui/react-popover";
 import { format } from "date-fns";
-import { useState } from "react";
+import { atom, useAtom } from "jotai";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+interface ICategory {
+  id: number;
+  name: string;
+}
+
+export const categoriesAtom = atom<ICategory[]>([]);
 
 type UserInput = z.infer<typeof itemFormSchema>;
 
 const itemFormSchema = z.object({
   name: z.string().min(3).max(255),
   price: z.string().min(1).max(255),
+  category: z.string().optional(),
   collection: z.date().optional(),
 });
 
@@ -46,26 +63,12 @@ export const CreateItemDialog = ({
   mutate: (key: string) => void;
   closeDialog: () => void;
 }) => {
-  const { createItem } = useBusinessApi();
+  const [categories, setCategories] = useAtom(categoriesAtom);
+  const { createItem, getCategories } = useBusinessApi();
 
-  const [collectionDate, setCollectionDate] = useState<Date>();
-  const [collectionError, setCollectionError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (data: UserInput) => {
-    setCollectionError(null);
-    if (!collectionDate) {
-      setCollectionError("Collection date is required");
-      return;
-    }
-    if (collectionDate < new Date()) {
-      setCollectionError("Collection date cannot be in the past");
-      return;
-    }
-    if (collectionError !== null) {
-      return;
-    }
-
     setLoading(true);
 
     form.reset();
@@ -73,7 +76,8 @@ export const CreateItemDialog = ({
     await createItem({
       name: data.name,
       price: data.price,
-      collection: collectionDate.toISOString(),
+      category_id: data.category,
+      collection: data.collection?.toISOString(),
       business_id: businessId,
     });
 
@@ -88,6 +92,21 @@ export const CreateItemDialog = ({
     resolver: zodResolver(itemFormSchema),
     defaultValues: {},
   });
+
+  useEffect(() => {
+    if (!categories.length) {
+      getCategories().then((data) => {
+        setCategories(
+          data.message.map((cat: { cat_id: number; cat_name: string }) => {
+            return {
+              id: cat.cat_id,
+              name: cat.cat_name,
+            };
+          })
+        );
+      });
+    }
+  }, []);
 
   return (
     <div
@@ -146,37 +165,69 @@ export const CreateItemDialog = ({
                 </FormItem>
               )}
             />
-            <Label className="text-sm mt-4 block mb-2">Collection Date</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full justify-start text-left font-normal py-6",
-                    !collectionDate && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {collectionDate ? (
-                    format(collectionDate, "PPP")
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={collectionDate}
-                  onSelect={setCollectionDate}
-                />
-              </PopoverContent>
-            </Popover>
-            {collectionError && (
-              <FormMessage className="text-xs text-red-500 mt-3">
-                {collectionError}
-              </FormMessage>
-            )}
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem className="mt-4">
+                  <FormLabel>Category</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="w-full py-6">
+                        <SelectValue placeholder="Category" />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={`${category.id}`}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="collection"
+              render={({ field }) => (
+                <FormItem className="mt-4">
+                  <FormLabel>Category</FormLabel>
+
+                  <Popover>
+                    <FormControl>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full justify-start text-left font-normal py-6",
+                            field.value ? "text-black" : "text-gray-400"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                    </FormControl>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
 
             <Button
               className={

@@ -48,8 +48,7 @@ export default function DesktopHeader() {
     return (
       <NavigationMenuItem>
         <NavigationMenuTrigger>Guest</NavigationMenuTrigger>
-        <NavigationMenuContent>
-          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+        <NavigationMenuContent className="flex flex-row p-4 gap-2">
             <NavLink
               title="Login"
               href="/login"
@@ -60,7 +59,6 @@ export default function DesktopHeader() {
               href="/register"
               description="Create a new account"
             />
-          </ul>
         </NavigationMenuContent>
       </NavigationMenuItem>
     );

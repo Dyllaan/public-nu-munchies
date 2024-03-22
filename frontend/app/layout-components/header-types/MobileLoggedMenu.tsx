@@ -18,15 +18,15 @@ export default function MobileLoggedMenu({ user, logout, userTypes } : {user:any
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant="ghost">{user.first_name}</Button>
+        <Button variant="ghost">{user.firstName ? user.firstName : 'Profile'}</Button>
       </DrawerTrigger>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
+        <div className="mx-auto w-full max-w-md text-center">
           <DrawerHeader>
-            <DrawerTitle>{user.first_name}</DrawerTitle>
+            <DrawerTitle>{user.firstName ? user.firstName : 'Profile'}</DrawerTitle>
             <DrawerDescription>Manage your profile</DrawerDescription>
           </DrawerHeader>
-          <div className="p-4 pb-0">
+          <div className="pb-0 flex flex-col gap-4">
             <NavLink
               title="Profile"
               href="/profile"
@@ -37,7 +37,7 @@ export default function MobileLoggedMenu({ user, logout, userTypes } : {user:any
               onClick={logout}
               description="View and edit your profile"
             />
-            {userTypes.includes('councillor') && (
+            {(userTypes && userTypes.length > 0) && userTypes.includes('councillor') && (
               <NavLink
               title="Councillor"
               href="/councillor"

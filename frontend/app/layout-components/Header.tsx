@@ -5,36 +5,18 @@ import {
 } from "@/components/ui/navigation-menu";
 import MobileHeader from "./MobileHeader";
 import DesktopHeader from "./header-types/DesktopHeader";
-import { useEffect, useState } from "react";
+import { useMobile } from "@/hooks/user-subsystem/use-mobile";
 
 /**
  * @author Louis Figes W21017657
  */
 
 export default function Header() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  /**
-  * Arbitrary breakpoint for mobile 
-  * Suggested by: https://testsigma.com/blog/css-breakpoints/
-  * I know this is not a good source
-  */
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 480);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-  
+  const { isMobile } = useMobile();
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        {isMobile ? <MobileHeader /> : <DesktopHeader />}
+        {isMobile === true ? <MobileHeader /> : <DesktopHeader />}
       </NavigationMenuList>
     </NavigationMenu>
   );

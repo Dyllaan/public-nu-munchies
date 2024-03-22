@@ -14,12 +14,6 @@ export default function MobileHeader() {
 
     const { user, logout, logged, userTypes } = useUserSubsystem();
 
-    const [goal, setGoal] = useState(350)
-
-    function onClick(adjustment: number) {
-        setGoal(Math.max(200, Math.min(400, goal + adjustment)))
-    }
-
     return (
         <>
             <NavigationMenuItem>
@@ -29,9 +23,11 @@ export default function MobileHeader() {
                     </NavigationMenuLink>
                 </Link>
             </NavigationMenuItem>
-            <MobileGuestMenu />
-            {logged && (
+            {logged ? (
             <MobileLoggedMenu user={user} logout={logout} userTypes={userTypes} />
+            ) :
+            (
+                <MobileGuestMenu />
             )}
             <MobilePagesMenu />
         </>

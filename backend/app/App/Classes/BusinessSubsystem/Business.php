@@ -114,7 +114,7 @@ class Business extends Entity
                 $address->id = $this->address;
                 $addressData = $address->getById();
                 unset($addressData['id']);
-                $formattedData[0]['address'] = $addressData;
+                $this->address = $addressData;
             }
 
             array_push($formattedData, $this->toArray());

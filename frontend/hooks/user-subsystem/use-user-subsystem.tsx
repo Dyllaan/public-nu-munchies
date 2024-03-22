@@ -364,9 +364,6 @@ export const useUserSubsystem = () => {
     }
   }
 
-  // added to prevent compile error
-  const deleteAccount = () => {}
-
   return {
     login,
     register,
@@ -387,8 +384,7 @@ export const useUserSubsystem = () => {
     loading,
     user,
     isOAuth,
-    userTypes,
-    deleteAccount
+    userTypes
   };
 };
 

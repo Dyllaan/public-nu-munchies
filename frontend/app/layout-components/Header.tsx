@@ -16,7 +16,7 @@ export default function Header() {
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        {isMobile === true ? <MobileHeader /> : <DesktopHeader />}
+        {isMobile == true ? <MobileHeader /> : <DesktopHeader />}
       </NavigationMenuList>
     </NavigationMenu>
   );

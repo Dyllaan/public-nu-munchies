@@ -98,7 +98,7 @@ export default function ShowIPs()  {
                     <div className="items-center text-center">
                     <LoadingInPage message="Sending..." />
                     </div>}
-                        {isMobile === true ? (
+                        {isMobile == true ? (
                             <MobileManageIP filteredData={filteredData} loading={loading} handleRemoval={handleRemoval} />
                            ) : (
                             <DesktopManageIP filteredData={filteredData} loading={loading} handleRemoval={handleRemoval} />

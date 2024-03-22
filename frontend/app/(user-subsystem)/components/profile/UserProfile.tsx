@@ -4,12 +4,14 @@ import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 import ProfileEmail from "./email/ProfileEmail";
 import requireAuth from "../auth/requireAuth";
 import GoogleEditProfile from "@/app/(user-subsystem)/components/profile/GoogleEditProfile";
-import OrderHistory from "./OrderHistory";
+import OrderHistory from "./delete/DeleteModal";
 import EditProfile from "./EditProfile";
 import ProfilePassword from "../profile/password/ProfilePassword";
+import Moderator from "../moderator/Moderator";
+import ProfileDelete from "./delete/ProfileDelete";
 
 function UserProfile() {
-  const { user, logout, isOAuth, userTypes } = useUserSubsystem();
+  const { user, isOAuth} = useUserSubsystem();
 
   let dateString = '';
   if (user.created_at) {
@@ -18,16 +20,18 @@ function UserProfile() {
   }
 
   return (
-    <div>
+    <>
+      {isOAuth ? <GoogleEditProfile /> : (
       <div className="flex flex-col lg:flex-row gap-4 mx-auto p-4">
         <EditProfile />
         <ProfileEmail />
       </div>
+      )}
       <div className="flex flex-col lg:flex-row gap-4 mx-auto p-4">
-          <OrderHistory />
-          <ProfilePassword />
+        <ProfileDelete />
+        <ProfilePassword />
       </div>
-    </div>
+    </>
   );
 }
 export default UserProfile;

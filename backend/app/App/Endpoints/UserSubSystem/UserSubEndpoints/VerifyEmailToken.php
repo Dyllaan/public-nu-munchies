@@ -25,7 +25,7 @@ class VerifyEmailToken extends SubEndpoint
         */
         $allowed =['email_verification', 'ip_verification',
          'password_reset', 'change_email',
-        'change_password'];
+        'change_password', 'delete_account'];
         if(!in_array($request->getAttribute('type'), $allowed)) {
             $this->setResponse(400, 'Invalid type', ['supported'=> $allowed]);
             return;

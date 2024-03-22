@@ -184,6 +184,27 @@ export const useUserSubsystem = () => {
     setRequestLoading(false);
   }
 
+  const checkDeleteCode = async (code: string) => {
+    setRequestLoading(true);
+    const otpData = new FormData();
+    otpData.append("token", code);
+    otpData.append("type", "delete_account");
+    try {
+      const response = await api.post("user/verify-email-token", otpData, localStorage.getItem("token"));
+      if (response.success) {
+        localStorage.removeItem("token");
+        logout();
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.data.message);
+      }
+    } catch (error: any) {
+      const responseString = "Failed to verify your email, please retry."
+      toast.error(responseString);
+    }
+    setRequestLoading(false);
+  }
+
   const requestNewCode = async (type: string) => {
     setRequestLoading(true);
     try {
@@ -308,6 +329,27 @@ export const useUserSubsystem = () => {
     router.replace("/");
   }
 
+  const removeIP = async (ip:string) => {
+    const data = new FormData();
+    data.append("ip", ip);
+    setRequestLoading(true);
+    try {
+      const response = await api.post("ip/remove", data, localStorage.getItem("token"));
+      if (response.success) {
+        toast.success(response.data.message);
+        setRequestLoading(false);
+        return true;
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      return error.response.data.message;
+    }
+    setRequestLoading(false);
+    return false;
+  }
+
   const setAuthStatus = (loading: boolean, logged?: boolean) => {
     setLoading(loading);
     setLogged(logged ?? false);
@@ -335,6 +377,8 @@ export const useUserSubsystem = () => {
     checkToken,
     requestEmailChange,
     requestPasswordChange,
+    checkDeleteCode,
+    removeIP,
     requestLoading,
     logged,
     loading,

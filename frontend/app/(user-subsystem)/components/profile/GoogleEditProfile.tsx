@@ -18,7 +18,7 @@ export default function GoogleEditProfile() {
     const { user } = useUserSubsystem();
 
     return (
-        <Card className="w-[350px] mx-auto">
+        <Card className="hover-scale">
           <CardHeader>
             <CardTitle>Your Profile</CardTitle>
             <CardDescription>Sadly, you cannot edit your OAuth profile currently.</CardDescription>

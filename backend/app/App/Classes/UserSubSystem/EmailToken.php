@@ -89,6 +89,16 @@ class EmailToken extends CrudModel
                                 </body>
                             </html>";
                 break;
+            case 'delete_account':
+                $subject = 'NU Munchies Account Deletion';
+                $content = "<html>
+                                <body>
+                                    <h1>Account Deletion Request</h1>
+                                    <p>Enter this code on your profile page to delete your account: <strong>" . $jwt . "</strong></p>
+                                    <p>This code will expire in 10 minutes.</p>
+                                </body>
+                            </html>";
+                break;
             default:
                 $this->setResponse(400, 'Invalid type');
         }

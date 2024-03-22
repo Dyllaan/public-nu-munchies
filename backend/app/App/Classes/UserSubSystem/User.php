@@ -360,7 +360,7 @@ class User extends CrudModel implements CrudInterface
     {
         if ($this->exists()) {
             $this->getDb()->createDelete()->from($this->getTable())->where(["id = '" . $this->getId() . "'"])->execute();
-            return ['message' => "User deleted"];
+            $this->setResponse(200, "User deleted");
         } else {
             $this->setResponse(400, "User does not exist");
         }

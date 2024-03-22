@@ -52,6 +52,11 @@ abstract class EndpointBase extends GivesResponse
         if (!$token->isValid()) {
             $this->setResponse(401, 'Token is invalid');
         }
+        $user = new User($this->getDb());
+        $user->setId($token->getUserId());
+        if(!$user->exists()) {
+            $this->setResponse(401, 'User does not exist');
+        }
         switch ($token->getProviderId()) {
             case 1:
                 $this->user = User::getInstance($this->getDb());

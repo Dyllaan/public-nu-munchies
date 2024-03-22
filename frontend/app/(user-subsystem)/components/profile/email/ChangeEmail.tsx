@@ -11,7 +11,6 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card";
-import VerifyInPage from '../VerifyInPage';
 
 export default function ChangeEmail({setSent}: {setSent: (value: boolean) => void}) {
     const { requestEmailChange, user, requestLoading } = useUserSubsystem();
@@ -78,7 +77,7 @@ export default function ChangeEmail({setSent}: {setSent: (value: boolean) => voi
       <CardHeader>
         <CardTitle>Change Email</CardTitle>
         <CardDescription>
-            Changing your email requires email verification from both the current email and the new email for security purposes.
+            Changing your email requires email verification from the current email and the new email for security purposes.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">

@@ -42,12 +42,13 @@ class ResendEmail extends SubEndpoint
                 break;
             case 'ip_verification':
             case 'email_verification':
+            case 'delete_account':
                 if($this->getUser()->getEmailHandler()->sendEmailToken($type)){
                     $this->setResponse(200, 'Email sent');
                 }
                 break;
             default:
-                $this->setResponse(400, 'Invalid type', ['supported'=> ['ip_verification', 'email_verification', 'change_email']]);
+                $this->setResponse(400, 'Invalid type', ['supported'=> ['ip_verification', 'email_verification', 'change_email', 'delete_account']]);
                 return;
                 break;
         }

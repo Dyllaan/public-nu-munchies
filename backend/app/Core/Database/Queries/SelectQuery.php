@@ -16,6 +16,9 @@ class SelectQuery extends \Core\Database\Query implements \Core\Database\QueryIn
     private $limit;
     private $offset;
     private $orderBy;
+    private $groupBy;
+    private $havingIsNotNull;
+    private $havingSum;
 
     public function cols($cols)
     {
@@ -59,6 +62,23 @@ class SelectQuery extends \Core\Database\Query implements \Core\Database\QueryIn
         return $this;
     }
 
+    public function groupBy($groupBy)
+    {
+        $this->groupBy = "GROUP BY $groupBy";
+        return $this;
+    }
+
+    public function havingSum($havingSum){
+        $this->havingSum = "HAVING $havingSum";
+        return $this;
+    }
+
+    public function havingIsNotNull($havingIsNotNull)
+    {
+        $this->havingIsNotNull = "HAVING $havingIsNotNull IS NOT NULL";
+        return $this;
+    }
+
     public function exists($subQuery, $alias = "found") {
         $this->cols = "SELECT EXISTS ($subQuery) AS $alias";
         return $this;
@@ -70,6 +90,9 @@ class SelectQuery extends \Core\Database\Query implements \Core\Database\QueryIn
             $this->table,
             !empty($this->joins) ? implode(" ", $this->joins) : null,
             $this->where,
+            $this->groupBy,
+            $this->havingSum,
+            $this->havingIsNotNull,
             $this->orderBy,
             $this->limit,
             $this->offset,

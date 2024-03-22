@@ -384,7 +384,7 @@ export const useUserSubsystem = () => {
     loading,
     user,
     isOAuth,
-    userTypes,
+    userTypes
   };
 };
 

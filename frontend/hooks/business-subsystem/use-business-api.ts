@@ -89,7 +89,27 @@ export const useBusinessApi = () => {
       price: data.price,
       collection: data.collection,
       business_id: data.business_id,
+      category_id: data.category_id,
     });
+    return res;
+  };
+
+  const acceptOrder = async (orderId: string) => {
+    const res = await sendRequest(Endpoints.acceptOrder, "POST", {
+      orderId,
+    });
+    return res;
+  };
+
+  const declineOrder = async (orderId: string) => {
+    const res = await sendRequest(Endpoints.declineOrder, "POST", {
+      orderId,
+    });
+    return res;
+  };
+
+  const getCategories = async () => {
+    const res = await sendRequest(Endpoints.categories, "GET", {});
     return res;
   };
 
@@ -103,5 +123,8 @@ export const useBusinessApi = () => {
     deleteBusiness,
     getItems,
     deleteItem,
+    acceptOrder,
+    declineOrder,
+    getCategories,
   };
 };

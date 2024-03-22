@@ -56,8 +56,10 @@ export default function BusinessSubsystem() {
             </Link>
           </p>
         ) : (
-          businesses.loadedMyBusinesses.map((business: IBusiness) => (
-            <MyBusinessCard business={business} key={business.id} />
+          businesses.loadedMyBusinesses.map((business: IBusiness, index) => (
+            <div key={index}>
+              <MyBusinessCard business={business} key={business.id} />
+            </div>
           ))
         )}
       </div>

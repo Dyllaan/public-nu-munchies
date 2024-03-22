@@ -31,6 +31,6 @@ class BusinessOrders extends SubEndpoint
         $analytics = new Analytics($this->getDb(), $this->getUser());
 
         // Assuming there is a respondJson method available
-        $this->setResponse(200, "User Rewards stats retrieved", $analytics->getBusinessOrders());
+        $this->setResponse(200, "Business Orders stats retrieved", $analytics->getBusinessOrders());
     }
 }

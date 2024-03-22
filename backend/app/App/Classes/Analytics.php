@@ -263,7 +263,7 @@ class Analytics extends CrudModel {
 
         $db = $this->getDb();
 
-        $rewardStats = $db->createSelect()->cols('order_id, points, food_waste_prevented')->from('user_analytics')->where(["user_id = " . $this->getUser()->getId() ])->execute();
+        $rewardStats = $db->createSelect()->cols('user_analytics.order_id, user_analytics.points, user_analytics.food_waste_prevented')->from('user_analytics')->where(["user_id = " . $this->getUser()->getId() ])->execute();
         $totalPoints = $db->createSelect()->cols('SUM(points) AS total_points')->from("user_analytics")->where(["user_id = " . $this->getUser()->getId() ])->execute();
 
             $userOrderData = [];
@@ -296,7 +296,7 @@ class Analytics extends CrudModel {
         $db = $this->getDb();
 
         $businessesHelped = $db->createSelect()->cols("business_name, COUNT(orders.id) AS purchase_amount")->from("businesses")->join('orders', 'businesses.id = orders.business_id')->where(["user_id = " . $this->getUser()->getId() ])->
-        groupBy("business_name")->execute();
+        groupBy("business_name")->orderBy("purchase_amount DESC")->execute();
 
         return $businessesHelped;
 
@@ -326,24 +326,27 @@ class Analytics extends CrudModel {
         return $userOrderData;
     }
 
+
+
     public function userList(){
 
         $db = $this->getDb();
-        $topUserRankings = $db->createSelect()->cols("users.first_name, users.last_name, SUM(user_analytics.points) AS total_points")->from("users")->join("user_analytics", "users.id = user_analytics.user_id")
+        $userList = $db->createSelect()->cols("users.first_name, users.last_name, SUM(user_analytics.points) AS total_points, SUM(user_analytics.food_waste_prevented) AS total_waste")->from("users")->join("user_analytics", "users.id = user_analytics.user_id")
         ->groupBy("users.id")
         ->havingIsNotNull("SUM(user_analytics.points)")
         ->orderBy("total_points DESC")->execute();
 
         $rankArray = [];
 
-        foreach ($topUserRankings as $index => $topUserRanking) {
+        foreach ($userList as $index => $userLists) {
 
             // Create an associative array with key-value pairs using the array() function
             $userData = array(
                 'rank' => $index + 1,
-                'first_name' => $topUserRanking['first_name'],
-                'last_name' => $topUserRanking['last_name'],
-                'total_points' => $topUserRanking['total_points'],
+                'first_name' => $userLists['first_name'],
+                'last_name' => $userLists['last_name'],
+                'total_points' => $userLists['total_points'],
+                'total_Uwaste' => $userLists['total_waste'],
             );
             array_push($rankArray, $userData);
         }
@@ -353,7 +356,7 @@ class Analytics extends CrudModel {
 
     public function businessList(){
         $db = $this->getDb();
-        $topBusinessRankings = $db->createSelect()->cols("businesses.business_name, SUM(business_analytics.points) AS total_points")->from("businesses")->join("business_analytics", "businesses.id = business_analytics.business_id")
+        $topBusinessRankings = $db->createSelect()->cols("businesses.business_name, SUM(business_analytics.points) AS total_points, SUM(business_analytics.food_waste_prevented) AS total_waste")->from("businesses")->join("business_analytics", "businesses.id = business_analytics.business_id")
         ->groupBy("businesses.id")
         ->havingIsNotNull("SUM(business_analytics.points)")
         ->orderBy("total_points DESC")->execute();
@@ -367,6 +370,7 @@ class Analytics extends CrudModel {
                 'rank' => $index + 1,
                 'business_name' => $topBusinessRanking['business_name'],
                 'total_points' => $topBusinessRanking['total_points'],
+                'total_Bwaste' => $topBusinessRanking['total_waste'],
             );
             array_push($rankArray, $businessData);
         }
@@ -569,6 +573,7 @@ class Analytics extends CrudModel {
             'totalWaste' => $this->totalBusinessFoodWastePrevented(),
             'totalOrders' => $this->getOrdersReceived(),
             'orderStats' => $this->businessOrderStats(),
+            'totalMoneyMade' => $this->getMoneyMade(),
 
         ];
 

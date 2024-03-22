@@ -27,7 +27,7 @@ export default function requireAuth(ChildComponents: any, pageNeedsAuth: boolean
         }
         
         if(pageNeedsAuth && !logged && !loading) {
-            return <RedirectTo to="/business-waste" message={"This page requires you to be logged in"} />;
+            return <RedirectTo to="/user-stats" message={"This page requires you to be logged in"} />;
         } else if(!pageNeedsAuth && logged && !loading) {
             return <RedirectTo to="/profile" message={"This page requires you to be logged out"} />;
         }

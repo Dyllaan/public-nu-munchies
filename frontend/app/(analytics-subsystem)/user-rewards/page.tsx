@@ -40,36 +40,109 @@ const headers = {
     }
 
     return (
+      <div>
+      <h1 className="text-3xl font-bold mb-2">Your Rewards:</h1>
         <div>
+          <div class="min-w-screen flex items-center justify-center">
+    <div class="max-w-7xl w-full mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="flex justify-center items-center">
+
+        <div class="w-1/4 lg:w-1/1 shadow-lg">
+    <div class="widget w-full p-4 rounded-lg bg-white border-l-4 border-purple-400">
+      <div class="flex items-center">
+                        <div class="icon w-14 p-3.5 bg-purple-400 text-white rounded-full mr-3">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <div class="text-lg">{rewards.data.total_points[0].total_points}</div>
+                            <div class="text-sm text-gray-400">Total Points</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+                </div>
+            </div>
+            </div>
+            <div className="pt-4">
           {rewards.data.total_points.length > 0 ? (
-            <div>
-              <div>
-                Total Points: {rewards.data.total_points[0].total_points}
-              </div>
-      
+            <div>  
               {/* Additional messages based on total points */}
-              <div>
+              <div className=" flex justify-center items-center pb-8">
                 {parseInt(rewards.data.total_points[0].total_points) <= 50 && (
-                  <div>You have between 0-50 total points message</div>
+                  <div> 
+                    <div className="flex justify-center items-center font-bold"> 
+                  Congratulations! 
+                  </div>
+                    <div className="flex justify-center items-center"> 
+                    You have earned over 50 points which means a £5 voucher should be waiting for you in your inbox!
+                    </div>
+                    <div className="flex justify-center items-center font-bold"> 
+                    Next Milestone:
+                    </div>
+                    <div> 
+                    100 Points
+                    </div>
+                  </div>
                 )}
                 {parseInt(rewards.data.total_points[0].total_points) >= 100 &&
                   parseInt(rewards.data.total_points[0].total_points) <= 500 && (
-                    <div>You have between 100-500 total points message</div>
+                    <div> 
+                    <div className="flex justify-center items-center font-bold"> 
+                  Congratulations! 
+                  </div>
+                    <div className="flex justify-center items-center"> 
+                    You have earned over 100 points which means a £10 voucher should be waiting for you in your inbox!
+                    </div>
+                    <div className="flex justify-center items-center font-bold"> 
+                    Next Milestone:
+                    </div>
+                    <div className="flex justify-center items-center"> 
+                    500 Points
+                    </div>
+                  </div>
                   )}
                 {parseInt(rewards.data.total_points[0].total_points) > 500 &&
                   parseInt(rewards.data.total_points[0].total_points) <= 1000 && (
-                    <div>You have between 500-1000 total points message</div>
+                    <div> 
+                      <div className="flex justify-center items-center font-bold"> 
+                  Congratulations! 
+                  </div>
+                    <div> 
+                    You have earned over 500 points which means a £20 voucher should be waiting for you in your inbox!
+                    </div>
+                    <div className="flex justify-center items-center font-bold"> 
+                    Next Milestone:
+                    </div>
+                    <div className="flex justify-center items-center"> 
+                    1000 Points
+                    </div>
+                  </div>
                   )}
-                {parseInt(rewards.data.total_points[0].total_points) > 1000 && (
-                  <div>You have over 1000 total points message</div>
+                {parseInt(rewards.data.total_points[0].total_points) >= 1000 && (
+                  <div> 
+                    <div className="flex justify-center items-center font-bold"> 
+                  Congratulations! 
+                  </div>
+                  <div> 
+                  You have earned over 1000 points which means a £50 voucher should be waiting for you in your inbox! Congratulations! 
+                  </div>
+                  <div className="flex justify-center items-center font-bold"> 
+                  Next Milestone:
+                  </div>
+                  <div className="flex justify-center items-center"> 
+                  More Rewards Coming Soon!
+                  </div>
+                </div>
                 )}
               </div>
       
               <Table>
-                <TableCaption>A list highlighting where your points have been earned</TableCaption>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px]">Order Number:</TableHead>
+                    <TableHead>Order Number:</TableHead>
                     <TableHead>Food Waste Prevented:</TableHead>
                     <TableHead>Points Earned:</TableHead>
                   </TableRow>
@@ -96,6 +169,7 @@ const headers = {
               You have no points, order now!
             </div>
           )}
+        </div>
         </div>
       );
       

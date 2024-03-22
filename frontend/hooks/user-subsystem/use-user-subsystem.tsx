@@ -161,6 +161,7 @@ export const useUserSubsystem = () => {
       setRequestLoading(false);
       return error.response.data.message;
     }
+    setRequestLoading(false);
   }
 
   const checkCode = async (code: string, type:string) => {
@@ -364,9 +365,6 @@ export const useUserSubsystem = () => {
     }
   }
 
-  // added to prevent compile error
-  const deleteAccount = () => {}
-
   return {
     login,
     register,
@@ -388,7 +386,6 @@ export const useUserSubsystem = () => {
     user,
     isOAuth,
     userTypes,
-    deleteAccount
   };
 };
 

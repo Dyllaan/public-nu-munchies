@@ -5,19 +5,41 @@ import {
 } from "@/components/ui/navigation-menu";
 import MobileHeader from "./MobileHeader";
 import DesktopHeader from "./header-types/DesktopHeader";
-import { useMobile } from "@/hooks/user-subsystem/use-mobile";
+import { BrowserView, MobileView } from "react-device-detect";
 
 /**
  * @author Louis Figes W21017657
  */
 
-export default function Header() {
-  const { isMobile } = useMobile();
+function Mobile() {
+  return (
+  <NavigationMenu>
+      <NavigationMenuList>
+          <MobileHeader />
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
+}
+
+function Desktop() {
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        {isMobile === true ? <MobileHeader /> : <DesktopHeader />}
+          <DesktopHeader />
       </NavigationMenuList>
     </NavigationMenu>
+  );
+}
+
+export default function Header() {
+  return (
+    <div>
+      <BrowserView>
+        <Desktop />
+      </BrowserView>
+      <MobileView>
+        <Mobile />
+      </MobileView>
+    </div>
   );
 }

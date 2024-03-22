@@ -17,9 +17,9 @@ export function MobileManageIP({filteredData, loading, handleRemoval} : {filtere
 
     function renderItems(data:any) {
         return data.map((ipObj:any, index:any) => (
-            <>
+            <div key={index}>
             <MobileRemoveIP key={index} ip={ipObj} removeIP={handleRemoval} />
-            <Separator className="my-4" /></>
+            </div>
         ));
     }
   

@@ -9,7 +9,6 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card";
-import DeleteModal from './DeleteModal';
 import LoadingInPage from '../../reusable/LoadingInPage';
 /**
  * @author Louis Figes

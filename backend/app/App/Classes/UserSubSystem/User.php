@@ -165,9 +165,7 @@ class User extends CrudModel implements CrudInterface
                 $this->setResponse(401, "Invalid password");
             } else {
                 $this->setUserFields($data[0]);
-                if (!$this->getIPHandler()->isIPAllowed()) {
-                    $this->getEmailHandler()->sendEmailToken('ip_verification');
-                }
+                $this->getIPHandler()->isIPAllowed();
                 if ($data[0]['verified'] == 0) {
                     $this->getEmailHandler()->sendEmailToken('email_verification');
                     return $this->toArray();
@@ -313,9 +311,9 @@ class User extends CrudModel implements CrudInterface
         }
     }
     
-    public function update()
+    public function update($respond = true, $checkExists = true)
     {
-        if(!$this->exists()) {
+        if(!$this->exists() && $checkExists) {
             $this->setResponse(400, "User does not exist1");
         }
         $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["id = '".$this->getId()."'"])->execute();

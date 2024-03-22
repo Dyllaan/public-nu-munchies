@@ -58,7 +58,7 @@ export const BusinessMenu: FC<{ businessId: string }> = ({ businessId }) => {
                     )}
                   </span>
                   <h4 className="text-2xl font-bold mt-2">{item.name}</h4>
-                  <h5 className="text-sm mt-1">{item.category.name}</h5>
+                  <h5 className="text-sm mt-1">{item.category?.name}</h5>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Reduced Price</span>

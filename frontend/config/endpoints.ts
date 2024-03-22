@@ -9,4 +9,7 @@ export enum Endpoints {
   deleteBusiness = "business/delete",
   deleteItems = "business/itemsdelete",
   createItem = "business/itemscreate",
+  acceptOrder = "business/orderaccept",
+  declineOrder = "business/orderdecline",
+  categories = "business/categories",
 }

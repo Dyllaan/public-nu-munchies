@@ -15,6 +15,7 @@ class CreateItem extends SubEndpoint
         parent::__construct('POST', 'itemscreate');
         $this->getAttributes()->addRequiredStrings(['name', 'collection']);
         $this->getAttributes()->addRequiredInts(['business_id', 'price']);
+        $this->getAttributes()->addAllowedInts(['category_id']);
         $this->setRequiresAuth(true);
     }
 
@@ -47,6 +48,10 @@ class CreateItem extends SubEndpoint
         $item->price = $fields['price'];
         $item->business_id = $fields['business_id'];
         $item->collection = $fields['collection'];
+
+        if (isset($fields['category_id']))
+            $item->category_optional = $fields['category_id'];
+
         $item->status_optional = "open";
         $res = $item->save();
 

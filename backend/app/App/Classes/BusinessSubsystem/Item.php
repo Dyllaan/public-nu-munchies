@@ -30,6 +30,7 @@ class Item extends Entity
     {
         $data = $this->getDb()->createSelect()->cols("*")->from("items")->where([
             "business_id = $businessId",
+            "collect_time > NOW() - INTERVAL '24 hours'"
         ])->execute();
 
         $formattedData = [];

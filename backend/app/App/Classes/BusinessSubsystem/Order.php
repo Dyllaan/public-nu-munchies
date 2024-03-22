@@ -64,4 +64,24 @@ class Order extends Entity
         }
         return $formattedData;
     }
+
+    public function acceptOrder()
+    {
+        $data = $this->getDb()->createUpdate()->table("orders")->set([
+            "status" => "accepted"
+        ])->where([
+            "id = $this->id"
+        ])->execute();
+        return $data;
+    }
+
+    public function declineOrder()
+    {
+        $data = $this->getDb()->createUpdate()->table("orders")->set([
+            "status" => "declined"
+        ])->where([
+            "id = $this->id"
+        ])->execute();
+        return $data;
+    }
 }

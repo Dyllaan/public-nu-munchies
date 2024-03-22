@@ -15,9 +15,9 @@ class Validator
         if (!is_numeric($value) || intval($value) != $value) {
             throw new \Core\ClientErrorException(400, ['message' => $name . ' must be an integer']);
         }
-    
+
         $intValue = intval($value);
-    
+
         if ($min !== null && $intValue < $min) {
             throw new \Core\ClientErrorException(400, ['message' => $name . ' minimum value is ' . $min]);
         } elseif ($max !== null && $intValue > $max) {
@@ -25,7 +25,7 @@ class Validator
         }
         return true;
     }
-    
+
     public static function validateString($name, $value)
     {
         if (!is_string($value) || is_numeric($value)) {

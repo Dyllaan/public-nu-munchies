@@ -74,13 +74,13 @@ const TblComponent = ({
   refreshOrders: () => void;
 }) => {
   const { acceptOrder, declineOrder } = useBusinessApi();
-  const accept = (orderId: string) => {
-    acceptOrder(orderId);
+  const accept = async (orderId: string) => {
+    await acceptOrder(orderId);
     refreshOrders();
   };
 
-  const decline = (orderId: string) => {
-    declineOrder(orderId);
+  const decline = async (orderId: string) => {
+    await declineOrder(orderId);
     refreshOrders();
   };
   return (

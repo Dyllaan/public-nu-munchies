@@ -30,7 +30,7 @@ function Checkout() {
 
   const fetchData = async () => {
     try {
-            const res = await fetch(`http://localhost:8080/checkoutItem?item_id=${selectedItem.id}`, {
+            const res = await fetch(`https://backend.nu-munchies.xyz/checkoutItem?item_id=${selectedItem.id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

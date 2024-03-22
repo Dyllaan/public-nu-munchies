@@ -30,7 +30,6 @@ class CheckoutItem extends Endpoint
         $item_name = $item[0]['item_name'];
         $id = $item[0]['id'];
         $businessId = $item[0]['business_id'];
-        $userId = $this->getUser()->getId();
 
         \Stripe\Stripe::setApiKey('sk_test_51MgmQnLvWNjHki0mRKISRuV2qxLQVHxfR1qZGt3cb3cexCsW94zVvM0csTpTCeuRO7QjzrVIYpZXaH17x3csd4d8000Ytk3840');
         header('Content-Type: application/json');
@@ -52,7 +51,6 @@ class CheckoutItem extends Endpoint
           'metadata' => [
               'business_id' => (int)$businessId,
               'item_id' => (int)$id,
-              'user_id' => (int)$userId
             ],
           'mode' => 'payment',
           'success_url' => $YOUR_DOMAIN . '?success=true',

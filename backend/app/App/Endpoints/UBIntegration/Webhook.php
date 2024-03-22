@@ -44,7 +44,6 @@ switch ($event->type) {
 
             $url = 'https://backend.nu-munchies.xyz/insertorder';
             $data = array('business_id' => $paymentIntent->metadata['business_id'],
-                            'user_id' => $paymentIntent->metadata['user_id'],
                             'item_id' => $paymentIntent->metadata['item_id']);
             $ch = curl_init($url);
             curl_setopt($ch,CURLOPT_POST, 1);

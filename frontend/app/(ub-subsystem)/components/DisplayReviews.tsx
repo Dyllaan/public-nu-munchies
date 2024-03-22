@@ -29,7 +29,7 @@ function DisplayReviews(props:any) {
       console.log(res.data);
 
     });
-  }, []);
+  }, );
 
   return (
     <>

@@ -53,7 +53,7 @@ function Items() {
       console.log(res);
 
     });
-  }, []);
+  }, [items.data.length]);
 
   const handleClick = (item: Item) => {
     console.log(item);

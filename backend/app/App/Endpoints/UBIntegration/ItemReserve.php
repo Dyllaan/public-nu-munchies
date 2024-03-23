@@ -3,7 +3,7 @@
  * class ItemReserve
  * @author Cameron Bramley w21020682
  * 
- * sets item status to reserved
+ * sets item status to reserved, should be used when checkout of item is successful. 
  */
 
 namespace App\Endpoints\UBIntegration;
@@ -22,9 +22,17 @@ class ItemReserve extends Endpoint
 
     public function process($request)
     {
-        $status = ['status' => 'reserved'];
-        $id = $this->getDb()->createUpdate()->table('items')->set($status)->where(["id = '" . $request->getAttribute('item_id'). "'"])->execute();
+        parent::process($request);
 
-        $this->setResponse(200, 'Item Reserved', ['id' => $id]);
+        $status = ['item_status' => 'reserved'];
+        $id = $this->getDb()->createUpdate()->table('items')->set($status)->where(["id = '" . $request->getAttribute('item_id'). "'"]);
+        if($id->execute()){
+            $this->setResponse(200, 'Item Reserved', ['id' => $id]);
+        }
+        else{
+            $this->setResponse(404, 'invalid item_id', ['id' => $id]);
+        }
+
+        
     }
 } 

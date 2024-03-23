@@ -30,6 +30,7 @@ function DisplayReviews(props: any) {
   useEffect(() => {
     fetchData().then(res => {
       setReviews(res);
+      console.log(res);
     });
   },);
 

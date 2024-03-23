@@ -177,14 +177,14 @@ export const useUserSubsystem = () => {
 
   const register = async (firstName: string, lastName: string, email: string, password: string) => {
     setAuthStatus(true);
-    await getUserIP();
+    const ip = await getUserIP();
     try {
       const registerData = new FormData();
       registerData.append("first_name", firstName);
       registerData.append("last_name", lastName);
       registerData.append("email", email);
       registerData.append("password", password);
-      registerData.append("ip", currentIP);
+      registerData.append("ip", ip);
       
       const response = await api.post("user/register", registerData);
       if (response.success) {

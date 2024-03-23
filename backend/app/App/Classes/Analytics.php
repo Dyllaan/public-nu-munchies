@@ -56,6 +56,20 @@ class Analytics extends CrudModel {
         return $query[0]["id"];
     }
 
+    public function getCouncillorId(){
+
+        $db = $this->getDb();
+
+        $query = $db->createSelect()
+                    ->cols("councillor.id")
+                    ->from("users")
+                    ->join("councillor", "users.id = councillor.user_id")
+                    ->where(["users.id = " . $this->getUser()->getId() ])
+                    ->execute();
+    
+        return $query[0]["id"];
+    }
+
     public function getFirstUserName() {
 
         $db = $this->getDb();
@@ -331,7 +345,7 @@ class Analytics extends CrudModel {
     public function userList(){
 
         $db = $this->getDb();
-        $userList = $db->createSelect()->cols("users.first_name, users.last_name, SUM(user_analytics.points) AS total_points, SUM(user_analytics.food_waste_prevented) AS total_waste")->from("users")->join("user_analytics", "users.id = user_analytics.user_id")
+        $userList = $db->createSelect()->cols("users.first_name, users.last_name, users.email, SUM(user_analytics.points) AS total_points, SUM(user_analytics.food_waste_prevented) AS total_waste")->from("users")->join("user_analytics", "users.id = user_analytics.user_id")
         ->groupBy("users.id")
         ->havingIsNotNull("SUM(user_analytics.points)")
         ->orderBy("total_points DESC")->execute();
@@ -345,6 +359,7 @@ class Analytics extends CrudModel {
                 'rank' => $index + 1,
                 'first_name' => $userLists['first_name'],
                 'last_name' => $userLists['last_name'],
+                'email' => $userLists['email'],
                 'total_points' => $userLists['total_points'],
                 'total_Uwaste' => $userLists['total_waste'],
             );
@@ -356,7 +371,7 @@ class Analytics extends CrudModel {
 
     public function businessList(){
         $db = $this->getDb();
-        $topBusinessRankings = $db->createSelect()->cols("businesses.business_name, SUM(business_analytics.points) AS total_points, SUM(business_analytics.food_waste_prevented) AS total_waste")->from("businesses")->join("business_analytics", "businesses.id = business_analytics.business_id")
+        $topBusinessRankings = $db->createSelect()->cols("businesses.business_name, businesses.business_email, SUM(business_analytics.points) AS total_points, SUM(business_analytics.food_waste_prevented) AS total_waste")->from("businesses")->join("business_analytics", "businesses.id = business_analytics.business_id")
         ->groupBy("businesses.id")
         ->havingIsNotNull("SUM(business_analytics.points)")
         ->orderBy("total_points DESC")->execute();
@@ -369,6 +384,7 @@ class Analytics extends CrudModel {
             $businessData = array(
                 'rank' => $index + 1,
                 'business_name' => $topBusinessRanking['business_name'],
+                'business_email' => $topBusinessRanking['business_email'],
                 'total_points' => $topBusinessRanking['total_points'],
                 'total_Bwaste' => $topBusinessRanking['total_waste'],
             );
@@ -551,6 +567,7 @@ class Analytics extends CrudModel {
 
     public function businessStats(){
         return [
+            'businessId' => $this->getBusinessId(),
             'usersName' => $this->getBusinessName(),
             'preventedWaste' => $this->totalBusinessFoodWastePrevented(),
             'ordersReceived' => $this->getOrdersReceived(),

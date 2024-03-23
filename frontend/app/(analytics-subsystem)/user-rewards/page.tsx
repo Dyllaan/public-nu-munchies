@@ -5,10 +5,17 @@ Items
 @author Jake McCarthy (w20043974) 
 */
 
-import requireAuth from "../../(user-subsystem)/components/requireAuth";
+import requireAuth from "../../(user-subsystem)/components/auth/requireAuth";
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 import {Table,TableBody,TableCaption, TableCell,TableFooter,TableHead,TableHeader,TableRow, } from "@/components/ui/table"
 import { useState, useEffect } from 'react'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 function Page() {
 const { user, logout, isOAuth } = useUserSubsystem();
@@ -42,6 +49,19 @@ const headers = {
     return (
       <div>
       <h1 className="text-3xl font-bold mb-2">Your Rewards:</h1>
+      <Breadcrumb className="mt-4">
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/impact-stats">Impact Stats</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem className="text-black">
+          <BreadcrumbLink href={`/user-rewards`}>
+            Your Rewards
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
         <div>
           <div class="min-w-screen flex items-center justify-center">
     <div class="max-w-7xl w-full mx-auto py-6 sm:px-6 lg:px-8">

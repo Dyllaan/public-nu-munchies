@@ -5,7 +5,6 @@ Items
 @author Jake McCarthy (w20043974) 
 */
 
-import requireAuth from "../../(user-subsystem)/components/requireAuth";
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 import {Table,TableBody,TableCaption, TableCell,TableFooter,TableHead,TableHeader,TableRow, } from "@/components/ui/table"
 import { useState, useEffect } from 'react'
@@ -50,7 +49,19 @@ const headers = {
     return (
       <div>
       <h1 className="text-3xl font-bold mb-2">Order History:</h1>
-      <Breadcrumb />
+      <Breadcrumb className="mt-4">
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/impact-stats">Impact Stats</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem className="text-black">
+          <BreadcrumbLink href={`/user-orders`}>
+            Order History
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
       <div class="min-w-screen flex items-center justify-center">
   <div class="max-w-7xl w-full mx-auto py-6 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">

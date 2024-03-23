@@ -2,10 +2,11 @@
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 import requireAuth from "../components/auth/requireAuth";
 import TabbedProfile from "../components/profile/TabbedProfile";
+import useDataFetching from '@/hooks/analytics-subsystem/use-analytics-subsystem';
+import ProfileComponent from "@/app/(analytics-subsystem)/components/ProfileComponent";
 
 function Profile() {
   const { user, logout, isOAuth, userTypes } = useUserSubsystem();
-
   let dateString = '';
   if (user.created_at) {
     const date = new Date(user.created_at);
@@ -18,7 +19,9 @@ function Profile() {
         Welcome to Profile Page {user.firstName} !
       </h1>
         <h2>Joined: {dateString}</h2>
+        <ProfileComponent />
         <TabbedProfile />
+        
     </main>
   );
 }

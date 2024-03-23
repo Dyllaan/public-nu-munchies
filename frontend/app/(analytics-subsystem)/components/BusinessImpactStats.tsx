@@ -1,56 +1,13 @@
 'use client'
-/*
-Items
-
-@author Jake McCarthy (w20043974) 
-*/
-
-import {Table,TableBody,TableCaption, TableCell,TableFooter,TableHead,TableHeader,TableRow, } from "@/components/ui/table"
-import { useState, useEffect } from 'react'
-import { Button } from "@/components/ui/button"
+import React from 'react';
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Separator } from "@/components/ui/separator"
 
-function BusinessStats() {
-const [items, setItems] = useState([]);
-const token = localStorage.getItem('token');
-const headers = {
-    'Authorization': `Bearer ${token}`
-};
-
-    const fetchData = () => { 
-        fetch("http://localhost:8080/analytics/business-stats", {
-            method: 'GET',
-            headers: headers
-        })
-        .then( response => response.json() )
-        .then( json => setItems(json) )
-        .then( json => console.log(json) )
-        .catch(error => {
-          console.error('Error fetching data:', error); 
-    });}
-
-    console.log(items)
- 
-    useEffect( fetchData, [])
-    
-
-      if (!items || !items.data) {
-        return <div>Loading...</div>;
-    }
-
-
-
+function BusinessImpactStats({ preventedWaste, ordersReceived, totalMoneyMade, businessPoints }) {
     return (
-
-      <div>
-                <h2 className="text-3xl font-bold mb-2">Welcome, {items.data.usersName[0].business_name}!</h2>
-                <Separator className="my-6" />
-                {items && (
-                  <div className=" my-2 rounded mb-2">
-                    <h2 >Your Contributions:</h2>
-      
-                    <div class="min-w-screen flex items-center justify-center">
+        <div>
+            <h3 className="font-bold">Your Business' Contributions:</h3>
+            <div class="min-w-screen flex items-center justify-center">
           <div class="max-w-7xl w-full mx-auto py-6 sm:px-6 lg:px-8">
               <div class="flex flex-col gap-10 lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4  ">
       
@@ -63,7 +20,7 @@ const headers = {
                                   </svg>
                               </div>
                               <div class="flex flex-col justify-center">
-                                  <div class="text-lg">{items.data.preventedWaste} kg</div>
+                                  <div class="text-lg">{preventedWaste} kg</div>
                                   <div class="text-sm text-gray-400">Food Waste Prevented</div>
                                   <Button className= "mt-2" asChild>
                                     <Link href="/business-orders">See More -></Link>
@@ -82,7 +39,7 @@ const headers = {
                                   </svg>
                               </div>
                               <div class="flex flex-col justify-center">
-                                  <div class="text-lg">{items.data.ordersReceived}</div>
+                                  <div class="text-lg">{ordersReceived}</div>
                                   <div class="text-sm text-gray-400">Orders Received</div>
                                   <Button className= "mt-2" asChild>
                                     <Link href="/business-orders">See More -></Link>
@@ -101,7 +58,7 @@ const headers = {
                                   </svg>
                               </div>
                               <div class="flex flex-col justify-center">
-                                  <div class="text-lg">£{items.data.totalMoneyMade}</div>
+                                  <div class="text-lg">£{totalMoneyMade}</div>
                                   <div class="text-sm text-gray-400">Revenue</div>
                                   <Button className= "mt-2" asChild>
                                     <Link href="/business-orders">See More ></Link>
@@ -121,7 +78,7 @@ const headers = {
                                   </svg>
                               </div>
                               <div class="flex flex-col justify-center">
-                                  <div class="text-lg">{items.data.businessPoints}</div>
+                                  <div class="text-lg">{businessPoints}</div>
                                   <div class="text-sm text-gray-400">Total Points</div>
                                   <Button className= "mt-2" asChild>
                                     <Link href="/business-rewards">See Your Rewards -></Link>
@@ -133,54 +90,8 @@ const headers = {
                       </div>
                       </div>
           </div>
-          <div>
-                    <div className="pt-8 pb-8"> 
-                      <h3 className="pb-2">Top Business Ranks:</h3>
-                    <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Rank:</TableHead>
-                    <TableHead>Name:</TableHead>
-                    <TableHead>Total Points:</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-  {items.data.topRanks.map((user, index) => (
-    <TableRow key={index}>
-      <TableCell className={user.rank === items.data.yourRank.rank ? "font-bold" : "font-medium"}>{user.rank}</TableCell>
-      <TableCell className={user.rank === items.data.yourRank.rank ? "font-bold" : ""}>{user.business_name}</TableCell>
-      <TableCell className={user.rank === items.data.yourRank.rank ? "font-bold" : ""}>{user.total_points}</TableCell>
-    </TableRow>
-  ))}
-</TableBody>
-              </Table>
-              </div>
-              <div>
-              <h3 className="pb-2">Your Rank:</h3>
-              <Table>
-              <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Rank:</TableHead>
-                    <TableHead>Total Points:</TableHead>
-                  </TableRow>
-                </TableHeader>
-              <TableBody>
-                  <TableRow>
-                    <TableCell className="font-bold" >{items.data.yourRank.rank}</TableCell>
-                    <TableCell className="font-bold">{items.data.yourRank.total_points}</TableCell>
-                  </TableRow>
-                  </TableBody>
-              </Table>
-              </div>
-      
-      
-      
-      
-              </div>
-              </div>
-                )}
         </div>
-    )
+    );
 }
- 
-export default BusinessStats
+
+export default BusinessImpactStats;

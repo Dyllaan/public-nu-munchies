@@ -5,7 +5,8 @@ Items
 @author Jake McCarthy (w20043974) 
 */
 
-import requireAuth from "../../(user-subsystem)/components/requireAuth";
+import requireAuth from "../../(user-subsystem)/components/auth/requireAuth";
+import requireType from '@/app/(user-subsystem)/components/auth/requireType';
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 import {Table,TableBody,TableCaption, TableCell,TableFooter,TableHead,TableHeader,TableRow, } from "@/components/ui/table"
 import { useState, useEffect } from 'react'
@@ -41,6 +42,9 @@ function Page() {
       return <div>Loading...</div>;
   }
 
+
+
+  
   return (
     <div>
       {showUserList && (
@@ -76,6 +80,7 @@ function Page() {
               <TableHead>Name:</TableHead>
               <TableHead>Total Points:</TableHead>
               <TableHead>Total Waste Prevented:</TableHead>
+              <TableHead>Contact Email:</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -85,6 +90,7 @@ function Page() {
         <TableCell>{councils.first_name} {councils.last_name}</TableCell>
         <TableCell>{councils.total_points}</TableCell>
         <TableCell>{councils.total_Uwaste}kg</TableCell>
+        <TableCell>{councils.email}</TableCell>
       </TableRow>
             ))}
           </TableBody>
@@ -100,6 +106,7 @@ function Page() {
               <TableHead>Name:</TableHead>
               <TableHead>Total Points:</TableHead>
               <TableHead>Total Waste Prevented:</TableHead>
+              <TableHead>Contact Email:</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -109,6 +116,7 @@ function Page() {
         <TableCell>{councils.business_name}</TableCell>
         <TableCell>{councils.total_points}</TableCell>
         <TableCell>{councils.total_Bwaste} kg</TableCell>
+        <TableCell>{councils.business_email}</TableCell>
       </TableRow>
             ))}
           </TableBody>
@@ -122,4 +130,4 @@ function Page() {
   
 }
 
-export default requireAuth(Page);
+export default  requireType(Page, 'councillor');

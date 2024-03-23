@@ -63,7 +63,6 @@ const NutritionForm: React.FC = () => {
 
   return (
     <>
-      <Header />
         <section className="hero">
           <div className="container flex flex-col">
             <form className="items-center justify-center mx-auto" onSubmit={handleSubmit}>

@@ -18,7 +18,7 @@ class RegisterUser extends SubEndpoint
     public function __construct() 
     {
         parent::__construct('POST', 'register');
-        $this->getAttributes()->addRequiredStrings(['first_name', 'last_name', 'email', 'password']);
+        $this->getAttributes()->addRequiredStrings(['first_name', 'last_name', 'email', 'password', 'ip']);
     }
 
     public function process($request)
@@ -32,12 +32,16 @@ class RegisterUser extends SubEndpoint
             $this->setResponse(400, 'Password must be at least 8 characters');
             return;
         }
+        if(!filter_var($request->getAttribute('ip'), FILTER_VALIDATE_IP)) {
+            $this->setResponse(400, 'Invalid IP');
+            return;
+        }
         $user = User::getInstance($this->getDb());
         $user->setFirstName($request->getAttribute('first_name'));
         $user->setLastName($request->getAttribute('last_name'));
         $user->setEmail($request->getAttribute('email'));
         $user->setPassword($request->getAttribute('password'));
-        $user->register($this->getDb());
+        $user->register($request->getAttribute('ip'));
         $this->setResponse(201, 'User created', $user->toArray());
     }
 }

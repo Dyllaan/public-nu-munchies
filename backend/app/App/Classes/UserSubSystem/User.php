@@ -23,7 +23,7 @@ use App\Classes\UserSubSystem\UserTypes\Councillor;
  * @generated GitHub Copilot was used during the creation of this code
  * OO user class
  */
-class User extends CrudModel implements CrudInterface
+class User extends CrudModel
 {
     private $firstName;
     private $lastName;
@@ -169,12 +169,12 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
-    public function register()
+    public function register($ip)
     {
         if ($this->exists()) {
             $this->setResponse(400, "User already exists");
         } else {
-            $this->save();
+            $this->save($ip);
         }
     }
 
@@ -229,7 +229,7 @@ class User extends CrudModel implements CrudInterface
         return true;
     }
 
-    public function save()
+    public function save($ipAddr)
     {
         if ($this->checkSavable()) {
             $this->getDb()->beginTransaction();
@@ -241,6 +241,7 @@ class User extends CrudModel implements CrudInterface
                     $this->getDb()->commit();
                     $id = intval($id);
                     $this->setId($id);
+                    $this->getIPHandler()->addIP($ipAddr);
                     return $this->getEmailHandler()->sendEmailToken('email_verification');
                 } else {
                     $this->getDb()->rollBack();

@@ -17,6 +17,7 @@ Database and to connect to the Email server which handles sending of emails. All
 - Docker - for running the server 
 - Stripe library - for handling payments
 - Firebase/JWT library for handling JWT tokens
+- PHPMailer for sending emails
 
 ### Frontend
 - Next.js 14 - for rendering frontend

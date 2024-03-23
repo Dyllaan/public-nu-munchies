@@ -32,7 +32,7 @@ function Categories() {
     return (
         <>
             <section className="hero">
-                <h1 className="title" onClick={handleTitleClick}>Categories</h1>
+                <h1 className="title" onClick={handleTitleClick}>↓ Categories ↓</h1>
                 {showCategories && (
                     <div className="grid grid-cols-3 gap-20">
                     {data.map((value: any, key) => (

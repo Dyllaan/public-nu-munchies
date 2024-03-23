@@ -40,8 +40,8 @@ function Verify({ type } : { type: string}) {
 
   function sentButton() {
     return (
-      <div className="flex flex-col">
-        <div className="flex px-4 text-center">
+      <div className="flex flex-col gap-2">
+        <div className="flex gap-2 px-4 text-center">
           <h3>Not received the email?</h3>
           <p>Check your spam folder, or click the button to resend the email.</p>
         </div>

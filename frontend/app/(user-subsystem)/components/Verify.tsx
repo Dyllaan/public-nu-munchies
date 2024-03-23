@@ -15,6 +15,7 @@ import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
  */
 
 function Verify({ type } : { type: string}) {
+  console.log(type);
   const title = type === 'ip_verification' ? 'your IP' : 'your email';
   const { user, requestIPVerificationCode, requestLoading, checkCode, requestNewCode } = useUserSubsystem();
   const [token, setToken] = useState("");
@@ -66,7 +67,7 @@ function Verify({ type } : { type: string}) {
         Halt there! We need to verify {title}.
       </h1>
       <div className="flex flex-col w-full lg:w-[45vw] gap-2 items-center justify-center">
-        <p className="mb-4">We have emailed you at: <b>{user.email}</b></p>
+        <p className="mb-4">Are you ready for the code at: <b>{user.email}?</b></p>
         {requestLoading && <LoadingInPage />}
         {!requestLoading && (
           <div className="flex flex-col gap-2">

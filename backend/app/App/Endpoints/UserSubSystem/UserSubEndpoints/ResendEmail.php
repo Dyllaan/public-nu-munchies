@@ -63,15 +63,14 @@ class ResendEmail extends SubEndpoint
                 break;
             case 'email_verification':
             case 'delete_account':
-                //handled at end
+                if($this->getUser()->getEmailHandler()->sendEmailToken($type)){
+                    $this->setResponse(200, 'Email sent');
+                }
                 break;
             default:
                 $this->setResponse(400, 'Invalid type', ['supported'=> ['ip_verification', 'email_verification', 'change_email', 'delete_account']]);
                 return;
                 break;
-        }
-        if($this->getUser()->getEmailHandler()->sendEmailToken($type)){
-            $this->setResponse(200, 'Email sent');
         }
 
         $this->setResponse(400, 'Unable to send email');

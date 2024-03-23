@@ -67,6 +67,17 @@ export const useUserSubsystem = () => {
     }
     setLoading(true);
 
+    const ip = await getUserIP();
+    const data = new FormData();
+    data.append("ip", ip);
+    const response = await api.post("ip/allowed", data, localStorage.getItem("token"));
+    if(response.success) {
+      setAllowed(true);
+    }
+    setLoading(false);
+  }
+
+  const getUserIP = async() => {
     try {
       const getIP = await fetch('https://api.ipify.org?format=json');
       if (!getIP.ok) {
@@ -75,19 +86,12 @@ export const useUserSubsystem = () => {
       const ipData = await getIP.json();
       const userIP = ipData.ip;
       setIP(userIP);
-      const data = new FormData();
-      data.append("ip", userIP);
-      const response = await api.post("ip/allowed", data, localStorage.getItem("token"));
-      if(response.success) {
-        setAllowed(true);
-      }
-      setLoading(false);
+      return userIP;
     } catch (error: any) {
-      console.error("Failed to check IP:", error);
-      toast.error(error.response.data.message);
-      setLoading(false);
+      console.error("Failed to get IP:", error);
+      toast.error(error.response.data);
+      return error.response.data;
     }
-    setLoading(false);
   }
 
   const requestIPVerificationCode = async () => {
@@ -97,7 +101,6 @@ export const useUserSubsystem = () => {
     }
     setRequestLoading(true);
     try {
-      console.log("IP:", currentIP)
       let endpoint = "user/resend-email?type=ip_verification&ip=" + currentIP;
       const response = await api.get(endpoint, localStorage.getItem("token"));
       if (response.success) {
@@ -174,12 +177,14 @@ export const useUserSubsystem = () => {
 
   const register = async (firstName: string, lastName: string, email: string, password: string) => {
     setAuthStatus(true);
+    await getUserIP();
     try {
       const registerData = new FormData();
       registerData.append("first_name", firstName);
       registerData.append("last_name", lastName);
       registerData.append("email", email);
       registerData.append("password", password);
+      registerData.append("ip", currentIP);
       
       const response = await api.post("user/register", registerData);
       if (response.success) {
@@ -187,7 +192,7 @@ export const useUserSubsystem = () => {
         setUserState(response.data.data.user);
         setTypes(response.data.data.types);
         setLogged(true);
-        await checkUserIP();
+        setAllowed(true);
         router.replace("/profile");
         setLoading(false);
         return response.data.message;

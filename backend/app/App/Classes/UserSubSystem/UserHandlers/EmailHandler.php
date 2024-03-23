@@ -60,7 +60,6 @@ class EmailHandler extends UserHelper
             }
         }
 
-
         $emailToken = new EmailToken($this->getDb(), $type);
         $emailToken->setUser($this->getUser());
         if($type === 'ip_verification') {

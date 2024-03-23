@@ -70,7 +70,7 @@ class EmailToken extends CrudModel
                                     <p>This code will expire in 10 minutes.</p>
                                 </body>
                             </html>";
-                            break;
+                break;
             case 'change_email':
                 $subject = "NU Munchies Email Change";
                 $content = "<html>

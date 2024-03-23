@@ -18,14 +18,15 @@ class OrderCancel extends Endpoint
     {
         parent::__construct('PUT', 'ordercancel');
         $this->setRequiresAuth(true);
-        $this->getAttributes()->addRequiredInts(['order_id']);
+        $this->getAttributes()->addRequiredInts('order_id');
     }
 
     public function process($request)
     {
+        parent::process($request);
         $status = ['status' => 'cancelled'];
-        $id = $this->getDb()->createUpdate()->table("orders")->set($status)->where(["id = '" . $request->getAttribute('order_id'). "'"])->execute();
-
+        $order_id = $request->getAttribute('order_id');
+        $id = $this->getDb()->createUpdate()->table("orders")->set($status)->where(["id = '" . $order_id . "'"])->execute();
         $this->setResponse(200, 'Order cancelled', ['id' => $id]);
     }
 }

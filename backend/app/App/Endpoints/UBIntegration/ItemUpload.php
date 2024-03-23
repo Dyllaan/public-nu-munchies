@@ -4,7 +4,7 @@
  * class ItemUpload
  * @author Cameron Bramley w21020682
  * 
- * Used by businesses to insert a new item into the items database.
+ * Used by businesses to insert a new item into the items database. Takes name, data, time, businesS_name, status, business_id and price as headers.
  * 
  * @generated ChatGPT was used to help understand and use the the InsertQuery and Database classes developed by Louis.
  */

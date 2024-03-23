@@ -24,9 +24,12 @@ class InsertReview extends Endpoint
 
     public function process($request)
     {
+        
         parent::process($request);
+       
         $id = $this->getDb()->createInsert()->into('reviews')->cols('user_id, business_id, title, rating, review_details')->values([$this->getUser()->getId(), $request->getAttribute('business_id'), $request->getAttribute('title'), $request->getAttribute('rating'), $request->getAttribute('review_details')])->execute();
 
         $this->setResponse(200, 'Review inserted', ['id' => $id]);
+        
     }
 }

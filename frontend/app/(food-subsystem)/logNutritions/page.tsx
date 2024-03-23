@@ -107,7 +107,7 @@ const NutritionForm: React.FC = () => {
             {/* Success pop-up */}
             {showSuccessPopup && (
                 <div className="popup">
-                  <div className="popup-content">
+                  <div className="popup-content text-center">
                     <span className="close" onClick={() => setShowSuccessPopup(false)}>&times;</span>
                     <p>Nutrition Saved</p>
                   </div>

@@ -10,7 +10,12 @@ namespace App\Classes\UserSubSystem;
 
 use \Firebase\JWT\JWT;
 use Core\HTTP\Classes\GivesResponse;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * OO Token class used by the User class to handle the JWT token in an object oriented way
+ * Simple authentication logic
+ */
 class Token extends GivesResponse
 {
   private $valid;

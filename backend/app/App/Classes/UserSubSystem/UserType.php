@@ -4,7 +4,11 @@ namespace App\Classes\UserSubSystem;
 
 use App\Classes\UserSubSystem\User;
 use App\Classes\UserSubSystem\UserAddon;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * Parent of Moderator and Councillor
+ */
 abstract class UserType extends UserAddon
 {
 

@@ -1,11 +1,10 @@
 // use client
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { EnvelopeOpenIcon } from "@radix-ui/react-icons";
 import { Input } from "@/components/ui/input";
 import LoadingInPage from "../reusable/LoadingInPage";
 import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
-import { Label } from '@/components/ui/label';
 import {
     CardContent,
     CardDescription,
@@ -22,7 +21,7 @@ import {
 
 function VerifyInPage({ type } : { type: string}) {
   const title = type === 'change_email' ? 'your password' : 'your email';
-  const { user, requestLoading, checkCode } = useUserSubsystem();
+  const { user, requestLoading, checkCode, requestNewCode } = useUserSubsystem();
   const [token, setToken] = useState("");
 
   const handleTokenSubmission = async () => {

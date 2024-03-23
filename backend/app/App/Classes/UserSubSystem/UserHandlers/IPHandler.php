@@ -6,6 +6,8 @@ use App\Classes\UserSubSystem\UserHelper;
 use App\Classes\UserSubSystem\UserIP;
 /**
  * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * Handles the IP verification of a user, this keeps it out of User which is already too large
  */
 class IPHandler extends UserHelper {
     
@@ -22,14 +24,13 @@ class IPHandler extends UserHelper {
         $ip->addIP($verifiedIP);
     }
 
-    public function isIPAllowed() {
+    public function isIPAllowed($ipAddr) {
         $ip = new UserIP($this->getDb());
         $ip->setUser($this->getUser());
 
-        if($ip->isAllowed($_SERVER['REMOTE_ADDR'])){
+        if($ip->isAllowed($ipAddr)){
             return true;
         } else {
-            $this->getUser()->getEmailHandler()->sendEmailToken('ip_verification');
             return false;
         }
     }
@@ -44,13 +45,5 @@ class IPHandler extends UserHelper {
         $ip = new UserIP($this->getDb());
         $ip->setUser($this->getUser());
         return $ip->removeIP($ipAddr);
-    }
-
-    public function isAllowed() {
-        return $this->allowed;
-    }
-
-    public function setAllowed($allowed) {
-        $this->allowed = $allowed;
     }
 }

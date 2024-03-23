@@ -13,7 +13,11 @@ use App\Endpoints\UserSubSystem\Mod\SearchUsers;
 use App\Endpoints\UserSubSystem\Mod\SearchBusiness;
 use App\Endpoints\UserSubSystem\Mod\Ban;
 use App\Endpoints\UserSubSystem\Mod\RemoveBusiness;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * This endpoint checks if the user is a moderator
+ */
 class IsMod extends UserTypeEndpoint
 {
 

@@ -9,7 +9,13 @@ namespace App\Classes\UserSubSystem;
 
 use App\Classes\UserSubSystem\User;
 use Core\Database\CrudModel;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * OO User ip, allows for Create, Read and Deletion of user ips, update is not needed as the ip is the only thing that can be changed and you shouldnt be able
+ * to manually change your ip.
+ * This class is used to handle the user's IP address for MFA
+ */
 class UserIP extends CrudModel
 {
     private \AppConfig $appConfigInstance;
@@ -22,9 +28,8 @@ class UserIP extends CrudModel
         $this->setTable('user_ips');
     }
 
-    public function addIP()
+    public function addIP($ip)
     {
-        $ip = $_SERVER['REMOTE_ADDR'];
         $id = $this->getDb()->createInsert()->into($this->getTable())
         ->cols('user_id, ip_address')
         ->values([$this->getUser()->getId(), $ip])->execute();
@@ -42,7 +47,7 @@ class UserIP extends CrudModel
 
     public function getAll() {
         $data = $this->getDb()->createSelect()->
-        cols("*")->from($this->getTable())->
+        cols("ip_address, created_at")->from($this->getTable())->
         where(["user_id = '" . $this->getUser()->getId() . "'"])->execute();
         return $data;
     }

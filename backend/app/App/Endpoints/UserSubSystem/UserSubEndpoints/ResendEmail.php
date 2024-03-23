@@ -7,14 +7,18 @@
 namespace App\Endpoints\UserSubSystem\UserSubEndpoints;
 
 use Core\Endpoint\SubEndpoint\SubEndpoint;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * Handles the resending of emails containing OTPs
+ */
 class ResendEmail extends SubEndpoint
 {
     public function __construct() 
     {
         parent::__construct('GET', 'resend-email');
         $this->getAttributes()->addRequiredStrings(['type']);
-        $this->getAttributes()->addAllowedStrings(['new_email', 'new_password']);
+        $this->getAttributes()->addAllowedStrings(['new_email', 'new_password', 'ip']);
         $this->setRequiresAuth(true);
     }
 
@@ -41,17 +45,35 @@ class ResendEmail extends SubEndpoint
                 }
                 break;
             case 'ip_verification':
-            case 'email_verification':
-            case 'delete_account':
-                if($this->getUser()->getEmailHandler()->sendEmailToken($type)){
+                if(!$request->hasAttribute('ip')){
+                    $this->setResponse(400, 'IP required');
+                    return;
+                }
+                if(!filter_var($request->getAttribute('ip'), FILTER_VALIDATE_IP)){
+                    $this->setResponse(400, 'Invalid IP');
+                    return;
+                }
+                if($this->getUser()->getIPHandler()->isIPAllowed($request->getAttribute('ip'))){
+                    $this->setResponse(200, 'IP already allowed');
+                    return;
+                }
+                if($this->getUser()->getEmailHandler()->sendEmailToken($type, null, null, $request->getAttribute('ip'))){
                     $this->setResponse(200, 'Email sent');
                 }
+                break;
+            case 'email_verification':
+            case 'delete_account':
+                //handled at end
                 break;
             default:
                 $this->setResponse(400, 'Invalid type', ['supported'=> ['ip_verification', 'email_verification', 'change_email', 'delete_account']]);
                 return;
                 break;
         }
+        if($this->getUser()->getEmailHandler()->sendEmailToken($type)){
+            $this->setResponse(200, 'Email sent');
+        }
+
         $this->setResponse(400, 'Unable to send email');
     }
 }

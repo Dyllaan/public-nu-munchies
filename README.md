@@ -8,7 +8,7 @@ In the backend folder run
 "docker-compose up" to start the backend
 which will be available at localhost:8080
 
-For the frontend run "npm run dev" or your preffered package manager such as yarn or bun.
+For the frontend run "npm run dev" in the frontend folder (or using your preffered package manager such as yarn or bun.)
 It will be hosted at localhost:3000
 
 The Backend requires the Firebase Library for JWT tokens

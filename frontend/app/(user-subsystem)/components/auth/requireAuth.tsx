@@ -7,13 +7,13 @@ import BannedScreen from "./BannedScreen";
 
 export default function requireAuth(ChildComponents: any, pageNeedsAuth: boolean = true) {
     const RequireAuthComponent = (props: any) => {
-        const { loading, logged, user, checkToken } = useUserSubsystem();
+        const { loading, logged, user, isIPAllowed} = useUserSubsystem();
         
         if(loading) {
             return (
             <div className="flex flex-col min-h-[85vh] justify-center align-center">
                 <div className="mx-auto my-auto">
-                    <LoadingInPage />;
+                    <LoadingInPage />
                 </div>
             </div>
             );
@@ -25,7 +25,7 @@ export default function requireAuth(ChildComponents: any, pageNeedsAuth: boolean
             if(user.banned) {
                 return <BannedScreen />;
             }
-            if(!user.allowed) {
+            if(!isIPAllowed) {
                 return <Verify type="ip_verification" />;
             } else if(!user.verified) {
                 return <Verify type="email_verification" />;

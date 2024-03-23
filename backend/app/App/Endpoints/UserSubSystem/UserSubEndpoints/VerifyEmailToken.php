@@ -5,7 +5,12 @@
 namespace App\Endpoints\UserSubSystem\UserSubEndpoints;
 
 use Core\Endpoint\SubEndpoint\SubEndpoint;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * This handled the verification of email tokens
+ * Not all are supported at this endpoint.
+ */
 class VerifyEmailToken extends SubEndpoint
 {
     public function __construct() 

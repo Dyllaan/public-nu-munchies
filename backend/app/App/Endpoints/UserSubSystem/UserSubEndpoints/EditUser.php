@@ -8,7 +8,11 @@ namespace App\Endpoints\UserSubSystem\UserSubEndpoints;
 
 use Core\Endpoint\SubEndpoint\SubEndpoint;
 use App\Classes\UserSubSystem\User;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * Handles the editing of the users name, editing other fields is handled via the email token verification system
+ */
 class EditUser extends SubEndpoint
 {
 

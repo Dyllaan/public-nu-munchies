@@ -17,7 +17,11 @@ use \App\Endpoints\UserSubSystem\UserSubEndpoints\ResendEmail;
 use \App\Endpoints\UserSubSystem\UserSubEndpoints\ForgotPassword;
 use \App\Endpoints\UserSubSystem\UserSubEndpoints\SendPasswordChange;
 use Core\Endpoint\Endpoint;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * Is the /user/ endpoint has many subendpoints for user actions
+ */
 class UserEndpoint extends Endpoint
 {
 

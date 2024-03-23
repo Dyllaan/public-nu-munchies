@@ -36,7 +36,7 @@ export const validateEmail = (email:any) => {
 }
 
 export const validatePassword = (password:any) => {
-    if (password.length < 7) {
+    if (password.length < 8) {
         return false;
     }
     return true;

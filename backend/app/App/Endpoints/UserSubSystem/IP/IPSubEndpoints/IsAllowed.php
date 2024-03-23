@@ -6,18 +6,18 @@
  */
 namespace App\Endpoints\UserSubSystem\IP\IPSubEndpoints;
 
-use Core\Endpoint\SubEndpoint\SubEndpoint;
+use Core\Endpoint\Endpoint;
 /**
  * @author Louis Figes W21017657
  * @generated GitHub Copilot was used during the creation of this code
  * SubEndpoint to AllIPs, removes an IP from the users allowed IP's
  */
-class RemoveIP extends SubEndpoint
+class IsAllowed extends Endpoint
 {
 
     public function __construct() 
     {
-        parent::__construct('POST', 'remove');
+        parent::__construct('POST', 'allowed');
         $this->getAttributes()->addRequiredStrings(['ip']);
         $this->setRequiresAuth(true);
     }
@@ -25,10 +25,15 @@ class RemoveIP extends SubEndpoint
     public function process($request)
     {
         parent::process($request);
-        if($this->getUser()->getIPHandler()->removeIP($request->getAttribute('ip'))) {
-            $this->setResponse(200, "IP removed");
-        } else {
-            $this->setResponse(400, "IP not found");
-        }
+        $ip = $request->getAttribute('ip');
+        if(filter_var($ip, FILTER_VALIDATE_IP)) {
+            $allowed = $this->getUser()->getIPHandler()->isIPAllowed($request->getAttribute('ip'));
+            if($allowed) {
+                $this->setResponse(200, 'IP Allowed');
+            } else {
+                $this->setResponse(403, 'IP Not Allowed');
+            }
+        } 
+        $this->setResponse(400, 'Invalid IP');
     }
 }

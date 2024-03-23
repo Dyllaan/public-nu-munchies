@@ -3,7 +3,11 @@ namespace App\Endpoints;
 
 use Core\Endpoint\Endpoint;
 use App\Classes\UserSubSystem\Helpers\SearchHelper;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * This endpoint allows users to search for businesses and items
+ */
 class Search extends Endpoint
 {
     public function __construct() 

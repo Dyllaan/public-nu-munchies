@@ -27,7 +27,7 @@ export default function DesktopHeader() {
       <NavigationMenuItem>
         <NavigationMenuTrigger>{user.firstName}</NavigationMenuTrigger>
         <NavigationMenuContent>
-          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+          <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
             <NavLink
               title="Profile"
               href="/profile"
@@ -38,7 +38,7 @@ export default function DesktopHeader() {
               onClick={logout}
               description="View and edit your profile"
             />
-          </ul>
+          </div>
         </NavigationMenuContent>
       </NavigationMenuItem>
     );

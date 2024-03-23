@@ -3,7 +3,11 @@
 namespace App\Classes\UserSubSystem\UserHandlers;
 
 use App\Classes\UserSubSystem\UserHelper;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * Handles the verification of a user, this keeps it out of User which is already too large
+ */
 class VerifiedHandler extends UserHelper {
 
     private $verified;

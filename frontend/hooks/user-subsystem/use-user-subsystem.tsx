@@ -17,18 +17,22 @@ import { userTypesAtom } from "@/stores/user-types";
 export const loadingAtom = atom(false);
 export const loggedAtom = atom(false);
 export const oAuthAtom = atom(false);
+export const ipAllowed = atom(false);
+export const ipAtom = atom("");
 
 export const useUserSubsystem = () => {
   const [user, setUser] = useAtom(userAtom);
   const [userTypes, setUserTypes] = useAtom(userTypesAtom);
   const [loading, setLoadingState] = useAtom(loadingAtom);
   const [logged, setLoggedState] = useAtom(loggedAtom);
+  const [isIPAllowed, setIPAllowed] = useAtom(ipAllowed);
   const [requestLoading, setRequestLoading ] = useState(false);
   const [isOAuth, setIsOAuth] = useAtom(oAuthAtom);
+  const [currentIP, setCurrentIP] = useAtom(ipAtom);
   const router = useRouter();
   
-  const setUserState = ({ first_name, last_name, email, verified, created_at, allowed, banned}: { first_name: string; last_name: string; email: string; verified: boolean; created_at: string, allowed: boolean, banned:boolean}) => {
-    setUser({ firstName: first_name, lastName: last_name, email, verified, created_at, allowed, banned});
+  const setUserState = ({ first_name, last_name, email, verified, created_at, banned}: { first_name: string; last_name: string; email: string; verified: boolean; created_at: string, banned:boolean}) => {
+    setUser({ firstName: first_name, lastName: last_name, email, verified, created_at, banned});
   };
 
   const setTypes = ({moderator, councillor}: {moderator: boolean, councillor: boolean}) => {
@@ -46,6 +50,68 @@ export const useUserSubsystem = () => {
     setIsOAuth((isOAuth) => state);
   }
 
+  const setAllowed = (state:boolean) => {
+    setIPAllowed((isIPAllowed) => state);
+  }
+
+  const setIP = (ip:string) => {
+    setCurrentIP((currentIP) => ip);
+  }
+
+  const checkUserIP = async() => {
+    if(isIPAllowed) {
+      return;
+    }
+    if(localStorage.getItem('token') === null){
+      return;
+    }
+    setLoading(true);
+
+    try {
+      const getIP = await fetch('https://api.ipify.org?format=json');
+      if (!getIP.ok) {
+        throw new Error('Failed to fetch IP address, the IP service is down. Please try again later.');
+      }
+      const ipData = await getIP.json();
+      const userIP = ipData.ip;
+      setIP(userIP);
+      const data = new FormData();
+      data.append("ip", userIP);
+      const response = await api.post("ip/allowed", data, localStorage.getItem("token"));
+      if(response.success) {
+        setAllowed(true);
+      }
+      setLoading(false);
+    } catch (error: any) {
+      console.error("Failed to check IP:", error);
+      toast.error(error.response.data.message);
+      setLoading(false);
+    }
+    setLoading(false);
+  }
+
+  const requestIPVerificationCode = async () => {
+    if(currentIP === null || currentIP.length === 0) {
+      toast.error("Failed to get IP address, please try again later.");
+      return;
+    }
+    setRequestLoading(true);
+    try {
+      console.log("IP:", currentIP)
+      let endpoint = "user/resend-email?type=ip_verification&ip=" + currentIP;
+      const response = await api.get(endpoint, localStorage.getItem("token"));
+      if (response.success) {
+        toast.success("Email sent!");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      return error.response.data.message;
+    }
+    setRequestLoading(false);
+  }
+
   function checkForOAuth(response:any) {
     if(response.data.data.user.oauth) {
       setOAuth(true);
@@ -61,8 +127,10 @@ export const useUserSubsystem = () => {
       setLoading(true);
       const response = await api.get("user", localStorage.getItem("token"));
       if(response.success) {
+        console.log(response.data);
         setUserState(response.data.data.user);
         setTypes(response.data.data.types);
+        await checkUserIP();
         setLoading(false);
         setLogged(true);
         checkForOAuth(response);
@@ -88,6 +156,7 @@ export const useUserSubsystem = () => {
         localStorage.setItem("token", response.data.data.jwt);
         setUserState(response.data.data.user);
         setTypes(response.data.data.types);
+        await checkUserIP();
         setLogged(true);
         router.replace("/profile");
         setLoading(false);
@@ -118,6 +187,7 @@ export const useUserSubsystem = () => {
         setUserState(response.data.data.user);
         setTypes(response.data.data.types);
         setLogged(true);
+        await checkUserIP();
         router.replace("/profile");
         setLoading(false);
         return response.data.message;
@@ -174,6 +244,9 @@ export const useUserSubsystem = () => {
       if (response.success) {
         setUserState(response.data.data.user);
         setTypes(response.data.data.types);
+        if(type === "ip_verification") {
+          setAllowed(true);
+        }
         toast.success(response.data.message);
       } else {
         toast.error(response.data.data.message);
@@ -321,7 +394,7 @@ export const useUserSubsystem = () => {
 
   function logout() {
     localStorage.removeItem("token");
-    setUserState({ first_name: "", last_name: "", email: "", verified: false, created_at: "", allowed: false, banned: false});
+    setUserState({ first_name: "", last_name: "", email: "", verified: false, created_at: "", banned: false});
     setTypes({moderator: false, councillor: false});
     setLogged(false);
     setLoading(false);
@@ -356,15 +429,6 @@ export const useUserSubsystem = () => {
     setLogged(logged ?? false);
   };
 
-  function initFromLocalStorage() {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-    if (token && user) {
-      setUserState(JSON.parse(user));
-      setAuthStatus(false, true);
-    }
-  }
-
   return {
     login,
     register,
@@ -380,12 +444,16 @@ export const useUserSubsystem = () => {
     requestPasswordChange,
     checkDeleteCode,
     removeIP,
+    checkUserIP,
+    requestIPVerificationCode,
     requestLoading,
     logged,
     loading,
     user,
     isOAuth,
     userTypes,
+    isIPAllowed,
+    currentIP
   };
 };
 

@@ -40,7 +40,11 @@ use Core\ClientErrorException;
 use App\Endpoints\UBIntegration\GetItems;
 use App\Endpoints\UBIntegration\GetReviews;
 use App\Endpoints\UserSubSystem\IP\AllIPs;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * This class is where all endpoints need to be added to be supported by the APIs
+ */
 class EndpointManager extends Manager
 {
 

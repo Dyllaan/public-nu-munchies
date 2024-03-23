@@ -18,6 +18,7 @@ import { EyeOpenIcon } from '@radix-ui/react-icons';
 export default function ChangePassword({setSent}: {setSent: (value: boolean) => void}) {
   const { requestLoading, requestPasswordChange } = useUserSubsystem();
   const [ password, setPassword ] = useState("");
+  const [ passwordConfirm, setPasswordConfirm ] = useState("");
   const [error, setError] = useState("");
   const [canSeePassword, setCanSeePassword] = useState(false);
   
@@ -42,12 +43,16 @@ export default function ChangePassword({setSent}: {setSent: (value: boolean) => 
 
   const isValid = () => {
     const isPasswordChangedAndValid = validatePassword(password ?? "");
-    const isValid = isPasswordChangedAndValid && !requestLoading;
+    const isPasswordConfirmed = password === passwordConfirm;
+    const isValid = isPasswordChangedAndValid && !requestLoading && isPasswordConfirmed;
     return !isValid;
   };
 
-  const handleInputChange = (e:any) => {
+  const handlePasswordChange = (e:any) => {
     setPassword(e.target.value);
+  }
+  const handlePasswordConfirmChange = (e:any) => {
+    setPasswordConfirm(e.target.value);
   }
 
   const handleCanSeeChange = () => {
@@ -63,13 +68,31 @@ export default function ChangePassword({setSent}: {setSent: (value: boolean) => 
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        <div className="flex">
-          <Input
-            id="firstName"
-            name="firstName"
+        <div className="flex flex-col gap-2">
+          <div className="flex">
+            <Input
+            id="password"
+            name="password"
             type={canSeePassword ? "text" : "password"}
             placeholder="Password"
-            onChange={handleInputChange}
+            onChange={handlePasswordChange}
+            />
+          <Toggle 
+            className="rounded-full ml-1"
+            defaultPressed={canSeePassword || false} // Convert null to false
+            onPressedChange={handleCanSeeChange} 
+            disabled={requestLoading}
+          >
+            <EyeOpenIcon />
+          </Toggle>
+          </div>
+          <div className="flex">
+          <Input
+            id="confirm-password"
+            name="confirm-password"
+            type={canSeePassword ? "text" : "password"}
+            placeholder="Confirm Password"
+            onChange={handlePasswordConfirmChange}
           />
           <Toggle 
             className="rounded-full ml-1"
@@ -79,8 +102,9 @@ export default function ChangePassword({setSent}: {setSent: (value: boolean) => 
           >
             <EyeOpenIcon />
           </Toggle>
-        </div>
-        {requestLoading ? <LoadingInPage /> : <Button onClick={handleSubmit} disabled={isValid()}>Save Password</Button>}
+          </div>
+            {requestLoading ? <LoadingInPage /> : <Button onClick={handleSubmit} disabled={isValid()}>Save Password</Button>}
+          </div>
         </CardContent>
         <div>
             {error &&

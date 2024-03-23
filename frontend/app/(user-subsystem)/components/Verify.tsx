@@ -16,13 +16,18 @@ import useUserSubsystem from "@/hooks/user-subsystem/use-user-subsystem";
 
 function Verify({ type } : { type: string}) {
   const title = type === 'ip_verification' ? 'your IP' : 'your email';
-  const { user, requestIPVerificationCode, requestLoading, checkCode, loading, currentIP } = useUserSubsystem();
+  const { user, requestIPVerificationCode, requestLoading, checkCode, requestNewCode } = useUserSubsystem();
   const [token, setToken] = useState("");
   const [sent, setSent] = useState(false);
 
   const requestVerificationEmail = async () => {
-    setSent(true)
-    await requestIPVerificationCode();
+    if(type === 'ip_verification') {
+      setSent(true);
+      await requestIPVerificationCode();
+      return;
+    }
+    await requestNewCode(type);
+    setSent(true);
   };
 
   const handleTokenSubmission = async () => {

@@ -22,7 +22,9 @@ function Verify({ type } : { type: string}) {
 
   const requestVerificationEmail = async () => {
     if(type === 'ip_verification') {
+      setSent(true);
       await requestIPVerificationCode();
+      return;
     }
     await requestNewCode(type);
     setSent(true);

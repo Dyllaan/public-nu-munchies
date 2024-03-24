@@ -48,8 +48,10 @@ class OAuthCallback extends Endpoint
             $user->setEmail($payload['email']);
             if($user->exists()) {
                 $user->login();
+                $this->setResponse(200, 'Login Successful', $user->toArray());
             } else {
                 $user->register();
+                $this->setResponse(200, 'Registration Successful', $user->toArray());
             }
         } else {
             $this->setResponse(401, 'Invalid token');

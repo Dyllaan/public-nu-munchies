@@ -114,7 +114,7 @@ class OAuthUser extends User
     }
 
 
-    public function save()
+    public function save($ipAddr = null)
     {
         $this->getDb()->beginTransaction();
         try {

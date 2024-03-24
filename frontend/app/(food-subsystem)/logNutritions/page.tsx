@@ -24,6 +24,7 @@ const NutritionForm: React.FC = () => {
     quantity: '',
   });
 
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false); // State for showing success pop-up
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,6 +53,7 @@ const NutritionForm: React.FC = () => {
         salt: '',
         quantity: '',
       });
+      setShowSuccessPopup(true); // Show success pop-up
       // Handle any other logic after successful submission
     } catch (error) {
       console.error('Error:', error);
@@ -61,7 +63,7 @@ const NutritionForm: React.FC = () => {
 
   return (
     <>
-      <Header />
+      <Header/>
         <section className="hero">
           <div className="container flex flex-col">
             <form className="items-center justify-center mx-auto" onSubmit={handleSubmit}>
@@ -102,7 +104,15 @@ const NutritionForm: React.FC = () => {
                 Save Nutrition
               </Button>
             </form>
-
+            {/* Success pop-up */}
+            {showSuccessPopup && (
+                <div className="popup">
+                  <div className="popup-content text-center">
+                    <span className="close" onClick={() => setShowSuccessPopup(false)}>&times;</span>
+                    <p>Nutrition Saved</p>
+                  </div>
+                </div>
+            )}
             <a href="http://localhost:3000/displayNutrition" className="text-center pt-5 underline">View All Nutritions</a>
           </div>
         </section>

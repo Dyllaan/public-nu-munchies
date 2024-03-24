@@ -18,8 +18,12 @@ use App\Classes\UserSubSystem\UserHandlers\IPHandler;
 use App\Classes\UserSubSystem\UserHandlers\BannedHandler;
 use App\Classes\UserSubSystem\UserTypes\Moderator;
 use App\Classes\UserSubSystem\UserTypes\Councillor;
-
-class User extends CrudModel implements CrudInterface
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * OO user class
+ */
+class User extends CrudModel
 {
     private $firstName;
     private $lastName;
@@ -47,15 +51,6 @@ class User extends CrudModel implements CrudInterface
         $this->ipHandler = new IPHandler($this->getDb(), $this);
         $this->bannedHandler = new BannedHandler($this->getDb(), $this);
         $this->setTable("users");
-    }
-
-    /**
-     * Short term MFA solution
-     * user is prompted to enter a token sent to their email
-     * when their token expires
-     */
-    public function tokenExpired() {
-        $this->verifyUser(0);
     }
 
     public static function getInstance($db)
@@ -168,9 +163,6 @@ class User extends CrudModel implements CrudInterface
                 $this->setResponse(401, "Invalid password");
             } else {
                 $this->setUserFields($data[0]);
-                if(!$this->getIPHandler()->isIPAllowed()) {
-                    $this->getEmailHandler()->sendEmailToken('ip_verification');
-                }
                 if ($data[0]['verified'] == 0) {
                     $this->getEmailHandler()->sendEmailToken('email_verification');
                     return $this->toArray();
@@ -181,12 +173,12 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
-    public function register()
+    public function register($ip)
     {
         if ($this->exists()) {
             $this->setResponse(400, "User already exists");
         } else {
-            $this->save();
+            $this->save($ip);
         }
     }
 
@@ -241,7 +233,7 @@ class User extends CrudModel implements CrudInterface
         return true;
     }
 
-    public function save()
+    public function save($ipAddr)
     {
         if ($this->checkSavable()) {
             $this->getDb()->beginTransaction();
@@ -253,8 +245,8 @@ class User extends CrudModel implements CrudInterface
                     $this->getDb()->commit();
                     $id = intval($id);
                     $this->setId($id);
-                    $this->getIPHandler()->checkForIP(true);
-                    return $this->sendVerificationEmail();
+                    $this->getIPHandler()->addIP($ipAddr);
+                    return $this->getEmailHandler()->sendEmailToken('email_verification');
                 } else {
                     $this->getDb()->rollBack();
                     $this->setResponse(400, "User could not be saved");
@@ -377,29 +369,18 @@ class User extends CrudModel implements CrudInterface
 
     public function toArray($useJwt = true)
     {
-        //is allowed
+        $user['user'] = [
+            'id' => $this->getId(),
+            'first_name' => $this->getFirstName(),
+            'last_name' => $this->getLastName(),
+            'email' => $this->getEmail(),
+            'verified' => $this->getVerifiedHandler()->isVerified(),
+            'created_at' => $this->getCreatedAt(),
+            'banned' => boolval($this->getBannedHandler()->isBanned())
+        ];
+
         $user['types'] = $this->getUserTypes();
-        if(!$this->getIPHandler()->isIPAllowed()) {
-            $user['user'] = [
-                'email' => $this->getEmail(),
-                'allowed' => false,
-                'ip' => $_SERVER['REMOTE_ADDR'],
-                'banned' => boolval($this->getBannedHandler()->isBanned())
-            ];
-        } else {
-            $user['user'] = [
-                'id' => $this->getId(),
-                'first_name' => $this->getFirstName(),
-                'last_name' => $this->getLastName(),
-                'email' => $this->getEmail(),
-                'verified' => $this->getVerifiedHandler()->isVerified(),
-                'created_at' => $this->getCreatedAt(),
-                'allowed' => true,
-                'ip' => $_SERVER['REMOTE_ADDR'],
-                'banned' => boolval($this->getBannedHandler()->isBanned())
-            ];
-            $user['types'] = $this->getUserTypes();
-        }
+        
         //hardcoded provider id not good
         if($useJwt) {
             $jwt = $this->generateJWT($this->getId(), 1);
@@ -435,6 +416,11 @@ class User extends CrudModel implements CrudInterface
         }
     }
 
+    /**
+     * Could be modified to only allow token from the users IP
+     * however this might cause problems with mobile users
+     * who switch between networks more often, or whilst walking
+     */
     public function generateJWT($id, $providerId)
     {
         $secretKey = $this->appConfigInstance->get('JWT_SECRET');
@@ -452,6 +438,8 @@ class User extends CrudModel implements CrudInterface
         $jwt = JWT::encode($payload, $secretKey, 'HS256');
         return $jwt;
     }
+
+    // getters and setters
 
     function getBannedHandler() {
         return $this->bannedHandler;

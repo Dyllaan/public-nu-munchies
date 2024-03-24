@@ -3,7 +3,11 @@
 namespace App\Classes\UserSubSystem;
 
 use App\Classes\UserSubSystem\User;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * Extension of User class, in EndpointBase in core, the logic automatically handles assigning the current user to an oauth or normal instance.
+ */
 class OAuthUser extends User
 {
 

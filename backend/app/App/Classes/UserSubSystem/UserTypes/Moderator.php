@@ -5,7 +5,11 @@ namespace App\Classes\UserSubSystem\UserTypes;
 use App\Classes\UserSubSystem\User;
 use App\Classes\UserSubSystem\UserType;
 use App\Classes\Business;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * OO Moderator, alongside the user class this class is used to handle the moderator users actions using the user object
+ */
 class Moderator extends UserType
 {
     private \AppConfig $appConfigInstance;

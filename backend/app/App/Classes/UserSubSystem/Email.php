@@ -4,6 +4,11 @@ namespace App\Classes\UserSubSystem;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * OO email class to send emails to users via SMTP
+ */
 
 class Email {
 
@@ -23,7 +28,7 @@ class Email {
     }
 
     public function sendEmail() {
-        $mail = new PHPMailer(true); // Passing `true` enables exceptions
+        $mail = new PHPMailer(true);
 
         try {
             $mail->isSMTP();

@@ -5,11 +5,11 @@ namespace App\Classes\UserSubSystem;
 use Core\Endpoint\Endpoint;
 use App\Classes\UserSubSystem\UserTypes\Councillor;
 use App\Classes\UserSubSystem\UserTypes\Moderator;
-
 /**
- * 
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * Specific endpoint parent used by endpoints requiring specialised user actions
  */
-
 abstract class UserTypeEndpoint extends Endpoint
 {
     private $userAddon;

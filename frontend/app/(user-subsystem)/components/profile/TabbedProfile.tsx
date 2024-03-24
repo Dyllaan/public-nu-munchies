@@ -13,13 +13,28 @@ export default function TabbedProfile() {
 
   const { user, logout, isOAuth, userTypes } = useUserSubsystem();
 
-  return (
-    <Tabs defaultValue="user" className="w-full">
-      <TabsList className="grid w-full grid-cols-2">
+  function moderatorTabList() {
+    return (
+      <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="user">User</TabsTrigger>
         <TabsTrigger value="ip">Access Management</TabsTrigger>
-        {userTypes.moderator && <TabsTrigger value="moderator">Moderator</TabsTrigger>}
+        <TabsTrigger value="moderator">Moderator</TabsTrigger>
       </TabsList>
+    )
+  }
+
+  function normalTabList() {
+    return (
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger value="user">User</TabsTrigger>
+        <TabsTrigger value="ip">Access Management</TabsTrigger>
+      </TabsList>
+    )
+  }
+
+  return (
+    <Tabs defaultValue="user" className="w-full">
+      {userTypes.moderator ? moderatorTabList() : normalTabList()}
       <TabsContent value="user">
         <UserProfile />
       </TabsContent>

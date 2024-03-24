@@ -8,7 +8,11 @@ namespace App\Endpoints\UserSubSystem\UserSubEndpoints;
 
 use Core\Endpoint\SubEndpoint\SubEndpoint;
 use App\Classes\UserSubSystem\User;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * Handles the login of users
+ */
 class LoginUser extends SubEndpoint
 {
     public function __construct() 
@@ -23,7 +27,6 @@ class LoginUser extends SubEndpoint
         $user = new User($this->getDb());
         $user->setEmail($request->getAttribute('email'));
         $user->setPassword($request->getAttribute('password'));
-        $userArr = $user->login($this->getDb());
-        $this->setResponse(201, 'Logged in', $userArr);
+        $this->setResponse(201, 'Logged in', $user->login($this->getDb()));
     }
 }

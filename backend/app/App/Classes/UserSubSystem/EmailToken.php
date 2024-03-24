@@ -14,7 +14,10 @@ use App\Factories\EmailFactory;
 use Core\ClientErrorException;
 use Firebase\JWT\JWT;
 use Core\Database\CrudModel;
-
+/**
+ * Handles All email tokens, this could be seperated into distinct classes but for the sake of simplicity and the fact that this uses a switch
+ * due to time constraints this was the best solution
+ */
 class EmailToken extends CrudModel
 {
     protected \AppConfig $appConfigInstance;
@@ -67,7 +70,7 @@ class EmailToken extends CrudModel
                                     <p>This code will expire in 10 minutes.</p>
                                 </body>
                             </html>";
-                            break;
+                break;
             case 'change_email':
                 $subject = "NU Munchies Email Change";
                 $content = "<html>
@@ -180,7 +183,7 @@ class EmailToken extends CrudModel
             'type' => $this->getType()
         ];
         if($this->getType() === 'ip_verification') {
-            $payload['ip'] = $_SERVER['REMOTE_ADDR'];
+            $payload['ip'] = $this->getIP();
         }
         if($this->getType() === 'change_email' && $email !== null) {
             $payload['email'] = $email;

@@ -10,7 +10,12 @@ namespace App\Endpoints\UserSubSystem\IP;
 
 use Core\Endpoint\Endpoint;
 use App\Endpoints\UserSubSystem\IP\IPSubEndpoints\RemoveIP;
-
+use App\Endpoints\UserSubSystem\IP\IPSubEndpoints\IsAllowed;
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * This endpoint outputs to the user all of the allowed IP's for their account
+ */
 class AllIPs extends Endpoint
 {
 
@@ -19,6 +24,7 @@ class AllIPs extends Endpoint
         parent::__construct('GET', 'ip');
         $this->setRequiresAuth(true);
         $this->addSubEndpoint(new RemoveIP());
+        $this->addSubEndpoint(new IsAllowed());
     }
 
     public function process($request)

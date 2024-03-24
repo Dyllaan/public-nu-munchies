@@ -6,7 +6,11 @@ use App\Classes\UserSubSystem\EmailToken;
 use App\Classes\UserSubSystem\UserHelper;
 use App\Classes\UserSubSystem\User;
 use App\Classes\UserSubSystem\PasswordChange;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * Handles sending and verifying email tokens for the user
+ */
 class EmailHandler extends UserHelper
 {
 
@@ -34,7 +38,7 @@ class EmailHandler extends UserHelper
     }
 
 
-    public function sendEmailToken($type, $newEmail = null, $newPassword = null)
+    public function sendEmailToken($type, $newEmail = null, $newPassword = null, $ip = null)
     {
         if(!$this->getUser()->exists()) {
             return;
@@ -56,9 +60,11 @@ class EmailHandler extends UserHelper
             }
         }
 
-
         $emailToken = new EmailToken($this->getDb(), $type);
         $emailToken->setUser($this->getUser());
+        if($type === 'ip_verification') {
+            $emailToken->setIP($ip);
+        }
         try {
             $jwt = $emailToken->sendEmail($newEmail);
             if($type === 'change_password') {

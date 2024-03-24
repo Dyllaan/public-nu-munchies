@@ -11,7 +11,13 @@ namespace App\Endpoints\UserSubSystem;
 use App\Classes\UserSubSystem\OAuthUser;
 use Core\Endpoint\Endpoint;
 use \Google\Client as GoogleClient;
-
+/**
+ * @author Louis Figes W21017657
+ * @generated GitHub Copilot was used during the creation of this code
+ * Is the callback endpoint for OAuth2.0 via Google.
+ * This is manually specified on the Google Developers cloud console and as such modifying its URL will require a change there.
+ * This endpoint is used to verify an OAuth google login and then log the user in to NU-MUNCHIES or register them if they do not exist.
+ */
 class OAuthCallback extends Endpoint
 {
 

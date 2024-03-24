@@ -4,6 +4,7 @@
 - Docker installed on your device
 - NodeJS / Bun on your device
 - Internet Connection
+- PostgreSQL server runnning the exported database.
 
 ## Technologies Used
 

@@ -1,7 +1,6 @@
 <?php
 
-//This is the endpoint for a business' 'total orders received' part of the dash
-//Also gonna have the 'money made' part of the dashboard as it makes more sense
+//This is the endpoint for a user's 'total orders placed' part of the dashboard
 
 namespace App\Endpoints\Analytics;
 
@@ -9,7 +8,7 @@ use App\Classes\Analytics;
 use Core\Endpoint\SubEndpoint\SubEndpoint;
 
 
-class BusinessOrders extends SubEndpoint
+class UserOrders extends SubEndpoint
 {
     //call:
     // - each order number
@@ -19,7 +18,7 @@ class BusinessOrders extends SubEndpoint
 
     public function __construct()
     {
-        parent::__construct('GET', 'business-orders');
+        parent::__construct('GET', 'user-orders');
         $this->setRequiresAuth(true);
 
     }
@@ -31,6 +30,7 @@ class BusinessOrders extends SubEndpoint
         $analytics = new Analytics($this->getDb(), $this->getUser());
 
         // Assuming there is a respondJson method available
-        $this->setResponse(200, "Business Orders stats retrieved", $analytics->getBusinessOrders());
+        $this->setResponse(200, "User Orders stats retrieved", $analytics->getUserOrders());
     }
+
 }

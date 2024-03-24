@@ -30,6 +30,7 @@ class User extends CrudModel
     private $email;
     private $password;
     private $token;
+    private $exists;
     private $createdAt;
 
     private $emailHandler;
@@ -60,32 +61,33 @@ class User extends CrudModel
         return self::$instance;
     }
 
-    public function searchBusinesses($offset, $conditions = [], $limit = 10)
-    {
-        $data = $this->getDb()->createSelect()->cols("*")
-            ->from("businesses")
-            ->where($conditions)->limit($limit)->offset($offset)->execute();
+    public function searchBusinesses($offset, $conditions = [], $limit = 10) {
+            $data = $this->getDb()->createSelect()->cols("*")
+        ->from("businesses")
+        ->where($conditions)->limit($limit)->
+        offset($offset)->execute();
         return $data;
     }
 
-    public function searchItems($offset, $conditions = [], $limit = 10, $catId = null)
-    {
-        if ($catId != null) {
+    public function searchItems($offset, $conditions = [], $limit = 10, $catId = null) {
+        if($catId != null) {
             $conditions[] = "cat_id = '" . $catId . "'";
             $data = $this->getDb()->createSelect()->cols("*")
-                ->from("items")->join("categories", "items.item_category = cat_id")
-                ->where($conditions)->limit($limit)->offset($offset)->execute();
-            return $data;
+            ->from("items")->join("categories", "items.item_category = cat_id")
+            ->where($conditions)->limit($limit)->
+            offset($offset)->execute();
+        return $data;
         } else {
             $data = $this->getDb()->createSelect()->cols("*")
-                ->from("items")->where($conditions)->limit($limit)->offset($offset)->execute();
-            return $data;
+            ->from("items")->where($conditions)->limit($limit)->
+            offset($offset)->execute();
+        return $data;
         }
     }
 
     public function getBusinesses()
     {
-        if (!$this->exists()) {
+        if(!$this->exists()) {
             return;
         }
         $data = $this->getDb()->createSelect()->cols("*")->from('businesses')->where(["user_id = '" . $this->getId() . "'"])->execute();
@@ -111,15 +113,17 @@ class User extends CrudModel
 
     public function exists()
     {
+        if($this->exists) {
+            return $this->exists;
+        }
         if ($this->getEmail() != null) {
-            if ($this->doesUserExistAtEmail($this->getEmail())) {
+            if($this->doesUserExistAtEmail($this->getEmail())) {
                 return true;
             }
         } elseif ($this->getId() != null) {
             if($this->doesUserExistAtId($this->getId())) {
                 return true;
             }
-            return false;
         }
         return false;
     }
@@ -267,8 +271,7 @@ class User extends CrudModel
         }
     }
 
-    protected function getFromEmail()
-    {
+    protected function getFromEmail() {
         $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["email = '" . $this->getEmail() . "'"])->execute();
         if (count($data) == 0) {
             return null;
@@ -278,24 +281,23 @@ class User extends CrudModel
         }
     }
 
-    public function setUserFields($data)
-    {
-        if (isset($data['id'])) {
+    public function setUserFields($data) {
+        if(isset($data['id'])) {
             $this->setId($data['id']);
         }
-        if (isset($data['first_name'])) {
+        if(isset($data['first_name'])) {
             $this->setFirstName($data['first_name']);
         }
-        if (isset($data['last_name'])) {
+        if(isset($data['last_name'])) {
             $this->setLastName($data['last_name']);
         }
-        if (isset($data['email'])) {
+        if(isset($data['email'])) {
             $this->setEmail($data['email']);
         }
-        if (isset($data['verified'])) {
+        if(isset($data['verified'])) {
             $this->getVerifiedHandler()->setVerified($data['verified']);
         }
-        if (isset($data['created_at'])) {
+        if(isset($data['created_at'])) {
             $this->setCreatedAt($data['created_at']);
         }
         if(isset($data['banned'])) {
@@ -303,43 +305,52 @@ class User extends CrudModel
         }
     }
     
-    public function update($respond = true, $checkExists = true)
+    public function update()
     {
-        if(!$this->exists() && $checkExists) {
-            $this->setResponse(400, "User does not exist1");
+        if (!$this->exists()) {
+            $this->setResponse(400, "User does not exist");
         }
-        $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["id = '".$this->getId()."'"])->execute();
+        // TODO: lets create constants of the table name and columns and then just reference them here so it is not hardcoded
+        $data = $this->getDb()->createSelect()->cols("*")->from($this->getTable())->where(["id = '" . $this->getId() . "'"])->execute();
         if (count($data) == 0) {
-            $this->setResponse(400, "User does not exist2");
+            $this->setResponse(400, "User does not exist");
         } else {
             $changed = [];
-            if($this->getFirstName() != $data[0]['first_name']) {
+            // TODO: i am wondering if we can make this if statement bit more cleaner
+            if ($this->getFirstName() != $data[0]['first_name']) {
                 $changed['first_name'] = $this->getFirstName();
             }
-            if($this->getLastName() != $data[0]['last_name']) {
+            if ($this->getLastName() != $data[0]['last_name']) {
                 $changed['last_name'] = $this->getLastName();
             }
-            if($this->getEmail() != $data[0]['email']) {
+            if ($this->getEmail() != $data[0]['email']) {
                 $changed['email'] = $this->getEmail();
+            }
+            if ($this->getPassword() != null) {
+                $this->setResponse(400, "Password cannot be updated by this method");
             }
             if($this->getBannedHandler()->isBanned() != $data[0]['banned']) {
                 $changed['banned'] = $this->getBannedHandler()->isBanned();
             }
-            if($changed != []) {
-                $this->getDb()->createUpdate()->table('users')->set($changed)->where(["id = '".$this->getId()."'"])->execute();
-                if($respond) {
-                    return $this->setResponse(200, "User updated", $this->toArray());
+
+            if ($changed != []) {
+                $this->getDb()->beginTransaction();
+                try {
+                    $this->getDb()->createUpdate()->table($this->getTable())->set($changed)->where(["
+                    id = '" . $this->getId() . "'"])->execute();
+                    $this->getDb()->commit();
+                    return ['message' => "User updated"];
+                } catch (\Exception $e) {
+                    $this->getDb()->rollBack();
+                    $this->setResponse(500, "An error occurred: " . $e->getMessage());
                 }
             } else {
-                if($respond) {
-                    return $this->setResponse(400, "No changes");
-                }
+                return ['message' => "No changes"];
             }
         }
     }
 
-    public function getFromUserId()
-    {
+    public function getFromUserId() {
         if ($this->getId() != null) {
             $data = $this->getDb()->createSelect()->cols("*")->from("users")->where(["id = '" . $this->getId() . "'"])->execute();
             return $data;
@@ -350,7 +361,7 @@ class User extends CrudModel
     {
         if ($this->exists()) {
             $this->getDb()->createDelete()->from($this->getTable())->where(["id = '" . $this->getId() . "'"])->execute();
-            $this->setResponse(200, "User deleted");
+            return ['message' => "User deleted"];
         } else {
             $this->setResponse(400, "User does not exist");
         }
@@ -371,7 +382,7 @@ class User extends CrudModel
         $user['types'] = $this->getUserTypes();
         
         //hardcoded provider id not good
-        if ($useJwt) {
+        if($useJwt) {
             $jwt = $this->generateJWT($this->getId(), 1);
             $user['jwt'] = $jwt;
         }
@@ -493,28 +504,31 @@ class User extends CrudModel
         $this->password = $password;
     }
 
-    public function getName()
-    {
+    public function getName() {
         return $this->getFirstName() . " " . $this->getLastName();
     }
 
-    public function getCreatedAt()
-    {
+    public function doesExist() {
+        return $this->exists;
+    }
+
+    public function setExists($exists) {
+        $this->exists = $exists;
+    }
+
+    public function getCreatedAt() {
         return $this->createdAt;
     }
 
-    public function setCreatedAt($createdAt)
-    {
+    public function setCreatedAt($createdAt) {
         $this->createdAt = $createdAt;
     }
 
-    public function getVerifiedHandler()
-    {
+    public function getVerifiedHandler() {
         return $this->verifiedHandler;
     }
 
-    public function getIPHandler()
-    {
+    public function getIPHandler() {
         return $this->ipHandler;
     }
 }

@@ -7,20 +7,9 @@
 
 namespace App\Managers;
 
-//use App\Endpoints\NutritionEndpoint;
-//use App\Endpoints\CatEndpoint;
-use App\Endpoints\UFIntegration\AllNutrition;
-use App\Endpoints\UFIntegration\RemoveNutrition;
-use App\Endpoints\UFIntegration\RemoveCat;
-use App\Endpoints\UFIntegration\GetNutrition;
-use App\Endpoints\UFIntegration\EditNutrition;
-use App\Endpoints\UFIntegration\EditCat;
-use App\Endpoints\UFIntegration\GetCat;
-use App\Endpoints\UFIntegration\AddNutrition;
+use App\Endpoints\AnalyticsEndpoint;
 use App\Endpoints\UserSubSystem\UserEndpoint;
-use App\Endpoints\UFIntegration\AddCat;
 use App\Endpoints\BusinessSubsystem\BusinessEndpoint;
-use App\Endpoints\BusinessSubsystem\BItemEndpoint;
 use App\Endpoints\UserSubSystem\OAuthCallback;
 use App\Endpoints\UserSubSystem\ForgotPassword;
 use App\Endpoints\UserSubSystem\ResetPassword;
@@ -29,13 +18,6 @@ use App\Endpoints\UserSubSystem\Councillor\IsCouncillor;
 use App\Endpoints\Search;
 use Core\Manager;
 use Core\HTTP\Classes\Request;
-use App\Endpoints\UBIntegration\ItemReserve;
-use App\Endpoints\UBIntegration\OrderCancel;
-use App\Endpoints\UBIntegration\OrderCollect;
-use App\Endpoints\UBIntegration\InsertOrder;
-use App\Endpoints\UBIntegration\InsertReview;
-use App\Endpoints\UBIntegration\CheckoutItem;
-use App\Endpoints\UBIntegration\Webhook;
 use Core\ClientErrorException;
 use App\Endpoints\UBIntegration\GetItems;
 use App\Endpoints\UBIntegration\GetReviews;
@@ -67,40 +49,16 @@ class EndpointManager extends Manager
 
     protected function add()
     {
-        //$this->addEndpoint(new NutritionEndpoint());
-        //$this->addEndpoint(new CatEndpoint());
-        $this->addEndpoint(new AllNutrition());
-        $this->addEndpoint(new RemoveNutrition());
-        $this->addEndpoint(new RemoveCat());
-        $this->addEndpoint(new EditNutrition());
-        $this->addEndpoint(new GetNutrition());
-        $this->addEndpoint(new EditCat());
-        $this->addEndpoint(new GetCat());
-        $this->addEndpoint(new AddNutrition());
-        $this->addEndpoint(new AddCat());
-        /**
-         * Users subsystem
-         */
         $this->addEndpoint(new UserEndpoint());
+        $this->addEndpoint(new AnalyticsEndpoint());
         $this->addEndpoint(new BusinessEndpoint());
         $this->addEndpoint(new OAuthCallback());
         $this->addEndpoint(new ForgotPassword());
         $this->addEndpoint(new ResetPassword());
         $this->addEndpoint(new UserEndpoint());
         $this->addEndpoint(new IsMod());
-        $this->addEndpoint(new AllIPs());
         $this->addEndpoint(new Search());
-
-
-        $this->addEndpoint(new ItemReserve());
-        $this->addEndpoint(new OrderCancel());
-        $this->addEndpoint(new InsertOrder());
-        $this->addEndpoint(new Webhook());
-        $this->addEndpoint(new GetItems());
-        $this->addEndpoint(new CheckoutItem());
-        $this->addEndpoint(new InsertReview());
-        $this->addEndpoint(new GetReviews());
-        $this->addEndpoint(new OrderCollect());
+        $this->addEndpoint(new IsCouncillor());
     }
 
     public function addEndpoint($endpoint)

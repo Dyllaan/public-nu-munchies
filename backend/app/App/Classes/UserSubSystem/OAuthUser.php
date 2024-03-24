@@ -29,7 +29,7 @@ class OAuthUser extends User
         return self::$instance;
     }
 
-    public function register()
+    public function register($ip = null)
     {
         if ($this->exists()) {
             $this->setResponse(400, "User already exists");

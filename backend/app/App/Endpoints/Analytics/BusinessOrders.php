@@ -20,17 +20,13 @@ class BusinessOrders extends SubEndpoint
     public function __construct()
     {
         parent::__construct('GET', 'business-orders');
-        $this->setRequiresAuth(true);
 
     }
 
     public function process($request)
     {
         parent::process($request);
-        // Create an instance of the Analytics class
-        $analytics = new Analytics($this->getDb(), $this->getUser());
-
-        // Assuming there is a respondJson method available
-        $this->setResponse(200, "Business Orders stats retrieved", $analytics->getBusinessOrders());
+        $this->setResponse(200, 'Business Orders retrieved');
     }
+
 }
